@@ -127,12 +127,12 @@ describe('manifestSchema', () => {
         activeWork: 0,
         totalCompleted: 0,
         decisions: 0,
+        releases: 0,
       },
     };
     const result = manifestSchema.safeParse(minimal);
     expect(result.success).toBe(true);
     if (result.success) {
-      // releases defaults to 0
       expect(result.data.counters.releases).toBe(0);
     }
   });
@@ -295,7 +295,7 @@ describe('manifestSchema', () => {
           database: 'sqlite',
         },
       },
-      counters: { activeWork: 0, totalCompleted: 0, decisions: 0 },
+      counters: { activeWork: 0, totalCompleted: 0, decisions: 0, releases: 0 },
     };
     const result = manifestSchema.safeParse(data);
     expect(result.success).toBe(true);

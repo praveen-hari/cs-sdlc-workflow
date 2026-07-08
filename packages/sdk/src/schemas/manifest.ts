@@ -67,7 +67,7 @@ export const countersSchema = z
     activeWork: z.number().int().min(0),
     totalCompleted: z.number().int().min(0),
     decisions: z.number().int().min(0),
-    releases: z.number().int().min(0).optional().default(0),
+    releases: z.number().int().min(0),
   })
   .passthrough();
 

@@ -65,7 +65,7 @@ describe('readJson', () => {
       specVersion: '1.0',
       magic: 'cs-sdlc',
       project: { name: 'Test', createdAt: '2026-07-08T10:00:00Z' },
-      counters: { activeWork: 0, totalCompleted: 0, decisions: 0 },
+      counters: { activeWork: 0, totalCompleted: 0, decisions: 0, releases: 0 },
     };
     await writeFile(filePath, JSON.stringify(manifest));
 
