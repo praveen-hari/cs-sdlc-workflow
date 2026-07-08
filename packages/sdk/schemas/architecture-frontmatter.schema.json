@@ -1,0 +1,36 @@
+{
+  "$id": "https://cs-sdlc.dev/schema/v1/architecture-frontmatter.json",
+  "$ref": "#/definitions/architecture-frontmatter",
+  "definitions": {
+    "architecture-frontmatter": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "monolith",
+                "modular",
+                "microservices",
+                "serverless",
+                "hybrid"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

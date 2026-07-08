@@ -1,0 +1,25 @@
+{
+  "$id": "https://cs-sdlc.dev/schema/v1/plan-frontmatter.json",
+  "$ref": "#/definitions/plan-frontmatter",
+  "definitions": {
+    "plan-frontmatter": {
+      "type": "object",
+      "properties": {
+        "totalTasks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completedTasks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currentTask": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,34 @@
+{
+  "$id": "https://cs-sdlc.dev/schema/v1/requirements-frontmatter.json",
+  "$ref": "#/definitions/requirements-frontmatter",
+  "definitions": {
+    "requirements-frontmatter": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "draft",
+                "approved",
+                "evolving"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

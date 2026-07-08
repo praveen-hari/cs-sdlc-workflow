@@ -1,0 +1,122 @@
+{
+  "$id": "https://cs-sdlc.dev/schema/v1/history-snapshot.json",
+  "$ref": "#/definitions/history-snapshot",
+  "definitions": {
+    "history-snapshot": {
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}$"
+        },
+        "snapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "overall": {
+                "type": "object",
+                "properties": {
+                  "grade": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "A+",
+                          "A",
+                          "A-",
+                          "B+",
+                          "B",
+                          "B-",
+                          "C+",
+                          "C",
+                          "C-",
+                          "D",
+                          "F"
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "required": [
+                  "grade"
+                ],
+                "additionalProperties": true
+              },
+              "coverage": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "total"
+                ],
+                "additionalProperties": true
+              },
+              "tests": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "passing": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "failing": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "total",
+                  "passing",
+                  "failing"
+                ],
+                "additionalProperties": true
+              },
+              "security": {
+                "type": "object",
+                "properties": {
+                  "vulnerabilities": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "vulnerabilities"
+                ],
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "date"
+            ],
+            "additionalProperties": true
+          },
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "month",
+        "snapshots"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,298 @@
+{
+  "$id": "https://cs-sdlc.dev/schema/v1/manifest.json",
+  "$ref": "#/definitions/manifest",
+  "definitions": {
+    "manifest": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "specVersion": {
+          "type": "string"
+        },
+        "magic": {
+          "type": "string",
+          "const": "cs-sdlc"
+        },
+        "project": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "createdAt": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+            },
+            "mode": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "greenfield",
+                    "brownfield"
+                  ]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "stack": {
+              "type": "object",
+              "properties": {
+                "language": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "framework": {
+                  "type": "string"
+                },
+                "runtime": {
+                  "type": "string"
+                },
+                "database": {
+                  "type": "string"
+                },
+                "testing": {
+                  "type": "string"
+                },
+                "styling": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "language"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "name",
+            "createdAt"
+          ],
+          "additionalProperties": true
+        },
+        "modules": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "frontend",
+                      "backend",
+                      "library",
+                      "infrastructure",
+                      "fullstack",
+                      "other"
+                    ]
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "stack": {
+                "type": "object",
+                "properties": {
+                  "language": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "framework": {
+                    "type": "string"
+                  },
+                  "runtime": {
+                    "type": "string"
+                  },
+                  "database": {
+                    "type": "string"
+                  },
+                  "testing": {
+                    "type": "string"
+                  },
+                  "styling": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "language"
+                ],
+                "additionalProperties": true
+              },
+              "repo": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path",
+              "type",
+              "stack"
+            ],
+            "additionalProperties": true
+          },
+          "propertyNames": {
+            "minLength": 2,
+            "maxLength": 64,
+            "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+          }
+        },
+        "counters": {
+          "type": "object",
+          "properties": {
+            "activeWork": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "totalCompleted": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "decisions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "releases": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "activeWork",
+            "totalCompleted",
+            "decisions",
+            "releases"
+          ],
+          "additionalProperties": true
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "understand",
+                "structure",
+                "build",
+                "verify",
+                "ship"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "health": {
+          "type": "object",
+          "properties": {
+            "coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "grade": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "A+",
+                    "A",
+                    "A-",
+                    "B+",
+                    "B",
+                    "B-",
+                    "C+",
+                    "C",
+                    "C-",
+                    "D",
+                    "F"
+                  ]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "securityIssues": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accessibilityIssues": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "updatedAt": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+            }
+          },
+          "additionalProperties": true
+        },
+        "gates": {
+          "type": "object",
+          "properties": {
+            "minCoverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "securityScan": {
+              "type": "boolean"
+            },
+            "accessibility": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "wcag-a",
+                    "wcag-aa",
+                    "wcag-aaa"
+                  ]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "performanceBudget": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "specVersion",
+        "magic",
+        "project",
+        "counters"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,247 @@
+{
+  "$id": "https://cs-sdlc.dev/schema/v1/latest-snapshot.json",
+  "$ref": "#/definitions/latest-snapshot",
+  "definitions": {
+    "latest-snapshot": {
+      "type": "object",
+      "properties": {
+        "generatedAt": {
+          "type": "string"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "overall": {
+          "type": "object",
+          "properties": {
+            "grade": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "A+",
+                    "A",
+                    "A-",
+                    "B+",
+                    "B",
+                    "B-",
+                    "C+",
+                    "C",
+                    "C-",
+                    "D",
+                    "F"
+                  ]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "grade"
+          ],
+          "additionalProperties": true
+        },
+        "coverage": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "unit": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "integration": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "e2e": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "total"
+          ],
+          "additionalProperties": true
+        },
+        "tests": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "passing": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "failing": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "skipped": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "total",
+            "passing",
+            "failing"
+          ],
+          "additionalProperties": true
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "vulnerabilities": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "advisories": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "outdatedDeps": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "vulnerabilities"
+          ],
+          "additionalProperties": true
+        },
+        "accessibility": {
+          "type": "object",
+          "properties": {
+            "violations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "standard": {
+              "type": "string"
+            },
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "severity": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "critical",
+                          "serious",
+                          "moderate",
+                          "minor"
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "rule",
+                  "count",
+                  "severity"
+                ],
+                "additionalProperties": true
+              }
+            }
+          },
+          "required": [
+            "violations"
+          ],
+          "additionalProperties": true
+        },
+        "complexity": {
+          "type": "object",
+          "properties": {
+            "maxFunctionComplexity": {
+              "type": "number"
+            },
+            "avgFunctionComplexity": {
+              "type": "number"
+            },
+            "filesOverThreshold": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "modules": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "coverage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "tests": {
+                "type": "object",
+                "properties": {
+                  "passing": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "failing": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "additionalProperties": true
+              },
+              "security": {
+                "type": "object",
+                "properties": {
+                  "vulnerabilities": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "generatedAt",
+        "overall"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
