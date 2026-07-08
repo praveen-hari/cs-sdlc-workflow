@@ -1,5 +1,7 @@
 # @syncfusion/cs-sdlc
 
+[![Tests](https://img.shields.io/badge/tests-414%20passing-brightgreen)]() [![Conformance](https://img.shields.io/badge/conformance-Level%203%20(Full)-blue)]() [![Node](https://img.shields.io/badge/node-%3E%3D18-green)]() [![ESM](https://img.shields.io/badge/module-ESM-yellow)]()
+
 TypeScript SDK for the `.sdlc/` file format specification — an open, tool-agnostic format for storing structured project context inside software repositories.
 
 ## What is `.sdlc/`?
@@ -20,6 +22,8 @@ npm install @syncfusion/cs-sdlc
 # or
 pnpm add @syncfusion/cs-sdlc
 ```
+
+> **Runtime dependencies:** Only `zod` and `yaml`. No other dependencies.
 
 ## Quick Start
 
@@ -69,6 +73,28 @@ console.log(m.counters.decisions);  // 1
 const report = await validateConsistency('/path/to/project');
 console.log(report.valid); // true
 ```
+
+## Brownfield Scanning
+
+For existing projects, the SDK can auto-detect your stack and modules:
+
+```typescript
+import { initSdlcFromScan } from '@syncfusion/cs-sdlc';
+
+const result = await initSdlcFromScan('/path/to/existing-project');
+
+console.log(result.detectedStack);
+// { language: 'typescript', framework: 'react', testing: 'vitest', styling: 'tailwind', confidence: 'high' }
+
+console.log(result.detectedModules);
+// 2 (for monorepos)
+
+console.log(result.detectedArtifacts);
+// { hasCI: true, hasTesting: true, hasDocs: false, hasDesignSystem: false }
+```
+
+**Supported ecosystems:** Node.js/TypeScript, .NET/C#, Python, Go, Rust, Java
+**Monorepo detection:** npm/pnpm workspaces, Turborepo, Nx, Lerna
 
 ## API
 
@@ -200,14 +226,91 @@ This SDK implements **Level 3 (Full)** conformance per the `.sdlc/` specificatio
 - ✅ Layer 2: Indexes (work, decisions, releases)
 - ✅ Layer 3: Objects (context docs, work items, decisions, releases)
 - ✅ Layer 4: Snapshots (latest + monthly history)
-- ✅ All Chapter 7 operations
-- ✅ Multi-module support (Chapter 8)
-- ✅ Forward compatibility (unknown fields preserved)
+- ✅ All Chapter 7 operations (init, work CRUD, decisions, releases, snapshots, sync)
+- ✅ Multi-module support (Chapter 8) — add, remove, rename modules
+- ✅ Brownfield scanning (§7.2.2) — 6 language ecosystems + monorepo detection
+- ✅ Forward compatibility (§9.6.1) — unknown fields preserved on read/write
+- ✅ Graceful degradation (§9.6.3) — Level 3 reader handles Level 1 directories
+
+## JSON Schemas
+
+13 JSON Schema files are generated from the Zod schemas and included in the `schemas/` directory:
+
+```
+schemas/
+├── manifest.schema.json
+├── work-index.schema.json
+├── decisions-index.schema.json
+├── releases-index.schema.json
+├── latest-snapshot.schema.json
+├── history-snapshot.schema.json
+├── architecture-frontmatter.schema.json
+├── conventions-frontmatter.schema.json
+├── requirements-frontmatter.schema.json
+├── brief-frontmatter.schema.json
+├── plan-frontmatter.schema.json
+├── decision-frontmatter.schema.json
+└── release-frontmatter.schema.json
+```
+
+Regenerate with: `pnpm --filter @syncfusion/cs-sdlc schemas`
+
+## Project Structure
+
+```
+src/
+├── index.ts                  # Public API barrel export
+├── schemas/                  # Zod schemas (single source of truth)
+│   ├── shared.ts             # Identifiers, dates, extensible enums
+│   ├── manifest.ts           # Manifest schema (Ch. 3)
+│   ├── indexes.ts            # Work, decisions, releases indexes (Ch. 4)
+│   ├── objects.ts            # Front matter schemas (Ch. 5)
+│   └── snapshots.ts          # Snapshot schemas (Ch. 6)
+├── types/                    # Inferred TypeScript types
+├── core/                     # Low-level I/O primitives
+│   ├── constants.ts          # Paths, sizes, magic values
+│   ├── errors.ts             # Error hierarchy
+│   ├── discovery.ts          # .sdlc/ walk-up discovery
+│   ├── reader.ts             # JSON + Markdown reader
+│   ├── writer.ts             # Atomic JSON writer
+│   ├── frontmatter.ts        # YAML front matter parser
+│   └── identifiers.ts        # Identifier validation
+├── operations/               # High-level CRUD operations (Ch. 7)
+│   ├── init.ts               # Greenfield init
+│   ├── init-scan.ts          # Brownfield init with scanner
+│   ├── work-start.ts         # Start work item
+│   ├── work-complete.ts      # Complete/abandon work item
+│   ├── decision-create.ts    # Create/supersede decisions
+│   ├── release-create.ts     # Create releases
+│   ├── snapshot-generate.ts  # Generate quality snapshots
+│   ├── sync.ts               # Index rebuild, counter recalc, consistency
+│   ├── phase.ts              # Phase update + module lifecycle
+│   └── read-helpers.ts       # All public read functions
+├── scanner/                  # Brownfield project scanner
+│   ├── detect-stack.ts       # Language/framework detection
+│   ├── detect-modules.ts     # Monorepo module detection
+│   └── heuristics.ts         # Detection rules + confidence
+└── utils/                    # Internal utilities
+    ├── slugify.ts            # Title → kebab-case
+    ├── semver.ts             # SemVer comparison
+    └── dates.ts              # ISO 8601 helpers
+```
 
 ## Requirements
 
 - Node.js 18+
 - ESM only (`"type": "module"`)
+
+## Development
+
+```bash
+pnpm install                                     # Install deps
+pnpm --filter @syncfusion/cs-sdlc test           # Run tests (414)
+pnpm --filter @syncfusion/cs-sdlc test:coverage  # Coverage report
+pnpm --filter @syncfusion/cs-sdlc typecheck      # Type check
+pnpm --filter @syncfusion/cs-sdlc build          # Build to dist/
+pnpm --filter @syncfusion/cs-sdlc schemas        # Generate JSON Schemas
+```
 
 ## License
 
