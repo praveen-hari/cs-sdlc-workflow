@@ -1,0 +1,5 @@
+{
+  "name": "@mono/web",
+  "dependencies": { "react": "^18.0.0", "react-dom": "^18.0.0" },
+  "devDependencies": { "typescript": "^5.0.0" }
+}
