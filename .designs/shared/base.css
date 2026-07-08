@@ -1,0 +1,35 @@
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Body — VS Code native feel */
+body {
+  background: var(--color-background);
+  color: var(--color-primary);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1 { font-family: var(--font-h1-family); font-size: var(--font-h1-size); font-weight: var(--font-h1-weight); line-height: var(--font-h1-line-height); letter-spacing: var(--font-h1-letter-spacing); }
+h2 { font-family: var(--font-h2-family); font-size: var(--font-h2-size); font-weight: var(--font-h2-weight); line-height: var(--font-h2-line-height); }
+h3 { font-family: var(--font-h3-family); font-size: var(--font-h3-size); font-weight: var(--font-h3-weight); line-height: var(--font-h3-line-height); }
+h4 { font-family: var(--font-h4-family); font-size: var(--font-h4-size); font-weight: var(--font-h4-weight); line-height: var(--font-h4-line-height); }
+small { font-family: var(--font-small-family); font-size: var(--font-small-size); }
+code, .code { font-family: var(--font-code-family); font-size: var(--font-code-size); }
+
+a { color: var(--color-linkForeground); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Scrollbar — VS Code style */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(121, 121, 121, 0.4); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(121, 121, 121, 0.7); }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Selection */
+::selection { background: var(--color-listActiveBackground); color: #fff; }

@@ -1,0 +1,51 @@
+{
+  "name": "SDLC Studio",
+  "description": "VS Code extension for SDLC-based project management with AI agent oversight",
+  "version": "0.1.0",
+  "createdAt": "2026-07-08T14:27:01.064Z",
+  "updatedAt": "2026-07-08T15:30:00.000Z",
+
+  "platform": {
+    "type": "web",
+    "responsive": false,
+    "darkMode": true
+  },
+
+  "iconLibrary": "lucide",
+
+  "navigation": {
+    "pattern": "sidebar",
+    "items": [
+      { "label": "Dashboard", "icon": "layout-dashboard", "screen": "dashboard" },
+      { "label": "Task Board", "icon": "grid", "screen": "task-board" },
+      { "label": "Work Items", "icon": "list", "screen": "work-item-create" },
+      { "label": "AI Plan Review", "icon": "search", "screen": "ai-plan-review" },
+      { "label": "Plugins", "icon": "grid", "screen": "plugin-marketplace" },
+      { "label": "Agent Context", "icon": "file", "screen": "active-agent-context" },
+      { "label": "Settings", "icon": "settings", "screen": "settings-project" }
+    ]
+  },
+
+  "screens": {
+    "dashboard":            { "title": "Dashboard",            "type": "dashboard", "priority": "P0" },
+    "task-board":           { "title": "Task Board",           "type": "kanban",    "priority": "P0" },
+    "work-item-detail":     { "title": "Work Item Detail",     "type": "detail",    "priority": "P0" },
+    "work-item-create":     { "title": "New Work Item",        "type": "form",      "priority": "P0" },
+    "ai-plan-review":       { "title": "AI Plan Review",       "type": "detail",    "priority": "P0" },
+    "plugin-marketplace":   { "title": "Plugin Marketplace",   "type": "list",      "priority": "P0" },
+    "active-agent-context": { "title": "Active Agent Context", "type": "detail",    "priority": "P0" },
+    "settings-project":     { "title": "Project Settings",     "type": "settings",  "priority": "P0" },
+    "requirement-editor":   { "title": "Requirement Editor",   "type": "form",      "priority": "P1" },
+    "file-impact":          { "title": "File Impact",          "type": "detail",    "priority": "P1" },
+    "test-summary":         { "title": "Test Summary",         "type": "detail",    "priority": "P1" },
+    "approval-history":     { "title": "Approval History",     "type": "list",      "priority": "P1" },
+    "plugin-detail":        { "title": "Plugin Detail",        "type": "detail",    "priority": "P1" },
+    "plugin-settings":      { "title": "Plugin Settings",      "type": "settings",  "priority": "P1" },
+    "sdlc-phase-detail":    { "title": "Phase Detail",         "type": "detail",    "priority": "P2" },
+    "work-item-edit":       { "title": "Edit Work Item",       "type": "form",      "priority": "P2" },
+    "onboarding":           { "title": "Welcome",              "type": "empty",     "priority": "P2" },
+    "dependency-graph":     { "title": "Dependency Graph",     "type": "detail",    "priority": "P2" }
+  },
+
+  "standalone": ["onboarding"]
+}

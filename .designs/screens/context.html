@@ -1,0 +1,275 @@
+<!-- Project Context — Two states: Empty + Configured -->
+
+<!-- ==================== -->
+<!-- STATE: Empty          -->
+<!-- ==================== -->
+<div id="context-empty" style="display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-height: 100%;">
+
+  <div style="display: flex; flex-direction: column; align-items: center; max-width: 480px; width: 100%;">
+
+    <!-- Icon -->
+    <div style="width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--color-accent) 10%, transparent); border-radius: var(--radius-lg); margin-bottom: var(--space-xl);">
+      <i class="icon-file-text" style="font-size:28px; color: var(--color-accent);"></i>
+    </div>
+
+    <!-- Title -->
+    <h2 class="view-title" style="text-align: center;">Set Up Project Context</h2>
+    <p class="text-secondary" style="text-align: center; margin-top: var(--space-md); line-height: 1.5;">
+      The agent needs to understand your project before it can help. Scan your codebase to auto-detect the stack, modules, and conventions.
+    </p>
+
+    <!-- Primary CTA -->
+    <button class="btn btn-primary" style="margin-top: var(--space-xl); height: 32px; padding: 0 var(--space-xl);" onclick="document.getElementById('context-empty').style.display='none'; document.getElementById('context-configured').style.display='flex';">
+      <i class="icon-scan" style="font-size:14px"></i> Scan &amp; Initialize Project
+    </button>
+    <button class="btn-ghost" style="margin-top: var(--space-md); font-size: var(--font-small-size);">
+      or set up manually
+    </button>
+
+    <!-- What gets detected -->
+    <div style="margin-top: var(--space-3xl); width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+      <div class="detect-item">
+        <i class="icon-package" style="font-size:16px; color: var(--color-accent);"></i>
+        <div>
+          <div class="detect-item-title">Project Identity</div>
+          <div class="detect-item-desc">Name, description from package.json</div>
+        </div>
+      </div>
+      <div class="detect-item">
+        <i class="icon-layers" style="font-size:16px; color: var(--color-accent);"></i>
+        <div>
+          <div class="detect-item-title">Tech Stack</div>
+          <div class="detect-item-desc">Language, framework, runtime</div>
+        </div>
+      </div>
+      <div class="detect-item">
+        <i class="icon-git-branch" style="font-size:16px; color: var(--color-accent);"></i>
+        <div>
+          <div class="detect-item-title">Modules</div>
+          <div class="detect-item-desc">Monorepo workspaces, services</div>
+        </div>
+      </div>
+      <div class="detect-item">
+        <i class="icon-check-circle" style="font-size:16px; color: var(--color-accent);"></i>
+        <div>
+          <div class="detect-item-title">Conventions</div>
+          <div class="detect-item-desc">ESLint, Prettier, tsconfig rules</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== -->
+<!-- STATE: Configured     -->
+<!-- ==================== -->
+<div id="context-configured" style="display: flex; flex-direction: column; gap: var(--space-xl);">
+  <div class="view-header">
+    <div>
+      <h2 class="view-title">Project Context</h2>
+      <p class="view-subtitle">my-saas-app · Brownfield · Created July 8, 2026</p>
+    </div>
+    <div class="flex gap-md">
+      <button class="btn btn-secondary"><i class="icon-refresh-cw" style="font-size:14px"></i> Re-scan</button>
+    </div>
+  </div>
+
+  <!-- Project Identity -->
+  <div class="config-section">
+    <div class="config-section-header">
+      <h3>Project Identity</h3>
+      <button class="btn-icon" title="Edit"><i class="icon-pencil" style="font-size:14px"></i></button>
+    </div>
+    <div class="identity-card">
+      <div class="identity-row">
+        <span class="identity-label">Name</span>
+        <span class="identity-value">my-saas-app</span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">Description</span>
+        <span class="identity-value">SaaS dashboard for team management and project tracking</span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">Mode</span>
+        <span class="identity-value">
+          <span class="badge" style="font-size:10px;">Brownfield</span>
+          <span class="text-secondary" style="font-size: var(--font-caption-size); margin-left: var(--space-sm);">auto-detected from existing codebase</span>
+        </span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">Created</span>
+        <span class="identity-value">July 8, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Documents -->
+  <div class="config-section">
+    <div class="config-section-header">
+      <h3>Context Documents</h3>
+      <span class="text-secondary" style="font-size: var(--font-small-size);">3 of 4 configured</span>
+    </div>
+
+    <div class="context-doc-list">
+      <!-- Architecture -->
+      <div class="context-doc-item is-configured">
+        <div class="context-doc-status">
+          <i class="icon-check-circle" style="font-size:16px; color: var(--color-success);"></i>
+        </div>
+        <div class="context-doc-icon" style="background: #9B59B615; color: #9B59B6;">
+          <i class="icon-boxes" style="font-size:18px"></i>
+        </div>
+        <div class="context-doc-info">
+          <div class="context-doc-name">Architecture</div>
+          <div class="context-doc-desc">Modular 3-layer: UI + API + Data · System overview, module relationships, data flow</div>
+        </div>
+        <div class="context-doc-meta">
+          <span class="text-secondary" style="font-size: var(--font-caption-size);">v3 · Jul 10</span>
+        </div>
+        <button class="btn-icon" title="View"><i class="icon-eye" style="font-size:14px"></i></button>
+        <button class="btn-icon" title="Edit"><i class="icon-pencil" style="font-size:14px"></i></button>
+      </div>
+
+      <!-- Conventions -->
+      <div class="context-doc-item is-configured">
+        <div class="context-doc-status">
+          <i class="icon-check-circle" style="font-size:16px; color: var(--color-success);"></i>
+        </div>
+        <div class="context-doc-icon" style="background: #3794FF15; color: var(--color-info);">
+          <i class="icon-ruler" style="font-size:18px"></i>
+        </div>
+        <div class="context-doc-info">
+          <div class="context-doc-name">Conventions</div>
+          <div class="context-doc-desc">PascalCase components, camelCase functions · Vitest for testing · Zod for validation</div>
+        </div>
+        <div class="context-doc-meta">
+          <span class="text-secondary" style="font-size: var(--font-caption-size);">v2 · Jul 10</span>
+        </div>
+        <button class="btn-icon" title="View"><i class="icon-eye" style="font-size:14px"></i></button>
+        <button class="btn-icon" title="Edit"><i class="icon-pencil" style="font-size:14px"></i></button>
+      </div>
+
+      <!-- Requirements -->
+      <div class="context-doc-item is-configured">
+        <div class="context-doc-status">
+          <i class="icon-check-circle" style="font-size:16px; color: var(--color-success);"></i>
+        </div>
+        <div class="context-doc-icon" style="background: #4EC9B015; color: var(--color-success);">
+          <i class="icon-clipboard-list" style="font-size:18px"></i>
+        </div>
+        <div class="context-doc-info">
+          <div class="context-doc-name">Requirements</div>
+          <div class="context-doc-desc">12 requirements defined · 8 approved, 3 draft, 1 evolving</div>
+        </div>
+        <div class="context-doc-meta">
+          <span class="text-secondary" style="font-size: var(--font-caption-size);">v1 · Jul 8</span>
+        </div>
+        <button class="btn-icon" title="View"><i class="icon-eye" style="font-size:14px"></i></button>
+        <button class="btn-icon" title="Edit"><i class="icon-pencil" style="font-size:14px"></i></button>
+      </div>
+
+      <!-- Stack (missing) -->
+      <div class="context-doc-item is-missing">
+        <div class="context-doc-status">
+          <i class="icon-circle" style="font-size:16px; color: var(--color-secondary);"></i>
+        </div>
+        <div class="context-doc-icon" style="background: var(--color-inputBackground); color: var(--color-secondary);">
+          <i class="icon-layers" style="font-size:18px"></i>
+        </div>
+        <div class="context-doc-info">
+          <div class="context-doc-name" style="color: var(--color-secondary);">Stack</div>
+          <div class="context-doc-desc">Technology choices with rationale · Recommended for multi-module projects</div>
+        </div>
+        <button class="btn btn-sm btn-secondary">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modules -->
+  <div class="config-section">
+    <div class="config-section-header">
+      <h3>Modules</h3>
+      <span class="text-secondary" style="font-size: var(--font-small-size);">3 detected</span>
+    </div>
+
+    <div class="modules-table">
+      <div class="modules-header">
+        <span class="modules-col-id">Module</span>
+        <span class="modules-col-path">Path</span>
+        <span class="modules-col-type">Type</span>
+        <span class="modules-col-stack">Stack</span>
+      </div>
+      <div class="modules-row">
+        <span class="modules-col-id">
+          <span class="font-mono" style="font-weight: 600;">web-app</span>
+        </span>
+        <span class="modules-col-path font-mono text-secondary">apps/web/</span>
+        <span class="modules-col-type"><span class="badge badge-accent" style="font-size:10px;">frontend</span></span>
+        <span class="modules-col-stack">
+          <span class="chip" style="font-size:11px; padding: 1px 6px;">TypeScript</span>
+          <span class="chip" style="font-size:11px; padding: 1px 6px;">React</span>
+        </span>
+      </div>
+      <div class="modules-row">
+        <span class="modules-col-id">
+          <span class="font-mono" style="font-weight: 600;">api</span>
+        </span>
+        <span class="modules-col-path font-mono text-secondary">services/api/</span>
+        <span class="modules-col-type"><span class="badge badge-success" style="font-size:10px;">backend</span></span>
+        <span class="modules-col-stack">
+          <span class="chip" style="font-size:11px; padding: 1px 6px;">TypeScript</span>
+          <span class="chip" style="font-size:11px; padding: 1px 6px;">Node.js</span>
+        </span>
+      </div>
+      <div class="modules-row">
+        <span class="modules-col-id">
+          <span class="font-mono" style="font-weight: 600;">shared</span>
+        </span>
+        <span class="modules-col-path font-mono text-secondary">libs/shared/</span>
+        <span class="modules-col-type"><span class="badge" style="font-size:10px;">library</span></span>
+        <span class="modules-col-stack">
+          <span class="chip" style="font-size:11px; padding: 1px 6px;">TypeScript</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Completeness -->
+  <div class="config-section">
+    <div class="config-section-header">
+      <h3>Context Completeness</h3>
+    </div>
+    <div class="completeness-card">
+      <div class="completeness-bar-wrap">
+        <div class="progress-bar" style="height:6px;">
+          <div class="progress-fill" style="width: 75%;"></div>
+        </div>
+        <span style="font-size: var(--font-h4-size); font-weight: 600; color: var(--color-primary); min-width: 36px; text-align: right;">75%</span>
+      </div>
+      <div class="completeness-items">
+        <span class="completeness-item is-done"><i class="icon-check-circle" style="font-size:12px; color: var(--color-success);"></i> Architecture</span>
+        <span class="completeness-item is-done"><i class="icon-check-circle" style="font-size:12px; color: var(--color-success);"></i> Conventions</span>
+        <span class="completeness-item is-done"><i class="icon-check-circle" style="font-size:12px; color: var(--color-success);"></i> Requirements</span>
+        <span class="completeness-item is-missing"><i class="icon-circle" style="font-size:12px; color: var(--color-secondary);"></i> Stack <span class="text-secondary">(recommended)</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toggle button for prototype (switch between states) -->
+<div style="position: fixed; bottom: 16px; right: 16px; z-index: 999;">
+  <button class="btn btn-sm btn-secondary" onclick="
+    var empty = document.getElementById('context-empty');
+    var configured = document.getElementById('context-configured');
+    if (empty.style.display === 'none') {
+      empty.style.display = 'flex';
+      configured.style.display = 'none';
+      this.textContent = 'Show Configured';
+    } else {
+      empty.style.display = 'none';
+      configured.style.display = 'flex';
+      this.textContent = 'Show Empty';
+    }
+  ">Show Empty</button>
+</div>

@@ -1,0 +1,114 @@
+<!-- Overview — SDLC Workflow Status -->
+
+<div class="view-header">
+  <div>
+    <h2 class="view-title">SDLC Studio</h2>
+    <p class="view-subtitle">my-saas-app · TypeScript + React + Node.js</p>
+  </div>
+</div>
+
+<!-- Workflow Cards -->
+<div class="overview-cards">
+
+  <!-- Card 1: Agent Configuration -->
+  <div class="overview-status-card is-ready" onclick="switchView('agent-config')">
+    <div class="overview-status-top">
+      <div class="overview-status-icon" style="background: color-mix(in srgb, var(--color-success) 12%, transparent); color: var(--color-success);">
+        <i class="icon-cpu" style="font-size:20px"></i>
+      </div>
+      <span class="badge badge-success" style="font-size:10px;">Ready</span>
+    </div>
+    <div class="overview-status-title">Agent Configuration</div>
+    <div class="overview-status-details">
+      <span><i class="icon-lightbulb" style="font-size:11px"></i> 7 skills</span>
+      <span><i class="icon-plug" style="font-size:11px"></i> 2 MCP</span>
+      <span><i class="icon-check-circle" style="font-size:11px"></i> 3 standards</span>
+    </div>
+    <div class="overview-status-bar">
+      <div class="progress-bar" style="height:3px;"><div class="progress-fill is-success" style="width:85%"></div></div>
+      <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">85%</span>
+    </div>
+  </div>
+
+  <!-- Card 2: Project Context -->
+  <div class="overview-status-card is-ready" onclick="switchView('context')">
+    <div class="overview-status-top">
+      <div class="overview-status-icon" style="background: color-mix(in srgb, var(--color-success) 12%, transparent); color: var(--color-success);">
+        <i class="icon-file-text" style="font-size:20px"></i>
+      </div>
+      <span class="badge badge-success" style="font-size:10px;">Complete</span>
+    </div>
+    <div class="overview-status-title">Project Context</div>
+    <div class="overview-status-details">
+      <span><i class="icon-boxes" style="font-size:11px"></i> Architecture</span>
+      <span><i class="icon-ruler" style="font-size:11px"></i> Conventions</span>
+      <span><i class="icon-layers" style="font-size:11px"></i> 3 modules</span>
+    </div>
+    <div class="overview-status-bar">
+      <div class="progress-bar" style="height:3px;"><div class="progress-fill is-success" style="width:100%"></div></div>
+      <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">100%</span>
+    </div>
+  </div>
+
+  <!-- Card 3: Active Work -->
+  <div class="overview-status-card is-active" onclick="switchView('work')">
+    <div class="overview-status-top">
+      <div class="overview-status-icon" style="background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-accent);">
+        <i class="icon-hammer" style="font-size:20px"></i>
+      </div>
+      <span class="badge badge-accent" style="font-size:10px;">In Progress</span>
+    </div>
+    <div class="overview-status-title">Active Work</div>
+    <div class="overview-status-details">
+      <span style="color: var(--color-primary); font-weight: 500;">FEAT-001: User Dashboard</span>
+    </div>
+    <div class="overview-status-bar">
+      <div class="progress-bar" style="height:3px;"><div class="progress-fill" style="width:60%"></div></div>
+      <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">3/5 tasks · 60%</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Alerts -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>Needs Attention</h3>
+  </div>
+  <div class="mcp-list">
+    <div class="mcp-item" style="border-color: color-mix(in srgb, var(--color-warning) 30%, var(--color-border));">
+      <div class="mcp-status"><span class="status-dot is-warning"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name" style="font-family: inherit;">Tailwind CSS skill suggested</div>
+        <div class="mcp-desc">Detected tailwind.config.js in your project but skill is not enabled</div>
+      </div>
+      <button class="btn btn-sm btn-secondary" onclick="switchView('agent-config')">Enable</button>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Completed -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>Recently Completed</h3>
+    <button class="btn-ghost" style="font-size: var(--font-small-size);" onclick="switchView('history')">View all</button>
+  </div>
+  <div class="mcp-list">
+    <div class="mcp-item">
+      <div class="mcp-status"><span class="status-dot is-success"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name" style="font-family: inherit;">FEAT-000: Project setup</div>
+        <div class="mcp-desc">Reviewed and approved · All acceptance criteria met</div>
+      </div>
+      <span class="text-secondary" style="font-size: var(--font-caption-size); white-space: nowrap;">2 hours ago</span>
+    </div>
+    <div class="mcp-item">
+      <div class="mcp-status"><span class="status-dot is-success"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name" style="font-family: inherit;">BUG-003: Fix login redirect loop</div>
+        <div class="mcp-desc">Agent fixed in 2 files · Tests passing</div>
+      </div>
+      <span class="text-secondary" style="font-size: var(--font-caption-size); white-space: nowrap;">Yesterday</span>
+    </div>
+  </div>
+</div>

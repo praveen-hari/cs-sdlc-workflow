@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDLC Studio</title>
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="shared/base.css" />
+  <link rel="stylesheet" href="shared/layout-new.css" />
+  <link rel="stylesheet" href="shared/components.css" />
+</head>
+<body>
+
+  <div class="webview-shell">
+
+    <!-- ===== Sidebar Navigation — SDLC Workflow ===== -->
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-header">
+        <i class="icon-rocket" style="font-size:16px; color: var(--color-accent);"></i>
+        <span>SDLC Studio</span>
+      </div>
+
+      <div class="sidebar-nav-items">
+        <button class="sidebar-nav-btn is-active" data-view="overview">
+          <i class="icon-home"></i>
+          <span class="sidebar-nav-label">Overview</span>
+        </button>
+        <button class="sidebar-nav-btn" data-view="agent-config">
+          <i class="icon-cpu"></i>
+          <span class="sidebar-nav-label">Agent Configuration</span>
+          <span class="sidebar-nav-dot is-success"></span>
+        </button>
+        <button class="sidebar-nav-btn" data-view="context">
+          <i class="icon-file-text"></i>
+          <span class="sidebar-nav-label">Project Context</span>
+          <span class="sidebar-nav-dot is-success"></span>
+        </button>
+        <button class="sidebar-nav-btn" data-view="work">
+          <i class="icon-hammer"></i>
+          <span class="sidebar-nav-label">Work</span>
+          <span class="sidebar-nav-dot is-active"></span>
+        </button>
+        <button class="sidebar-nav-btn" data-view="history">
+          <i class="icon-clock"></i>
+          <span class="sidebar-nav-label">History</span>
+          <span class="sidebar-nav-badge">3</span>
+        </button>
+      </div>
+
+      <div class="sidebar-nav-footer">
+        <button class="sidebar-nav-btn" data-view="settings">
+          <i class="icon-settings"></i>
+          <span class="sidebar-nav-label">Settings</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== Detail Area ===== -->
+    <main class="detail-area">
+      <div class="view" id="screen-content">
+        <div class="empty-state"><p>Loading...</p></div>
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    // Work tab switching (used by work.html)
+    function switchWorkTab(tab) {
+      document.querySelectorAll('.work-tab').forEach(t => t.classList.toggle('is-active', t.dataset.tab === tab));
+      document.querySelectorAll('.work-tab-content').forEach(c => c.style.display = 'none');
+      const target = document.getElementById('tab-' + tab);
+      if (target) target.style.display = 'flex';
+    }
+
+    // Screen loading via fetch
+    async function switchView(name) {
+      const content = document.getElementById('screen-content');
+      try {
+        const res = await fetch('screens/' + name + '.html');
+        if (!res.ok) throw new Error('Not found');
+        content.innerHTML = await res.text();
+      } catch {
+        content.innerHTML =
+          '<div class="empty-state"><h3>Screen not found</h3><p class="text-secondary"><code>' + name + '.html</code> does not exist yet.</p></div>';
+      }
+
+      // Update nav active state
+      document.querySelectorAll('.sidebar-nav-btn').forEach(b => {
+        b.classList.toggle('is-active', b.dataset.view === name);
+      });
+    }
+
+    // Nav click handlers
+    document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchView(btn.dataset.view));
+    });
+
+    // Load default screen
+    switchView('overview');
+  </script>
+
+</body>
+</html>

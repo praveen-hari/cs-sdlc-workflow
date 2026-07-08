@@ -1,0 +1,232 @@
+<!-- Agent Configuration — Skills, MCP Servers, Coding Standards -->
+
+<div class="view-header">
+  <div>
+    <h2 class="view-title">Agent Configuration</h2>
+    <p class="view-subtitle">Manage skills, tools, and standards for AI-assisted development</p>
+  </div>
+  <div class="flex gap-md">
+    <button class="btn btn-secondary"><i class="icon-scan" style="font-size:14px"></i> Auto-Detect</button>
+    <button class="btn btn-primary"><i class="icon-check" style="font-size:14px"></i> Save</button>
+  </div>
+</div>
+
+<!-- Skills Section -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>Skills</h3>
+    <span class="text-secondary" style="font-size: var(--font-small-size);">7 active · 2 available</span>
+  </div>
+
+  <div class="skill-grid">
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #61DAFB20; color: #61DAFB;"><i class="icon-atom" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">React UI Development</div>
+      <div class="skill-desc">Component patterns, hooks, state management, JSX best practices</div>
+      <div class="skill-tags">
+        <span class="skill-tag">core</span>
+        <span class="skill-tag">frontend</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #0078D420; color: #0078D4;"><i class="icon-component" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Syncfusion Components</div>
+      <div class="skill-desc">EJ2 React components — Grid, Charts, Inputs, Buttons, RichTextEditor</div>
+      <div class="skill-tags">
+        <span class="skill-tag">ui-library</span>
+        <span class="skill-tag">react</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #3178C620; color: #3178C6;"><i class="icon-file-code" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">TypeScript</div>
+      <div class="skill-desc">Type system, generics, strict mode, module resolution, declaration files</div>
+      <div class="skill-tags">
+        <span class="skill-tag">language</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #68A06320; color: #68A063;"><i class="icon-server" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Node.js API</div>
+      <div class="skill-desc">Express/Fastify patterns, middleware, REST API design, error handling</div>
+      <div class="skill-tags">
+        <span class="skill-tag">backend</span>
+        <span class="skill-tag">api</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #729B1B20; color: #729B1B;"><i class="icon-test-tube-2" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Testing (Vitest)</div>
+      <div class="skill-desc">Unit tests, integration tests, mocking, coverage, test patterns</div>
+      <div class="skill-tags">
+        <span class="skill-tag">testing</span>
+        <span class="skill-tag">quality</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #E5534B20; color: #E5534B;"><i class="icon-search-code" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Code Review</div>
+      <div class="skill-desc">Multi-axis review — correctness, readability, security, performance</div>
+      <div class="skill-tags">
+        <span class="skill-tag">quality</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-enabled">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #9B59B620; color: #9B59B6;"><i class="icon-boxes" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Software Architecture</div>
+      <div class="skill-desc">System design, module boundaries, API contracts, data flow patterns</div>
+      <div class="skill-tags">
+        <span class="skill-tag">design</span>
+        <span class="skill-tag">architecture</span>
+      </div>
+    </div>
+
+    <!-- Suggested Skills -->
+    <div class="skill-card is-suggested">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #38BDF820; color: #38BDF8;"><i class="icon-wind" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Tailwind CSS <span class="badge badge-warning" style="font-size:9px; margin-left: var(--space-sm);">Suggested</span></div>
+      <div class="skill-desc">Utility-first CSS, responsive design, custom theme configuration</div>
+      <div class="skill-tags">
+        <span class="skill-tag">styling</span>
+        <span class="skill-tag">css</span>
+      </div>
+    </div>
+
+    <div class="skill-card is-suggested">
+      <div class="skill-header">
+        <div class="skill-icon" style="background: #2496ED20; color: #2496ED;"><i class="icon-container" style="font-size:18px"></i></div>
+        <label class="toggle">
+          <input type="checkbox">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="skill-name">Docker & Deployment <span class="badge" style="font-size:9px; margin-left: var(--space-sm);">Optional</span></div>
+      <div class="skill-desc">Containerization, CI/CD pipelines, deployment strategies</div>
+      <div class="skill-tags">
+        <span class="skill-tag">devops</span>
+        <span class="skill-tag">deployment</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MCP Servers Section -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>MCP Servers</h3>
+    <span class="text-secondary" style="font-size: var(--font-small-size);">2 connected · 1 available</span>
+  </div>
+
+  <div class="mcp-list">
+    <div class="mcp-item is-connected">
+      <div class="mcp-status"><span class="status-dot is-success"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name">filesystem</div>
+        <div class="mcp-desc">Read/write project files, directory listing, file search</div>
+      </div>
+      <span class="badge badge-success" style="font-size:10px;">Connected</span>
+    </div>
+    <div class="mcp-item is-connected">
+      <div class="mcp-status"><span class="status-dot is-success"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name">github</div>
+        <div class="mcp-desc">Repository operations, PR management, issue tracking</div>
+      </div>
+      <span class="badge badge-success" style="font-size:10px;">Connected</span>
+    </div>
+    <div class="mcp-item">
+      <div class="mcp-status"><span class="status-dot"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name">database</div>
+        <div class="mcp-desc">SQL queries, schema inspection, data exploration</div>
+      </div>
+      <button class="btn btn-sm btn-secondary">Configure</button>
+    </div>
+  </div>
+</div>
+
+<!-- Coding Standards Section -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>Coding Standards</h3>
+  </div>
+
+  <div class="standards-grid">
+    <div class="standard-item is-active">
+      <i class="icon-check-circle" style="font-size:14px; color: var(--color-success);"></i>
+      <span>ESLint</span>
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">.eslintrc.json detected</span>
+    </div>
+    <div class="standard-item is-active">
+      <i class="icon-check-circle" style="font-size:14px; color: var(--color-success);"></i>
+      <span>Prettier</span>
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">.prettierrc detected</span>
+    </div>
+    <div class="standard-item is-active">
+      <i class="icon-check-circle" style="font-size:14px; color: var(--color-success);"></i>
+      <span>Strict TypeScript</span>
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">tsconfig strict: true</span>
+    </div>
+    <div class="standard-item">
+      <i class="icon-circle" style="font-size:14px; color: var(--color-secondary);"></i>
+      <span>EditorConfig</span>
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">Not detected</span>
+    </div>
+  </div>
+</div>

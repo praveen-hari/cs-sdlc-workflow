@@ -1,0 +1,369 @@
+<!-- Active Work — Two states: Empty + Active Work Item -->
+
+<!-- ==================== -->
+<!-- STATE: Empty          -->
+<!-- ==================== -->
+<div id="work-empty" style="display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-height: 100%;">
+  <div style="display: flex; flex-direction: column; align-items: center; max-width: 480px; width: 100%;">
+
+    <div style="width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--color-accent) 10%, transparent); border-radius: var(--radius-lg); margin-bottom: var(--space-xl);">
+      <i class="icon-hammer" style="font-size:28px; color: var(--color-accent);"></i>
+    </div>
+
+    <h2 class="view-title" style="text-align: center;">No Active Work</h2>
+    <p class="text-secondary" style="text-align: center; margin-top: var(--space-md); line-height: 1.5;">
+      Start a new work item to begin development. Describe what you want to build and the agent will create a brief and implementation plan.
+    </p>
+
+    <button class="btn btn-primary" style="margin-top: var(--space-xl); height: 32px; padding: 0 var(--space-xl);" onclick="document.getElementById('work-empty').style.display='none'; document.getElementById('work-create').style.display='flex';">
+      <i class="icon-plus" style="font-size:14px"></i> Start New Work
+    </button>
+
+    <!-- Recent completed for reference -->
+    <div style="margin-top: var(--space-3xl); width: 100%;">
+      <div style="font-size: var(--font-caption-size); font-weight: 600; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-md);">Recently Completed</div>
+      <div class="mcp-list">
+        <div class="mcp-item">
+          <div class="mcp-status"><span class="status-dot is-success"></span></div>
+          <div class="mcp-info">
+            <div class="mcp-name" style="font-family: inherit;">FEAT-000: Project setup</div>
+            <div class="mcp-desc">Completed · 2 hours ago</div>
+          </div>
+        </div>
+        <div class="mcp-item">
+          <div class="mcp-status"><span class="status-dot is-success"></span></div>
+          <div class="mcp-info">
+            <div class="mcp-name" style="font-family: inherit;">BUG-003: Fix login redirect</div>
+            <div class="mcp-desc">Completed · Yesterday</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== -->
+<!-- STATE: Create Form    -->
+<!-- ==================== -->
+<div id="work-create" style="display: none; flex-direction: column; gap: var(--space-xl);">
+
+  <div class="view-header">
+    <div>
+      <h2 class="view-title">Start New Work</h2>
+      <p class="view-subtitle">Describe what you want to work on — the agent will generate a brief and plan</p>
+    </div>
+  </div>
+
+  <div class="create-form">
+
+    <!-- Description -->
+    <div class="form-group">
+      <label class="form-label">What do you want to work on?</label>
+      <textarea class="form-textarea" rows="3" placeholder="e.g., Add dark mode toggle to the navigation bar with system preference detection and localStorage persistence">Add dark mode toggle to the navigation bar with system preference detection and localStorage persistence</textarea>
+      <div class="form-hint">Be specific — the agent uses this to generate requirements, acceptance criteria, and an implementation plan.</div>
+    </div>
+
+    <!-- Type + Priority row -->
+    <div class="form-row">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Type</label>
+        <select class="form-select">
+          <option value="feature" selected>✨ Feature</option>
+          <option value="bug">🐛 Bug Fix</option>
+          <option value="refactor">🔧 Refactor</option>
+          <option value="performance">⚡ Performance</option>
+          <option value="security">🔒 Security</option>
+          <option value="docs">📝 Documentation</option>
+          <option value="tech-debt">🧹 Tech Debt</option>
+          <option value="infrastructure">🏗️ Infrastructure</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Priority</label>
+        <select class="form-select">
+          <option value="critical">🔴 Critical</option>
+          <option value="high">🟠 High</option>
+          <option value="medium" selected>🟡 Medium</option>
+          <option value="low">🟢 Low</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Modules -->
+    <div class="form-group">
+      <label class="form-label">Modules affected <span class="text-secondary" style="font-weight: 400;">(optional)</span></label>
+      <div class="form-chips">
+        <label class="form-chip is-selected"><input type="checkbox" checked> <span>web-app</span></label>
+        <label class="form-chip"><input type="checkbox"> <span>api</span></label>
+        <label class="form-chip"><input type="checkbox"> <span>shared</span></label>
+      </div>
+    </div>
+
+    <!-- What the agent will do -->
+    <div class="create-info">
+      <div class="create-info-title"><i class="icon-cpu" style="font-size:14px; color: var(--color-accent);"></i> The agent will:</div>
+      <div class="create-info-items">
+        <span>1. Generate a <strong>brief</strong> with What, Why, and Acceptance Criteria</span>
+        <span>2. Create an <strong>implementation plan</strong> with task breakdown</span>
+        <span>3. Wait for your <strong>review and approval</strong> before starting</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button class="btn btn-primary" style="height: 32px; padding: 0 var(--space-xl);" onclick="document.getElementById('work-create').style.display='none'; document.getElementById('work-active').style.display='flex';">
+        <i class="icon-rocket" style="font-size:14px"></i> Create Work Item
+      </button>
+      <button class="btn btn-secondary" onclick="document.getElementById('work-create').style.display='none'; document.getElementById('work-empty').style.display='flex';">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== -->
+<!-- STATE: Active Work    -->
+<!-- ==================== -->
+<div id="work-active" style="display: flex; flex-direction: column; gap: var(--space-xl);">
+
+  <!-- Work Item Header -->
+  <div class="work-header-card">
+    <div class="work-header-top">
+      <div class="work-header-badges">
+        <span class="badge badge-accent" style="font-size:10px;">Feature</span>
+        <span class="badge badge-warning" style="font-size:10px;">High</span>
+        <span class="chip" style="font-size:11px; padding: 1px 6px;">web-app</span>
+        <span class="chip" style="font-size:11px; padding: 1px 6px;">api</span>
+      </div>
+      <span class="badge badge-success" style="font-size:10px;">Active</span>
+    </div>
+    <div class="work-header-title">FEAT-001: User Dashboard</div>
+    <div class="work-header-meta">
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">Created Jul 8, 2026</span>
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">·</span>
+      <span class="text-secondary" style="font-size: var(--font-caption-size);">Implement phase</span>
+    </div>
+    <!-- Progress -->
+    <div class="work-header-progress">
+      <div class="progress-bar" style="height:4px; flex:1;"><div class="progress-fill" style="width:60%"></div></div>
+      <span style="font-size: var(--font-small-size); color: var(--color-primary); font-weight: 600;">60%</span>
+      <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">3 / 5 tasks</span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="work-tabs">
+    <button class="work-tab" data-tab="brief" onclick="switchWorkTab('brief')">
+      <i class="icon-file-text" style="font-size:14px"></i> Brief
+    </button>
+    <button class="work-tab is-active" data-tab="plan" onclick="switchWorkTab('plan')">
+      <i class="icon-list-checks" style="font-size:14px"></i> Plan
+    </button>
+    <button class="work-tab" data-tab="review" onclick="switchWorkTab('review')">
+      <i class="icon-shield-check" style="font-size:14px"></i> Review
+    </button>
+  </div>
+
+  <!-- TAB: Brief -->
+  <div class="work-tab-content" id="tab-brief" style="display: none;">
+    <div class="brief-section">
+      <h3>What</h3>
+      <p>Build the main user dashboard with KPI stat cards, SDLC progress visualization, recent activity timeline, and a work items summary table. The dashboard is the primary landing screen when users open the extension.</p>
+    </div>
+    <div class="brief-section">
+      <h3>Why</h3>
+      <p>Users need a central overview of their project's health, progress, and pending actions. Without a dashboard, they have to navigate multiple views to understand the current state. This is the most requested feature from early testers.</p>
+    </div>
+    <div class="brief-section">
+      <h3>Acceptance Criteria</h3>
+      <div class="criteria-list">
+        <label class="criteria-item"><input type="checkbox" checked disabled> <span>Dashboard loads in under 2 seconds</span></label>
+        <label class="criteria-item"><input type="checkbox" checked disabled> <span>Shows 5 KPI stat cards (total, in-progress, review, completed, blocked)</span></label>
+        <label class="criteria-item"><input type="checkbox" disabled> <span>SDLC phase progress with percentage bars</span></label>
+        <label class="criteria-item"><input type="checkbox" disabled> <span>Recent activity timeline (last 10 events)</span></label>
+        <label class="criteria-item"><input type="checkbox" disabled> <span>Responsive layout for different panel sizes</span></label>
+      </div>
+    </div>
+    <div class="brief-section">
+      <h3>Modules Affected</h3>
+      <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+        <div class="module-chip">
+          <span class="badge badge-accent" style="font-size:9px;">frontend</span>
+          <span class="font-mono" style="font-size: var(--font-small-size);">web-app</span>
+          <span class="text-secondary" style="font-size: var(--font-caption-size);">— Dashboard page, KPI components, chart components</span>
+        </div>
+        <div class="module-chip">
+          <span class="badge badge-success" style="font-size:9px;">backend</span>
+          <span class="font-mono" style="font-size: var(--font-small-size);">api</span>
+          <span class="text-secondary" style="font-size: var(--font-caption-size);">— GET /api/dashboard endpoint</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Plan (default active) -->
+  <div class="work-tab-content" id="tab-plan" style="display: flex;">
+
+    <!-- Task List -->
+    <div class="task-list">
+
+      <!-- Task 1: Complete -->
+      <div class="task-item is-complete">
+        <div class="task-indicator">
+          <div class="task-icon is-complete"><i class="icon-check" style="font-size:12px"></i></div>
+          <div class="task-line"></div>
+        </div>
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-title">Task 1: Setup page route</span>
+            <span class="chip" style="font-size:10px; padding: 1px 5px;">web-app</span>
+          </div>
+          <div class="task-subtasks">
+            <label class="subtask"><input type="checkbox" checked disabled> <span>Create /dashboard route</span></label>
+            <label class="subtask"><input type="checkbox" checked disabled> <span>Add page layout component</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task 2: Complete -->
+      <div class="task-item is-complete">
+        <div class="task-indicator">
+          <div class="task-icon is-complete"><i class="icon-check" style="font-size:12px"></i></div>
+          <div class="task-line"></div>
+        </div>
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-title">Task 2: Create KPI components</span>
+            <span class="chip" style="font-size:10px; padding: 1px 5px;">web-app</span>
+          </div>
+          <div class="task-subtasks">
+            <label class="subtask"><input type="checkbox" checked disabled> <span>StatCard component with icon, value, label, change indicator</span></label>
+            <label class="subtask"><input type="checkbox" checked disabled> <span>StatsGrid responsive layout (5 columns → 2 on narrow)</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task 3: Complete -->
+      <div class="task-item is-complete">
+        <div class="task-indicator">
+          <div class="task-icon is-complete"><i class="icon-check" style="font-size:12px"></i></div>
+          <div class="task-line"></div>
+        </div>
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-title">Task 3: Add data fetching</span>
+            <span class="chip" style="font-size:10px; padding: 1px 5px;">api</span>
+          </div>
+          <div class="task-subtasks">
+            <label class="subtask"><input type="checkbox" checked disabled> <span>GET /api/dashboard endpoint with KPI aggregation</span></label>
+            <label class="subtask"><input type="checkbox" checked disabled> <span>React Query hook useDashboardData()</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task 4: Current -->
+      <div class="task-item is-current">
+        <div class="task-indicator">
+          <div class="task-icon is-current"><i class="icon-hammer" style="font-size:12px"></i></div>
+          <div class="task-line"></div>
+        </div>
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-title">Task 4: Build chart section</span>
+            <span class="chip" style="font-size:10px; padding: 1px 5px;">web-app</span>
+            <span class="badge badge-accent" style="font-size:9px; margin-left: auto;">Current</span>
+          </div>
+          <div class="task-subtasks">
+            <label class="subtask"><input type="checkbox" checked disabled> <span>Install Syncfusion Charts package</span></label>
+            <label class="subtask"><input type="checkbox" disabled> <span>Create ProgressChart component</span></label>
+            <label class="subtask"><input type="checkbox" disabled> <span>Wire up chart to API data</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task 5: Pending -->
+      <div class="task-item is-pending">
+        <div class="task-indicator">
+          <div class="task-icon is-pending"><span style="font-size:8px;">5</span></div>
+          <div class="task-line is-last"></div>
+        </div>
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-title" style="color: var(--color-secondary);">Task 5: Add responsive layout</span>
+            <span class="chip" style="font-size:10px; padding: 1px 5px;">web-app</span>
+          </div>
+          <div class="task-subtasks">
+            <label class="subtask"><input type="checkbox" disabled> <span>Mobile breakpoints (< 640px)</span></label>
+            <label class="subtask"><input type="checkbox" disabled> <span>Tablet layout (640px – 1024px)</span></label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Action Bar -->
+    <div class="work-action-bar">
+      <button class="btn btn-primary"><i class="icon-check" style="font-size:14px"></i> Mark Task 4 Complete</button>
+      <button class="btn btn-secondary"><i class="icon-archive" style="font-size:14px"></i> Complete Work Item</button>
+    </div>
+  </div>
+
+  <!-- TAB: Review -->
+  <div class="work-tab-content" id="tab-review" style="display: none;">
+    <div class="review-status-card">
+      <div class="review-status-icon" style="background: color-mix(in srgb, var(--color-warning) 10%, transparent); color: var(--color-warning);">
+        <i class="icon-clock" style="font-size:24px"></i>
+      </div>
+      <div>
+        <div style="font-size: var(--font-h4-size); font-weight: 600; color: var(--color-primary);">Awaiting Completion</div>
+        <div class="text-secondary" style="margin-top: var(--space-xs);">Complete all tasks before requesting review. 2 tasks remaining.</div>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-section-header">
+        <h3>Review Actions</h3>
+      </div>
+      <p class="text-secondary" style="font-size: var(--font-small-size); margin-bottom: var(--space-lg);">
+        Once all tasks are complete, review the agent's work and decide whether to approve, request changes, or reject.
+      </p>
+      <div class="review-actions">
+        <button class="btn btn-success" disabled><i class="icon-check-circle" style="font-size:14px"></i> Approve</button>
+        <button class="btn btn-secondary" disabled><i class="icon-message-circle" style="font-size:14px"></i> Request Changes</button>
+        <button class="btn btn-danger" disabled><i class="icon-x-circle" style="font-size:14px"></i> Reject</button>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-section-header">
+        <h3>Decision Log</h3>
+      </div>
+      <div class="text-secondary" style="font-size: var(--font-small-size); padding: var(--space-xl); text-align: center;">
+        No review decisions yet for this work item.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toggle for prototype (cycles: Active → Empty → Create → Active) -->
+<div style="position: fixed; bottom: 16px; right: 16px; z-index: 999;">
+  <button class="btn btn-sm btn-secondary" onclick="
+    var empty = document.getElementById('work-empty');
+    var create = document.getElementById('work-create');
+    var active = document.getElementById('work-active');
+    if (active.style.display !== 'none') {
+      active.style.display = 'none'; empty.style.display = 'flex'; create.style.display = 'none';
+      this.textContent = 'Show Create Form';
+    } else if (empty.style.display !== 'none') {
+      empty.style.display = 'none'; create.style.display = 'flex'; active.style.display = 'none';
+      this.textContent = 'Show Active';
+    } else {
+      create.style.display = 'none'; active.style.display = 'flex'; empty.style.display = 'none';
+      this.textContent = 'Show Empty';
+    }
+  ">Show Empty</button>
+</div>
+
+
