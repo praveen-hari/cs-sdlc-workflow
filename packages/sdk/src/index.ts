@@ -121,6 +121,9 @@ export { rebuildIndexes, recalculateCounters, validateConsistency } from './oper
 
 export { updatePhase, addModule, removeModule, renameModule } from './operations/phase.js';
 
+export { listPlanTasks, updatePlanTask, syncPlanProgress } from './operations/plan-tasks.js';
+export type { PlanTask, PlanSummary } from './operations/plan-tasks.js';
+
 export {
   readManifest, readWorkIndex, readDecisionsIndex, readReleasesIndex,
   readContextDoc, readWorkItem, readDecision, readRelease,

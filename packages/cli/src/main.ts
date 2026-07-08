@@ -13,6 +13,7 @@ import validate from './commands/validate.js';
 import sync from './commands/sync.js';
 import phase from './commands/phase.js';
 import snapshot from './commands/snapshot.js';
+import task from './commands/task.js';
 
 export const main = defineCommand({
   meta: {
@@ -34,5 +35,6 @@ export const main = defineCommand({
     sync,
     phase,
     snapshot,
+    task,
   },
 });
