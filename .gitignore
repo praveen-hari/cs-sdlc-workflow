@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+lib/
 
 # IDE
 .vscode/
@@ -20,3 +21,5 @@ coverage/
 
 # Temp files
 *.tmp
+obj/
+bin/
