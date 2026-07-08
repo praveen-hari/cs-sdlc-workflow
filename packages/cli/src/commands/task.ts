@@ -1,7 +1,7 @@
 import { defineCommand } from 'citty';
-import { listPlanTasks, updatePlanTask, syncPlanProgress } from '@syncfusion/cs-sdlc';
+import { listPlanTasks, syncPlanProgress } from '@syncfusion/cs-sdlc';
 import { resolveProjectRoot } from '../utils/resolve-root.js';
-import { printSuccess, printInfo } from '../output/human.js';
+import { printSuccess } from '../output/human.js';
 import { handleError } from '../utils/error-handler.js';
 import pc from 'picocolors';
 
@@ -33,60 +33,8 @@ const listSubcommand = defineCommand({
   },
 });
 
-const checkSubcommand = defineCommand({
-  meta: { name: 'check', description: 'Mark a task as completed' },
-  args: {
-    'work-id': { type: 'positional', description: 'Work item ID', required: true },
-    'task-number': { type: 'positional', description: 'Task number (1-based)', required: true },
-    json: { type: 'boolean', description: 'Output as JSON', default: false },
-  },
-  async run({ args }) {
-    try {
-      const projectRoot = await resolveProjectRoot();
-      const taskNum = Number(args['task-number']);
-      const summary = await updatePlanTask(projectRoot, args['work-id'], taskNum, true);
-
-      if (args.json) {
-        console.log(JSON.stringify(summary, null, 2));
-      } else {
-        const task = summary.tasks.find((t) => t.number === taskNum);
-        printSuccess(`Task #${taskNum} checked: ${task?.text ?? ''}`);
-        printInfo('Progress', `${summary.completedTasks}/${summary.totalTasks}`);
-      }
-    } catch (err) {
-      handleError(err, args.json);
-    }
-  },
-});
-
-const uncheckSubcommand = defineCommand({
-  meta: { name: 'uncheck', description: 'Mark a task as not completed' },
-  args: {
-    'work-id': { type: 'positional', description: 'Work item ID', required: true },
-    'task-number': { type: 'positional', description: 'Task number (1-based)', required: true },
-    json: { type: 'boolean', description: 'Output as JSON', default: false },
-  },
-  async run({ args }) {
-    try {
-      const projectRoot = await resolveProjectRoot();
-      const taskNum = Number(args['task-number']);
-      const summary = await updatePlanTask(projectRoot, args['work-id'], taskNum, false);
-
-      if (args.json) {
-        console.log(JSON.stringify(summary, null, 2));
-      } else {
-        const task = summary.tasks.find((t) => t.number === taskNum);
-        printSuccess(`Task #${taskNum} unchecked: ${task?.text ?? ''}`);
-        printInfo('Progress', `${summary.completedTasks}/${summary.totalTasks}`);
-      }
-    } catch (err) {
-      handleError(err, args.json);
-    }
-  },
-});
-
 const syncSubcommand = defineCommand({
-  meta: { name: 'sync', description: 'Sync plan front matter from checkbox state' },
+  meta: { name: 'sync', description: 'Sync plan front matter counters from checkbox state' },
   args: {
     'work-id': { type: 'positional', description: 'Work item ID', required: true },
     json: { type: 'boolean', description: 'Output as JSON', default: false },
@@ -108,11 +56,9 @@ const syncSubcommand = defineCommand({
 });
 
 export default defineCommand({
-  meta: { name: 'task', description: 'Manage tasks within a work item plan' },
+  meta: { name: 'task', description: 'View and sync tasks within a work item plan' },
   subCommands: {
     list: listSubcommand,
-    check: checkSubcommand,
-    uncheck: uncheckSubcommand,
     sync: syncSubcommand,
   },
 });

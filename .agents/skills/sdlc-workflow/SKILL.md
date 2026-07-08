@@ -102,27 +102,62 @@ cs-sdlc start "Add user authentication" \
   --priority high \
   --modules web-app,auth-service
 
-# Edit the plan with your task breakdown
+# Write the task breakdown in plan.md (see format rules below)
 # (edit .sdlc/work/active/add-user-authentication/plan.md)
 
-# Track task progress
+# View task progress
 cs-sdlc task list add-user-authentication
-cs-sdlc task check add-user-authentication 1
-cs-sdlc task check add-user-authentication 2
 
-# Check progress
-cs-sdlc task list add-user-authentication
+# After editing plan.md, sync front matter counters
+cs-sdlc task sync add-user-authentication
 ```
 
 **What to do in this phase:**
 1. Create a work item with `cs-sdlc start`
-2. Write the task breakdown in `plan.md`
+2. Write the task breakdown in `plan.md` following the **strict format** below
 3. Implement one task at a time
-4. Check off tasks with `cs-sdlc task check` as you complete them
-5. Commit after each task
-6. Repeat until all tasks are done
+4. After completing a task, edit `plan.md` directly: change `- [ ]` to `- [x]`
+5. Run `cs-sdlc task sync <id>` to update front matter counters
+6. Commit after each task
+7. Repeat until all tasks are done
 
 **The critical rule:** Always have an active work item before writing code. If you're coding without a work item, stop and create one.
+
+#### plan.md Format (STRICT — agents and UI must follow this)
+
+The `plan.md` file MUST use this exact format so the SDK, CLI, and extension UI can all parse it:
+
+```markdown
+---
+totalTasks: 5
+completedTasks: 2
+currentTask: 3
+---
+
+# Implementation Plan
+
+## Task 1: Setup project structure
+- [x] Create directory layout
+- [x] Install dependencies
+- [x] Configure TypeScript
+
+## Task 2: Build core features
+- [ ] Implement data model
+- [ ] Add API endpoints
+
+## Task 3: Test and verify
+- [ ] Write unit tests
+- [ ] Write integration tests
+```
+
+**Format rules:**
+- Tasks are `- [ ]` (pending) or `- [x]` (done) — standard markdown checkboxes
+- One checkbox per sub-task, on a single line
+- Group tasks under `## Task N: Title` headings
+- Headings are for human readability — the parser counts ALL `- [ ]` / `- [x]` lines
+- Front matter (`totalTasks`, `completedTasks`, `currentTask`) is auto-synced by `cs-sdlc task sync`
+- Agents edit the markdown directly (change `[ ]` to `[x]`), then run sync
+- The extension UI reads the checkboxes to render a task list and can toggle them via the SDK
 
 ### Phase 4: Verify
 
@@ -199,16 +234,12 @@ cs-sdlc start "Add payment API" --modules billing-service,web-app
 # List tasks in a work item's plan
 cs-sdlc task list <work-id>
 
-# Mark a task as done (by number)
-cs-sdlc task check <work-id> 1
-cs-sdlc task check <work-id> 2
-
-# Undo a task
-cs-sdlc task uncheck <work-id> 3
-
-# Sync front matter after manual edits to plan.md
+# To complete a task: edit plan.md directly (change [ ] to [x])
+# Then sync front matter counters:
 cs-sdlc task sync <work-id>
 ```
+
+**How agents update tasks:** Edit `plan.md` directly — change `- [ ]` to `- [x]` for completed tasks. Then run `cs-sdlc task sync <id>` to update the front matter counters. The UI and CLI read the checkbox state from the markdown.
 
 ### Completing Work
 
