@@ -1,9 +1,35 @@
 ---
-description: 'SDLC Workflow conventions and approval gates. Use when working in a project that has a .sdlc/ directory. Ensures the agent uses SDLC tools correctly, follows tracking practices, and ALWAYS gets user approval before proceeding.'
+description: 'SDLC Workflow conventions, phase→skill mapping, and approval gates. Use when working in a project that has a .sdlc/ directory. Ensures the agent uses the right skills at each phase, uses SDLC tools correctly, and ALWAYS gets user approval before proceeding.'
 applyTo: '**'
 ---
 
 # SDLC Workflow Conventions
+
+## Skill Discovery: Match Intent to Phase
+
+When a task arrives, identify the SDLC phase and use the corresponding skills:
+
+```
+Task arrives
+    │
+    ├── Vague idea, needs clarity?        → interview-me, idea-refine
+    ├── Need a formal spec?               → spec-driven-development
+    ├── Need to set up project context?   → context-engineering, init-sdlc
+    ├── Need to break work into tasks?    → plan-feature
+    ├── Implementing code?                → implement-task
+    │   ├── Writing tests?                → test-driven-development
+    │   ├── Need doc-verified code?       → source-driven-development
+    │   └── Something broke?              → debugging-and-error-recovery
+    ├── Reviewing completed work?         → review-work
+    │   ├── Too complex?                  → code-simplification
+    │   ├── Security concerns?            → security-and-hardening
+    │   └── Performance concerns?         → performance-optimization
+    ├── Committing / releasing?           → git-workflow-and-versioning
+    ├── Making a decision?                → log-decision
+    └── Deploying to production?          → shipping-and-launch
+```
+
+**If a task matches a skill, use it.** Don't implement directly if a skill applies. Skills encode the workflows that prevent common mistakes.
 
 ## CRITICAL: Human Approval Required at Every Stage
 
