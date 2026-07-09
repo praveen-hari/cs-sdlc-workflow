@@ -97,7 +97,7 @@ export function History({ workIndex, decisionsIndex, releasesIndex }: HistoryPro
                 <span class="text-secondary text-sm">{decisionCount} records</span>
               </div>
               {decisionsIndex!.entries.map((d) => (
-                <div key={d.id} class="list-item" style="cursor:pointer;" onClick={() => openFile(`decisions/${d.id}-*.md`)}>
+                <div key={d.id} class="list-item" style="cursor:pointer;" onClick={() => openFile(d.path || `decisions/${d.id}.md`)}>
                   <span style="font-size:10px; font-weight:700; color:var(--vscode-descriptionForeground); min-width:28px; text-align:center;">
                     {d.id}
                   </span>

@@ -404,6 +404,7 @@ export interface DecisionEntryData {
   title: string;
   status?: string;
   date?: string;
+  path?: string;
 }
 
 export interface ReleaseEntryData {

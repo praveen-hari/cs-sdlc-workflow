@@ -72,6 +72,7 @@ export interface DecisionEntry {
   title: string;
   status?: string;
   date?: string;
+  path?: string;
 }
 
 export interface DecisionsIndexData {
