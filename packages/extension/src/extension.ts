@@ -3,6 +3,7 @@ import { SdlcService } from './services/sdlc-service.js';
 import { SdlcFileWatcher } from './services/file-watcher.js';
 import { ExtensionState } from './services/state.js';
 import { registerCommands } from './commands/index.js';
+import { registerTools } from './tools/index.js';
 import { MainViewProvider } from './views/main-view-provider.js';
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -32,6 +33,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // ── Commands ───────────────────────────────────────────────────────────
   registerCommands(context, sdlcService, state, mainViewProvider, outputChannel);
+
+  // ── Language Model Tools ────────────────────────────────────────────────
+  registerTools(context, sdlcService);
 
   // ── File watcher ───────────────────────────────────────────────────────
   fileWatcher.start(context);

@@ -107,6 +107,159 @@
         }
       ]
     },
+    "languageModelTools": [
+      {
+        "name": "sdlc-workflow_getProjectStatus",
+        "displayName": "Get SDLC Project Status",
+        "modelDescription": "Returns the current SDLC project status including project name, tech stack, modules, active work items, recent completions, counters, and health metrics. Use when the user asks about project status, progress, or overview.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcStatus",
+        "icon": "$(info)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "sdlc-workflow_getProjectContext",
+        "displayName": "Get SDLC Project Context",
+        "modelDescription": "Returns the SDLC project context documents including brief, architecture, conventions, requirements, and stack information. Use when the user asks about the project setup, architecture, coding conventions, or when you need project context to make implementation decisions.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcContext",
+        "icon": "$(file-text)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "sdlc-workflow_listWorkItems",
+        "displayName": "List SDLC Work Items",
+        "modelDescription": "Lists SDLC work items. Can filter by status: 'active' for in-progress items, 'recent' for recently completed, or 'all' for both. Use when the user asks about current tasks, what's being worked on, or completed work.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcWork",
+        "icon": "$(tasklist)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["active", "recent", "all"],
+              "description": "Filter by status. Default: all"
+            }
+          }
+        }
+      },
+      {
+        "name": "sdlc-workflow_getWorkItem",
+        "displayName": "Get SDLC Work Item",
+        "modelDescription": "Returns detailed information about a specific SDLC work item by ID, including its brief (title, type, priority, acceptance criteria) and implementation plan (tasks, progress). Use when the user asks about a specific work item or when you need to understand what a task involves.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcWorkItem",
+        "icon": "$(file-code)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The work item ID (e.g., 'add-dark-mode-toggle')"
+            }
+          },
+          "required": ["id"]
+        }
+      },
+      {
+        "name": "sdlc-workflow_createWorkItem",
+        "displayName": "Create SDLC Work Item",
+        "modelDescription": "Creates a new SDLC work item with a brief and plan template. Use when the user wants to start working on a new feature, bug fix, or task. This creates the work item directory in .sdlc/work/active/ with brief.md and plan.md files.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcCreate",
+        "icon": "$(add)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Description of the work item"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["feature", "bug", "refactor", "performance", "security", "docs", "tech-debt", "infrastructure"],
+              "description": "Type of work. Default: feature"
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["critical", "high", "medium", "low"],
+              "description": "Priority level. Default: medium"
+            },
+            "modules": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Module IDs this work affects"
+            }
+          },
+          "required": ["title"]
+        }
+      },
+      {
+        "name": "sdlc-workflow_completeWorkItem",
+        "displayName": "Complete SDLC Work Item",
+        "modelDescription": "Marks an active SDLC work item as completed and archives it. Use when the user says they are done with a task or when all acceptance criteria have been met. This moves the work item from active to archive.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcComplete",
+        "icon": "$(check)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The work item ID to complete"
+            }
+          },
+          "required": ["id"]
+        }
+      },
+      {
+        "name": "sdlc-workflow_logDecision",
+        "displayName": "Log SDLC Decision",
+        "modelDescription": "Creates an architectural decision record (ADR) in the SDLC project. Use when the user makes a significant technical decision, chooses between alternatives, or when you want to document why a particular approach was taken.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcDecision",
+        "icon": "$(law)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Decision title"
+            },
+            "context": {
+              "type": "string",
+              "description": "What prompted this decision"
+            },
+            "decision": {
+              "type": "string",
+              "description": "What was decided"
+            },
+            "rationale": {
+              "type": "string",
+              "description": "Why this option was chosen"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["proposed", "accepted", "deprecated", "superseded"],
+              "description": "Decision status. Default: accepted"
+            },
+            "modules": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Module IDs affected by this decision"
+            }
+          },
+          "required": ["title"]
+        }
+      }
+    ],
     "configuration": {
       "title": "SDLC Workflow",
       "properties": {

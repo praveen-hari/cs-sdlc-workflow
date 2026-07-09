@@ -26,42 +26,54 @@ Prompts composed with `@vscode/prompt-tsx` for token-budget-aware rendering.
 
 ---
 
-## Phase 1 — Extension Scaffold + SDK Integration
+## Phase 1 — Extension Scaffold + SDK Integration ✅ COMPLETE
 
 **Goal:** Buildable extension that activates, registers commands, and reads `.sdlc/` data.
 
+**Completed:** July 9, 2026 · Commit `1c7866b`
+
 ### Tasks
 
-1.1 **Scaffold `packages/extension/`**
-- `package.json` with `engines.vscode`, `activationEvents`, `main`, `contributes`
-- `tsconfig.json` (jsx: react, jsxFactory: vscpp for prompt-tsx)
-- `esbuild.config.ts` for bundling
-- `src/extension.ts` with `activate()` / `deactivate()`
+- [x] 1.1 **Scaffold `packages/extension/`**
+  - `package.json` with `engines.vscode`, `activationEvents`, `main`, `contributes`
+  - `tsconfig.json` (jsx: react, jsxFactory: vscpp for prompt-tsx)
+  - `esbuild.config.mjs` for bundling
+  - `src/extension.ts` with `activate()` / `deactivate()`
 
-1.2 **Add to monorepo**
-- Add to `pnpm-workspace.yaml`
-- Workspace dependency on `@syncfusion/cs-sdlc`
-- Dev dependencies: `@types/vscode`, `esbuild`, `@vscode/prompt-tsx`
+- [x] 1.2 **Add to monorepo**
+  - Auto-detected by `pnpm-workspace.yaml` (`packages/*`)
+  - Workspace dependency on `@syncfusion/cs-sdlc`
+  - Dev dependencies: `@types/vscode`, `@types/node`, `esbuild`, `@vscode/prompt-tsx`
 
-1.3 **SDK Service Layer**
-- `src/services/sdlc-service.ts` — wraps SDK operations (init, workStart, workComplete, status, etc.)
-- `src/services/file-watcher.ts` — watches `.sdlc/` for external changes
-- `src/services/state.ts` — extension state (active project, current work item)
+- [x] 1.3 **SDK Service Layer**
+  - `src/services/sdlc-service.ts` — wraps `discoverSdlc`, `readManifest`, `readWorkIndex`, etc.
+  - `src/services/file-watcher.ts` — watches `.sdlc/` with debounced refresh
+  - `src/services/state.ts` — persists active screen, onboarding status via `workspaceState`
 
-1.4 **Register Commands**
-- `sdlc-workflow.init` — Initialize SDLC tracking
-- `sdlc-workflow.start` — Start new work item
-- `sdlc-workflow.status` — Show project status
-- `sdlc-workflow.done` — Complete active work item
-- `sdlc-workflow.openDashboard` — Open overview panel
-- `sdlc-workflow.openInChat` — Send prompt to chat
+- [x] 1.4 **Register Commands** (8 total)
+  - `sdlc-workflow.init` — Initialize SDLC tracking
+  - `sdlc-workflow.start` — Start new work item (with input box)
+  - `sdlc-workflow.status` — Show project status
+  - `sdlc-workflow.done` — Complete active work item (with summary input)
+  - `sdlc-workflow.openDashboard` — Open overview panel
+  - `sdlc-workflow.openInChat` — Send prompt to chat
+  - `sdlc-workflow.sync` — Manual data sync
+  - `sdlc-workflow.snapshot` — Take project snapshot
 
-1.5 **Verify build + activation**
-- `pnpm --filter @syncfusion/cs-sdlc-extension build`
-- Extension loads in Extension Development Host
+- [x] 1.5 **Sidebar Webview + Status Bar**
+  - `MainViewProvider` — single webview with internal routing (Overview, Plugins, Context, Work, History)
+  - Uses **only** `--vscode-*` CSS variables and `codicon` icons
+  - Message passing protocol: webview ↔ extension host
+  - Onboarding screen when no `.sdlc/` found
+  - Status bar item with project name
+  - `.vscode/launch.json` + `tasks.json` for F5 debugging
+
+- [x] 1.6 **Verify build + activation**
+  - Clean typecheck, clean build
+  - All 436 existing tests still pass
 
 ### Deliverable
-Extension activates, commands registered, SDK reads `.sdlc/` data.
+Extension activates, commands registered, SDK reads `.sdlc/` data, sidebar webview renders.
 
 ---
 
@@ -318,13 +330,15 @@ packages/extension/
 
 ## Execution Order
 
-| Phase | What | Depends On | Est. |
-|-------|------|------------|------|
-| **1** | Scaffold + SDK integration | SDK (done ✅) | 1-2 days |
-| **2** | Language Model Tools + prompt-tsx | Phase 1 | 2-3 days |
-| **3** | Sidebar Webview UI | Phase 1 | 3-4 days |
-| **4** | Skills + Agents + Instructions | Phase 2 | 1-2 days |
-| **5** | Status bar + Polish + Packaging | Phase 3, 4 | 1-2 days |
+| Phase | What | Depends On | Status |
+|-------|------|------------|--------|
+| **1** | Scaffold + SDK integration | SDK (done ✅) | ✅ **DONE** (Jul 9) |
+| **2** | Language Model Tools + prompt-tsx | Phase 1 | ⬜ Next |
+| **3** | Sidebar Webview UI (rich screens) | Phase 1 | ⬜ |
+| **4** | Skills + Agents + Instructions | Phase 2 | ⬜ |
+| **5** | Polish + Packaging | Phase 3, 4 | ⬜ |
+
+**Note:** Phase 1 also delivered the sidebar webview shell, status bar, and file watcher (originally planned for Phase 3/5). Phases 2 & 3 can run in parallel.
 
 **Phases 2 and 3 can run in parallel** after Phase 1 is complete.
 
