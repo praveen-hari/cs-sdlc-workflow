@@ -1,9 +1,10 @@
-import type { WorkIndexData } from '../types';
+import type { WorkIndexData, ContextDocData } from '../types';
 
 interface SidebarProps {
   activeScreen: string;
   onNavigate: (screen: string) => void;
   workIndex: WorkIndexData | null;
+  contextDocs: Record<string, ContextDocData>;
 }
 
 interface NavItem {
@@ -14,11 +15,15 @@ interface NavItem {
   badge?: number;
 }
 
-export function Sidebar({ activeScreen, onNavigate, workIndex }: SidebarProps) {
+export function Sidebar({ activeScreen, onNavigate, workIndex, contextDocs }: SidebarProps) {
+  // Context dot: green if at least 2 docs have content (architecture + conventions)
+  const configuredDocs = ['architecture', 'conventions', 'requirements', 'stack']
+    .filter(name => contextDocs[name]?.hasContent);
+  const contextReady = configuredDocs.length >= 2;
+
   const items: NavItem[] = [
     { id: 'overview', label: 'Overview', icon: 'codicon-home' },
-    { id: 'plugins', label: 'Plugins', icon: 'codicon-extensions', dot: 'success' },
-    { id: 'context', label: 'Project Context', icon: 'codicon-file-text', dot: 'success' },
+    { id: 'context', label: 'Project Context', icon: 'codicon-file-text', dot: contextReady ? 'success' : undefined },
     { id: 'work', label: 'Work', icon: 'codicon-tools', dot: workIndex?.active.length ? 'active' : undefined },
     { id: 'history', label: 'History', icon: 'codicon-history', badge: workIndex?.recent.length || undefined },
   ];

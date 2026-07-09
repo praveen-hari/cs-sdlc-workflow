@@ -88,15 +88,6 @@ export function Overview({ status, workIndex, snapshot, contextDocs, activeWorkD
 
       {/* Status Cards */}
       <div class="status-cards">
-        {/* Plugins Card */}
-        <StatusCard
-          title="Plugins"
-          icon="codicon-extensions"
-          badge="Setup"
-          badgeVariant="info"
-          details={[{ icon: 'codicon-gear', text: 'Browse plugins to get started' }]}
-          onClick={() => onNavigate('plugins')}
-        />
 
         {/* Context Card */}
         <StatusCard

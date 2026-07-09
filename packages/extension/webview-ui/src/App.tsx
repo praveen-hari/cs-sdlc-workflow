@@ -56,7 +56,7 @@ export function App() {
 
   return (
     <div class="shell">
-      <Sidebar activeScreen={screen} onNavigate={handleSwitchScreen} workIndex={workIndex} />
+      <Sidebar activeScreen={screen} onNavigate={handleSwitchScreen} workIndex={workIndex} contextDocs={contextDocs} />
       <main class="detail">
         {screen === 'overview' && (
           <Overview status={status} workIndex={workIndex} snapshot={snapshot} contextDocs={contextDocs} activeWorkDetails={activeWorkDetails} onNavigate={handleSwitchScreen} />
