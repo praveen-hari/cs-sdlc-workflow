@@ -23,7 +23,7 @@
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
-  "icon": "media/sdlc-icon.png",
+  "icon": "media/sdlc-icon.svg",
   "contributes": {
     "commands": [
       {

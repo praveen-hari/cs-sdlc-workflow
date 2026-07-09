@@ -9,7 +9,6 @@ import {
   readLatestSnapshot,
   readContextDoc,
   readWorkItem,
-  listPlanTasks,
 } from '@syncfusion/cs-sdlc';
 import type {
   Manifest,
@@ -19,7 +18,6 @@ import type {
   LatestSnapshot,
   ContextDocument,
   WorkItem,
-  PlanSummary,
 } from '@syncfusion/cs-sdlc';
 
 /**
@@ -35,7 +33,6 @@ export class SdlcService {
   private _snapshot: LatestSnapshot | undefined;
   private _contextDocs: Map<string, ContextDocument> = new Map();
   private _activeWorkItems: Map<string, WorkItem> = new Map();
-  private _planSummaries: Map<string, PlanSummary> = new Map();
   private _loaded = false;
 
   private readonly _onDidChange = new vscode.EventEmitter<void>();
@@ -85,9 +82,7 @@ export class SdlcService {
     return this._activeWorkItems.get(id);
   }
 
-  getPlanSummary(id: string): PlanSummary | undefined {
-    return this._planSummaries.get(id);
-  }
+
 
   // ── Load / Refresh ───────────────────────────────────────────────────
 
@@ -100,15 +95,18 @@ export class SdlcService {
     const rootPath = workspaceFolders[0]!.uri.fsPath;
 
     try {
+      this._output.appendLine(`Searching for .sdlc/ from: ${rootPath}`);
       const sdlcRoot = await discoverSdlc(rootPath);
       const projectRoot = projectRootFromSdlc(sdlcRoot);
+      this._output.appendLine(`Found .sdlc/ at: ${sdlcRoot}, project root: ${projectRoot}`);
 
       this._sdlcRoot = projectRoot;
       await this._loadData(projectRoot);
       this._loaded = true;
       this._onDidChange.fire();
       return true;
-    } catch {
+    } catch (err) {
+      this._output.appendLine(`Failed to discover .sdlc/: ${err instanceof Error ? err.message : String(err)}`);
       this._loaded = false;
       return false;
     }
@@ -171,9 +169,14 @@ export class SdlcService {
     }
 
     // Serialize active work items with plan details
+    // Group sub-checkboxes by ## Task headings — a main task is "complete"
+    // only when ALL its sub-checkboxes are checked.
     const activeWorkDetails: Record<string, ActiveWorkDetail> = {};
     for (const [id, item] of this._activeWorkItems) {
-      const planSummary = this._planSummaries.get(id);
+      const mainTasks = parsePlanMainTasks(item.plan?.body ?? '');
+      const totalTasks = mainTasks.length;
+      const completedTasks = mainTasks.filter(t => t.completed).length;
+
       activeWorkDetails[id] = {
         id,
         briefFrontMatter: item.brief.frontMatter as Record<string, unknown> | null,
@@ -181,9 +184,9 @@ export class SdlcService {
         hasPlan: item.plan !== null,
         planBody: item.plan?.body ?? null,
         planFrontMatter: item.plan?.frontMatter as Record<string, unknown> | null,
-        totalTasks: planSummary?.totalTasks ?? 0,
-        completedTasks: planSummary?.completedTasks ?? 0,
-        tasks: planSummary?.tasks ?? [],
+        totalTasks,
+        completedTasks,
+        tasks: mainTasks,
       };
     }
 
@@ -220,11 +223,16 @@ export class SdlcService {
   // ── Private ──────────────────────────────────────────────────────────
 
   private async _loadData(projectRoot: string): Promise<void> {
-    // Core data (always needed)
+    // Manifest is required — if this fails, the project is truly broken
     this._manifest = await readManifest(projectRoot);
-    this._workIndex = await readWorkIndex(projectRoot);
 
-    // Indexes (may not exist)
+    // Indexes — gracefully degrade if any are missing or malformed
+    try { this._workIndex = await readWorkIndex(projectRoot); }
+    catch (err) {
+      this._output.appendLine(`Warning: work.json failed validation, loading without work data: ${err instanceof Error ? err.message : String(err)}`);
+      this._workIndex = undefined;
+    }
+
     try { this._decisionsIndex = await readDecisionsIndex(projectRoot); }
     catch { this._decisionsIndex = undefined; }
 
@@ -248,7 +256,6 @@ export class SdlcService {
 
     // Active work item details + plan summaries
     this._activeWorkItems.clear();
-    this._planSummaries.clear();
     if (this._workIndex) {
       for (const entry of this._workIndex.active) {
         try {
@@ -257,16 +264,66 @@ export class SdlcService {
         } catch {
           this._output.appendLine(`Failed to read work item: ${entry.id}`);
         }
-
-        try {
-          const plan = await listPlanTasks(projectRoot, entry.id);
-          this._planSummaries.set(entry.id, plan);
-        } catch {
-          // No plan or parse error — skip
-        }
       }
     }
   }
+}
+
+// ── Plan Parsing ─────────────────────────────────────────────────────────
+
+/**
+ * Parse plan.md body into main tasks (## Task N: headings).
+ * A main task is "completed" when ALL its sub-checkboxes are [x].
+ * A main task with zero checkboxes is considered completed.
+ */
+function parsePlanMainTasks(planBody: string): Array<{ number: number; text: string; completed: boolean }> {
+  const lines = planBody.split('\n');
+  const tasks: Array<{ number: number; text: string; completed: boolean }> = [];
+
+  let currentTask: { number: number; text: string; hasUnchecked: boolean; hasCheckboxes: boolean } | null = null;
+
+  for (const line of lines) {
+    // Match ## Task N: Title or ## Task N — Title
+    const headingMatch = line.match(/^##\s+Task\s+(\d+)[:\s—–-]+(.*)$/i);
+    if (headingMatch) {
+      // Save previous task
+      if (currentTask) {
+        tasks.push({
+          number: currentTask.number,
+          text: currentTask.text,
+          completed: currentTask.hasCheckboxes ? !currentTask.hasUnchecked : true,
+        });
+      }
+      currentTask = {
+        number: parseInt(headingMatch[1]!, 10),
+        text: headingMatch[2]!.trim(),
+        hasUnchecked: false,
+        hasCheckboxes: false,
+      };
+      continue;
+    }
+
+    // Count checkboxes under current task
+    if (currentTask) {
+      if (/^\s*-\s+\[x\]/i.test(line)) {
+        currentTask.hasCheckboxes = true;
+      } else if (/^\s*-\s+\[\s\]/.test(line)) {
+        currentTask.hasCheckboxes = true;
+        currentTask.hasUnchecked = true;
+      }
+    }
+  }
+
+  // Save last task
+  if (currentTask) {
+    tasks.push({
+      number: currentTask.number,
+      text: currentTask.text,
+      completed: currentTask.hasCheckboxes ? !currentTask.hasUnchecked : true,
+    });
+  }
+
+  return tasks;
 }
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -313,12 +370,40 @@ export interface SnapshotData {
   generatedAt: string;
 }
 
+export interface WorkEntryData {
+  id: string;
+  title: string;
+  type?: string;
+  priority?: string;
+  phase?: string;
+  modules?: string[];
+  progress?: number;
+  totalTasks?: number;
+  completedTasks?: number;
+  status?: string;
+  completedAt?: string;
+  path?: string;
+}
+
+export interface DecisionEntryData {
+  id: string;
+  title: string;
+  status?: string;
+  date?: string;
+}
+
+export interface ReleaseEntryData {
+  version: string;
+  title?: string;
+  date?: string;
+}
+
 export interface FullSdlcData {
   isLoaded: boolean;
   status: ProjectStatusSummary | undefined;
-  workIndex: { active: unknown[]; recent: unknown[] } | null;
-  decisionsIndex: { entries: unknown[] } | null;
-  releasesIndex: { entries: unknown[] } | null;
+  workIndex: { active: WorkEntryData[]; recent: WorkEntryData[] } | null;
+  decisionsIndex: { entries: DecisionEntryData[] } | null;
+  releasesIndex: { entries: ReleaseEntryData[] } | null;
   snapshot: SnapshotData | null;
   contextDocs: Record<string, ContextDocData>;
   activeWorkDetails: Record<string, ActiveWorkDetail>;

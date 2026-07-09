@@ -165,11 +165,14 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
 
   const w = workIndex.active[0];
   const detail = activeWorkDetails[w.id];
-  const progress = detail
-    ? (detail.totalTasks > 0 ? Math.round((detail.completedTasks / detail.totalTasks) * 100) : 0)
-    : 0;
-  const nextTask = detail?.tasks?.find(t => !t.completed);
-  const remainingTasks = detail ? detail.totalTasks - detail.completedTasks : 0;
+
+  // Count from actual parsed tasks (not front matter which may be stale)
+  const tasks = detail?.tasks ?? [];
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(t => t.completed).length;
+  const remainingTasks = totalTasks - completedTasks;
+  const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const nextTask = tasks.find(t => !t.completed);
 
   return (
     <div class="screen is-active">
@@ -188,7 +191,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
             <div class="progress-fill" style={`width:${progress}%`} />
           </div>
           <span style="font-size:12px; font-weight:600;">{progress}%</span>
-          <span class="text-xs text-secondary">{detail?.completedTasks ?? 0} / {detail?.totalTasks ?? 0} tasks</span>
+          <span class="text-xs text-secondary">{completedTasks} / {totalTasks} tasks</span>
         </div>
         <div class="flex gap-sm">
           <Button

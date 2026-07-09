@@ -59,7 +59,7 @@ export function App() {
       <Sidebar activeScreen={screen} onNavigate={handleSwitchScreen} workIndex={workIndex} />
       <main class="detail">
         {screen === 'overview' && (
-          <Overview status={status} workIndex={workIndex} snapshot={snapshot} contextDocs={contextDocs} onNavigate={handleSwitchScreen} />
+          <Overview status={status} workIndex={workIndex} snapshot={snapshot} contextDocs={contextDocs} activeWorkDetails={activeWorkDetails} onNavigate={handleSwitchScreen} />
         )}
         {screen === 'plugins' && <Plugins />}
         {screen === 'context' && <ProjectContext status={status} contextDocs={contextDocs} />}

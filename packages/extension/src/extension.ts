@@ -15,15 +15,10 @@ export function activate(context: vscode.ExtensionContext): void {
   const sdlcService = new SdlcService(outputChannel);
   const fileWatcher = new SdlcFileWatcher(sdlcService, outputChannel);
 
-  // ── Dashboard panel (opens in editor area on icon click) ───────────────
+  // ── Dashboard panel ─────────────────────────────────────────────────────
   const openDashboard = () => {
     DashboardPanel.open(context.extensionUri, sdlcService, state, outputChannel);
   };
-
-  // Open dashboard when clicking the Activity Bar icon
-  context.subscriptions.push(
-    vscode.commands.registerCommand('sdlc-workflow.openDashboardView', openDashboard),
-  );
 
   // ── Commands ───────────────────────────────────────────────────────────
   registerCommands(context, sdlcService, state, openDashboard, outputChannel);
