@@ -52,12 +52,10 @@ export function Onboarding() {
             class="onboarding-option"
             onClick={() => openInChat(
               'I want to start a new project from scratch. ' +
-              'Interview me to gather the details before creating anything. ' +
-              'Ask ONE question at a time and wait for my answer before asking the next. ' +
-              'Attach your best guess to each question so I can confirm or correct. ' +
-              'I need you to find out: 1) What I\'m building and why, 2) Who the target users are, ' +
-              '3) What tech stack to use, 4) What the first feature should be. ' +
-              'After gathering all answers, show me a structured summary and wait for my explicit "yes" before creating the .sdlc/ directory. ' +
+              'Use the interview-me skill and the askQuestions tool to gather what I want to build. ' +
+              'Ask ONE question at a time using the askQuestions tool with predefined options where possible, and wait for my answer before asking the next. ' +
+              'Cover: what I\'m building, who it\'s for, tech stack, and first feature. ' +
+              'After the interview, show a summary and wait for my explicit "yes" before initializing the .sdlc/ directory. ' +
               'Do NOT create anything until I confirm.'
             )}
           >

@@ -15,48 +15,21 @@ argument-hint: 'Describe your project or say "scan" to auto-detect'
 Read package.json, tsconfig, eslint, README, folder structure, test config, CI config.
 Then go to Step 3.
 
-### Step 2b: Greenfield — Interview (One Question at a Time)
+### Step 2b: Greenfield — Interview the User
 
-**Start with a hypothesis and confidence number:**
-```
-HYPOTHESIS: You want to build a web application.
-CONFIDENCE: ~20% — missing: what it does, who it's for, tech stack, first feature.
-```
+Use the `interview-me` skill to gather requirements. This skill will:
+1. Ask ONE question at a time with a guess attached
+2. Probe vague answers ("something modern" → "what would you actually want?")
+3. Build to ~95% confidence about what the user wants
+4. Produce a confirmed restate: Outcome / Users / Stack / First work / Out of scope
 
-**Ask ONE question at a time. Wait for the answer before asking the next. Attach your best guess to each question.**
+**The interview must cover at minimum:**
+- What they're building and why
+- Who the target users are
+- What tech stack to use
+- What the first feature should be
 
-**Question 1: What are you building?**
-```
-Q: What are you building and what problem does it solve?
-GUESS: Based on the empty workspace, I'm guessing a web application — but it could be a CLI tool, API, library, or mobile app. What is it?
-```
-⛔ Wait for answer.
-
-**Question 2: Who will use it?**
-```
-Q: Who are the target users?
-GUESS: <guess based on their answer to Q1>
-```
-⛔ Wait for answer.
-
-**Question 3: What tech stack?**
-```
-Q: What tech stack do you want to use? Or should I suggest one based on what you're building?
-GUESS: <suggest based on Q1 + Q2 — e.g., "For a web app with that audience, I'd suggest React + TypeScript + Node.js">
-```
-⛔ Wait for answer.
-
-**Question 4: What's the first feature?**
-```
-Q: What's the first thing you want to build? This will become your first work item after setup.
-GUESS: <guess based on previous answers>
-```
-⛔ Wait for answer.
-
-**If any answer is vague** (e.g., "something modern", "the usual stack", "make it scalable"):
-> Ask: "If you didn't have to justify this to anyone, what would you actually want?"
-
-**Do NOT batch questions.** Batching encourages skim-reading and surface answers. The third question often depends on the answer to the first.
+Only proceed to Step 3 after the `interview-me` skill produces a confirmed restate with an explicit "yes" from the user.
 
 ### Step 3: ⛔ CONFIRM WITH USER — Restate and Wait
 
@@ -175,4 +148,5 @@ Wait for user acknowledgment.
 - Missing build/test commands in conventions.md
 
 ## See Also
+- For requirements gathering, see the `interview-me` skill
 - For context engineering best practices, see the `context-engineering` skill

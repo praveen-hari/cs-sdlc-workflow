@@ -33,7 +33,8 @@ export function registerCommands(
       await openInChat(
         'Initialize SDLC tracking for this workspace. ' +
         'If source code exists, scan it to auto-detect the project details and show me a summary. ' +
-        'If the workspace is empty, interview me one question at a time to gather what I\'m building. ' +
+        'If the workspace is empty, use the interview-me skill to gather what I want to build — ' +
+        'one question at a time with your best guess attached. ' +
         'Wait for my explicit confirmation before creating the .sdlc/ directory. ' +
         'Do NOT create anything until I say "yes".',
       );
