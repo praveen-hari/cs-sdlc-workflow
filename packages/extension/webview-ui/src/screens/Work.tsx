@@ -174,8 +174,45 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
   const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
   const nextTask = tasks.find(t => !t.completed);
 
+  // Determine current phase
+  const phase = (() => {
+    if (!detail?.hasPlan) return 'SPEC';
+    if (totalTasks === 0) return 'PLAN';
+    if (remainingTasks > 0) return 'BUILD';
+    if (progress === 100) return 'REVIEW';
+    return 'BUILD';
+  })();
+
+  const phases = ['SPEC', 'PLAN', 'BUILD', 'TEST', 'REVIEW', 'SHIP'] as const;
+  const phaseIcons: Record<string, string> = {
+    SPEC: 'codicon-note', PLAN: 'codicon-list-tree', BUILD: 'codicon-tools',
+    TEST: 'codicon-beaker', REVIEW: 'codicon-shield', SHIP: 'codicon-rocket',
+  };
+
   return (
     <div class="screen is-active">
+
+      {/* Phase Indicator */}
+      <div class="flex gap-xs" style="align-items:center; padding:4px 0 8px;">
+        {phases.map((p, i) => {
+          const isCurrent = p === phase;
+          const isPast = phases.indexOf(phase) > i;
+          const color = isCurrent
+            ? 'var(--vscode-progressBar-background)'
+            : isPast
+              ? 'var(--vscode-testing-iconPassed)'
+              : 'var(--vscode-descriptionForeground)';
+          return (
+            <div key={p} class="flex gap-xs" style="align-items:center;">
+              {i > 0 && <span style={`width:16px; height:1px; background:${isPast ? 'var(--vscode-testing-iconPassed)' : 'var(--vscode-panel-border)'};`} />}
+              <div class="flex gap-xs" style={`align-items:center; font-size:11px; font-weight:${isCurrent ? '700' : '500'}; color:${color}; ${isCurrent ? 'background:color-mix(in srgb, var(--vscode-progressBar-background) 12%, transparent); padding:2px 8px; border-radius:10px;' : ''}`}>
+                <span class={`codicon ${phaseIcons[p]}`} style="font-size:12px;" />
+                {p}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Work Item Header */}
       <div class="list-item" style="flex-direction:column; align-items:stretch; gap:8px; border-color:color-mix(in srgb, var(--vscode-progressBar-background) 20%, var(--vscode-panel-border));">
@@ -193,7 +230,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
           <span style="font-size:12px; font-weight:600;">{progress}%</span>
           <span class="text-xs text-secondary">{completedTasks} / {totalTasks} tasks</span>
         </div>
-        <div class="flex gap-sm">
+        <div class="flex gap-sm flex-wrap">
           <Button
             variant="primary"
             size="sm"
@@ -202,6 +239,15 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
           >
             Continue in Chat
           </Button>
+          {remainingTasks > 1 && (
+            <Button
+              size="sm"
+              icon="codicon-run-all"
+              prompt={`Implement ALL remaining tasks for ${w.id}: ${w.title} autonomously. I approve the plan — execute every remaining task using test-driven-development (RED→GREEN→REFACTOR), run tests after each, commit per task, and stop only if tests fail or you hit an ambiguous requirement. Summarize at the end.`}
+            >
+              Build All (auto)
+            </Button>
+          )}
           <Button
             size="sm"
             icon="codicon-go-to-file"
@@ -264,22 +310,58 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
                     <div class="task-content">
                       <div class="flex gap-sm" style="align-items:center;">
                         <span style={`font-size:13px; font-weight:500; ${task.completed ? 'text-decoration:line-through; opacity:0.6;' : ''} ${!task.completed && !isCurrent ? 'color:var(--vscode-descriptionForeground);' : ''}`}>
-                          {task.text}
+                          Task {task.number}: {task.text}
                         </span>
                         {isCurrent && <span class="badge badge-accent">Current</span>}
+                        {task.completed && <span class="codicon codicon-check" style="font-size:11px; color:var(--vscode-testing-iconPassed);" />}
                       </div>
+                      {/* Show "implement this task" link for current task */}
+                      {isCurrent && (
+                        <div class="mt-sm">
+                          <button
+                            class="btn btn-sm btn-primary"
+                            style="height:20px; font-size:11px; padding:0 8px;"
+                            onClick={() => openInChat(
+                              `Implement Task ${task.number} for ${w.id}: ${task.text}. ` +
+                              `Follow test-driven-development (write failing test first, then implement, then refactor). ` +
+                              `Run tests and build after implementing. Mark done with #sdlcPlanToggle when complete.`
+                            )}
+                          >
+                            <span class="codicon codicon-play" style="font-size:11px;" /> Implement This Task
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
-              <div class="flex gap-sm mt-md">
-                <Button
-                  variant="primary"
-                  icon="codicon-comment-discussion"
-                  prompt={`Continue implementing the current task for ${w.id}: ${nextTask?.text || 'next task'}. Follow the plan and update checkboxes as you complete sub-tasks.`}
-                >
-                  Continue Current Task
-                </Button>
+              <div class="flex gap-sm mt-md flex-wrap">
+                {nextTask && (
+                  <Button
+                    variant="primary"
+                    icon="codicon-comment-discussion"
+                    prompt={`Continue implementing the current task for ${w.id}: Task ${nextTask.number}: ${nextTask.text}. Follow test-driven-development and run tests after implementing.`}
+                  >
+                    Continue Current Task
+                  </Button>
+                )}
+                {remainingTasks > 1 && (
+                  <Button
+                    icon="codicon-run-all"
+                    prompt={`Implement ALL remaining tasks for ${w.id}: ${w.title} autonomously. I approve the plan — execute every remaining task using test-driven-development (RED→GREEN→REFACTOR), run tests after each, commit per task, and stop only if tests fail or you hit an ambiguous requirement. Summarize at the end.`}
+                  >
+                    Build All (auto)
+                  </Button>
+                )}
+                {!nextTask && (
+                  <Button
+                    variant="primary"
+                    icon="codicon-shield"
+                    prompt={`All tasks are complete for ${w.id}: ${w.title}. Run the review-work skill — verify acceptance criteria, do a 5-axis review (correctness, readability, architecture, security, performance), and report findings.`}
+                  >
+                    Start Review
+                  </Button>
+                )}
               </div>
             </>
           ) : (
