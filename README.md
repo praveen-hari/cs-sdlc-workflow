@@ -1,10 +1,10 @@
-# SDLC Studio
+# SDLC Workflow
 
 A structured SDLC workflow system for AI-assisted software development — from agent configuration to deployment.
 
 ## What is this?
 
-SDLC Studio gives developers clear visibility, control, and review over AI-assisted software development. It provides a structured workflow:
+SDLC Workflow gives developers clear visibility, control, and review over AI-assisted software development. It provides a structured workflow:
 
 1. **Agent Configuration** — Configure skills, tools, MCP servers, and coding standards
 2. **Project Context** — Define architecture, conventions, requirements, and modules
@@ -23,7 +23,7 @@ cs-sdlc-workflow/
 │   ├── cli/          → @syncfusion/cs-sdlc-cli — Command-line interface
 │   └── tsconfig/     → @syncfusion/tsconfig — Shared TypeScript config
 ├── spec/sdlc/        → .sdlc/ format specification (v1.0-draft)
-├── .designs/         → UI design prototypes (SDLC Studio extension)
+├── .designs/         → UI design prototypes (SDLC Workflow extension)
 └── tasks/            → Project planning
 ```
 
@@ -34,7 +34,7 @@ cs-sdlc-workflow/
 | [`@syncfusion/cs-sdlc`](packages/sdk/) | `packages/sdk/` | TypeScript SDK for reading, writing, and validating `.sdlc/` directories | v0.1.0 — 414 tests, Level 3 conformance ✅ |
 | `@syncfusion/cs-sdlc-cli` | `packages/cli/` | CLI tool (`cs-sdlc init`, `start`, `done`, etc.) | In progress |
 | `@syncfusion/tsconfig` | `packages/tsconfig/` | Shared TypeScript configuration | Done |
-| SDLC Studio Extension | `packages/extension/` | VS Code / Code Studio extension | Planned — [UI designs](.designs/) |
+| SDLC Workflow Extension | `packages/extension/` | VS Code / Code Studio extension | Planned — [UI designs](.designs/) |
 
 ## Getting Started
 

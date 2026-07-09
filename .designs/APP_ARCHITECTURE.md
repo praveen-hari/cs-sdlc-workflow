@@ -1,4 +1,4 @@
-# SDLC Studio — Application Architecture
+# SDLC Workflow — Application Architecture
 
 ## Navigation
 
@@ -7,7 +7,7 @@
 This is a VS Code extension, not a standalone web app. Navigation follows VS Code's native patterns:
 
 **Activity Bar (left icon strip):**
-- 🚀 **SDLC Studio** icon → Opens the primary sidebar with all views
+- 🚀 **SDLC Workflow** icon → Opens the primary sidebar with all views
 
 **Primary Sidebar (tree views + webview views):**
 - Project Explorer (tree view)
@@ -32,7 +32,7 @@ This is a VS Code extension, not a standalone web app. Navigation follows VS Cod
 
 **Context Menus & Command Palette:**
 - Right-click actions on tree items
-- `Cmd+Shift+P` → "SDLC Studio: ..." commands
+- `Cmd+Shift+P` → "SDLC Workflow: ..." commands
 
 ---
 
@@ -67,7 +67,7 @@ This is a VS Code extension, not a standalone web app. Navigation follows VS Cod
 
 ### 1. Project Explorer (Tree View)
 ```
-📁 SDLC Studio
+📁 SDLC Workflow
   └─ 📦 my-saas-app                    ← project name
        ├─ 📋 Plan                       ← SDLC phase (with progress %)
        │    ├─ ✅ Define requirements    ← completed work item
@@ -206,11 +206,11 @@ These screens have a different layout (no sidebar — they are full-panel webvie
 
 | VS Code Surface | Integration |
 |----------------|-------------|
-| **Activity Bar** | Custom icon for SDLC Studio — opens the sidebar |
+| **Activity Bar** | Custom icon for SDLC Workflow — opens the sidebar |
 | **Sidebar** | 5 views: Project Explorer, SDLC Progress, Work Items, Agent Plugins, Quick Actions |
 | **Editor Area** | Webview panels for all detail/form/dashboard/kanban screens |
 | **Status Bar** | 4 items: project name, phase, work item count, plugin count |
-| **Command Palette** | ~20 commands: "SDLC Studio: New Work Item", "SDLC Studio: Open Dashboard", etc. |
+| **Command Palette** | ~20 commands: "SDLC Workflow: New Work Item", "SDLC Workflow: Open Dashboard", etc. |
 | **Context Menus** | Explorer: "Add to Work Item", SCM: "Link Commit to Work Item" |
 | **Notifications** | Review requests, phase completions, blocker alerts, plugin recommendations |
 | **Settings** | Extension settings for defaults, theme, notification preferences |

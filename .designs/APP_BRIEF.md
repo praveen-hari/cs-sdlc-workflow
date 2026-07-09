@@ -1,4 +1,4 @@
-# SDLC Studio — Application Brief
+# SDLC Workflow — Application Brief
 
 ## App Overview
 - **Type:** VS Code / Code Studio extension (webview panels + sidebar views + tree views)
