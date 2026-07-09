@@ -1,0 +1,144 @@
+{
+  "name": "@syncfusion/cs-sdlc-extension",
+  "displayName": "SDLC Workflow",
+  "description": "AI-powered SDLC project management — track work, manage context, review plans, ship with confidence",
+  "version": "0.1.0",
+  "publisher": "syncfusion",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "AI",
+    "Other"
+  ],
+  "keywords": [
+    "sdlc",
+    "workflow",
+    "project-management",
+    "ai",
+    "copilot"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "icon": "media/sdlc-icon.png",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sdlc-workflow.init",
+        "title": "Initialize SDLC Tracking",
+        "category": "SDLC Workflow",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "sdlc-workflow.start",
+        "title": "Start New Work Item",
+        "category": "SDLC Workflow",
+        "icon": "$(add)"
+      },
+      {
+        "command": "sdlc-workflow.status",
+        "title": "Show Project Status",
+        "category": "SDLC Workflow",
+        "icon": "$(info)"
+      },
+      {
+        "command": "sdlc-workflow.done",
+        "title": "Complete Active Work Item",
+        "category": "SDLC Workflow",
+        "icon": "$(check)"
+      },
+      {
+        "command": "sdlc-workflow.openDashboard",
+        "title": "Open Dashboard",
+        "category": "SDLC Workflow",
+        "icon": "$(dashboard)"
+      },
+      {
+        "command": "sdlc-workflow.openInChat",
+        "title": "Open in Chat",
+        "category": "SDLC Workflow",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "sdlc-workflow.sync",
+        "title": "Sync SDLC Data",
+        "category": "SDLC Workflow",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "sdlc-workflow.snapshot",
+        "title": "Take Snapshot",
+        "category": "SDLC Workflow",
+        "icon": "$(device-camera)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sdlc-workflow",
+          "title": "SDLC Workflow",
+          "icon": "$(rocket)"
+        }
+      ]
+    },
+    "views": {
+      "sdlc-workflow": [
+        {
+          "type": "webview",
+          "id": "sdlc-workflow.mainView",
+          "name": "SDLC Workflow"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "sdlc-workflow.sync",
+          "when": "view == sdlc-workflow.mainView",
+          "group": "navigation"
+        },
+        {
+          "command": "sdlc-workflow.openInChat",
+          "when": "view == sdlc-workflow.mainView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "SDLC Workflow",
+      "properties": {
+        "sdlc-workflow.autoSync": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically sync SDLC data when files change"
+        },
+        "sdlc-workflow.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show SDLC status in the status bar"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "package": "vsce package --no-dependencies",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@syncfusion/cs-sdlc": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "@types/vscode": "^1.96.0",
+    "@vscode/prompt-tsx": "^0.4.0-alpha.9",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.5.0"
+  }
+}
