@@ -62,8 +62,23 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
 
+  // ── Context keys (control tool/command visibility) ───────────────────
+  const updateContextKeys = () => {
+    const loaded = sdlcService.isLoaded;
+    const workIndex = sdlcService.getWorkIndex();
+    const hasActive = (workIndex?.active?.length ?? 0) > 0;
+
+    vscode.commands.executeCommand('setContext', 'sdlc-workflow:projectLoaded', loaded);
+    vscode.commands.executeCommand('setContext', 'sdlc-workflow:hasActiveWork', hasActive);
+  };
+
+  // Update context keys whenever data changes
+  sdlcService.onDidChange(updateContextKeys, null, context.subscriptions);
+
   // ── Initial load ───────────────────────────────────────────────────────
   sdlcService.tryLoad().then((loaded) => {
+    updateContextKeys();
+
     if (loaded) {
       const manifest = sdlcService.getManifest();
       if (manifest) {

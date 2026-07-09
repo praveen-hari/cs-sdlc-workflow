@@ -89,6 +89,48 @@ export function registerCommands(
     }),
   );
 
+  // ── Abandon ───────────────────────────────────────────────────────────
+  context.subscriptions.push(
+    vscode.commands.registerCommand('sdlc-workflow.abandon', async () => {
+      const confirm = await vscode.window.showWarningMessage(
+        'Are you sure you want to abandon the active work item?',
+        { modal: true },
+        'Abandon',
+      );
+
+      if (confirm !== 'Abandon') {
+        return;
+      }
+
+      await openInChat(
+        'Abandon the active SDLC work item. ' +
+        'Archive it as "abandoned" and remove it from active work.',
+      );
+    }),
+  );
+
+  // ── Release ──────────────────────────────────────────────────────────
+  context.subscriptions.push(
+    vscode.commands.registerCommand('sdlc-workflow.release', async () => {
+      const version = await vscode.window.showInputBox({
+        title: 'Create Release',
+        prompt: 'Semantic version for this release',
+        placeHolder: 'e.g., 1.0.0, 0.2.0',
+        validateInput: (v) => /^\d+\.\d+\.\d+/.test(v) ? null : 'Enter a valid semver (e.g., 1.0.0)',
+      });
+
+      if (!version) {
+        return;
+      }
+
+      await openInChat(
+        `Create SDLC release v${version}. ` +
+        'Summarize the completed work items and decisions since the last release, ' +
+        'then create the release record with highlights, features, and bug fixes.',
+      );
+    }),
+  );
+
   // ── Open Dashboard ───────────────────────────────────────────────────
   context.subscriptions.push(
     vscode.commands.registerCommand('sdlc-workflow.openDashboard', () => {

@@ -69,5 +69,6 @@ Once user approves, use `#sdlcComplete` tool to archive the work item.
 ## Key Rules
 - NEVER complete a work item without user approval
 - Be honest — don't mark criteria as passed if they're not
-- If criteria fail, offer to fix them
+- If criteria fail, offer to fix them or offer to abandon with `#sdlcAbandon`
 - Only use `#sdlcComplete` after explicit user approval
+- Only use `#sdlcAbandon` after explicit user confirmation

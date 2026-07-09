@@ -29,7 +29,7 @@ Proceeding...
 ### Step 3: Implement ONE Task
 - Implement only the current task — do NOT skip ahead
 - Follow conventions from `.sdlc/context/conventions.md`
-- Update `plan.md` — change `- [ ]` to `- [x]` for completed sub-tasks
+- After completing the task, use `#sdlcPlanToggle` to mark it done (keeps dashboard and indexes in sync)
 
 ### Step 4: ⛔ STOP — TASK REVIEW REQUIRED
 
@@ -73,5 +73,6 @@ Would you like me to verify the acceptance criteria now?
 ## Key Rules
 - ONE task at a time — never implement multiple tasks without review
 - ALWAYS stop after each task and wait for user response
+- ALWAYS use `#sdlcPlanToggle` after completing a task — never edit plan.md checkboxes manually
 - If a task requires a decision, use `#sdlcDecision` to log it
 - Never call `#sdlcComplete` — that's for the review-work skill after user approval

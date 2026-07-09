@@ -45,18 +45,21 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 | Initialize project | `#sdlcInit` | ❌ Don't manually create `.sdlc/` directory |
 | Create work item | `#sdlcCreate` | ❌ Don't manually create `work/active/` directories |
 | Complete work item | `#sdlcComplete` | ❌ Don't manually move files to `archive/` |
+| Abandon work item | `#sdlcAbandon` | ❌ Don't manually delete `work/active/` directories |
+| Mark task done | `#sdlcPlanToggle` | ❌ Don't manually edit checkboxes in plan.md |
 | Log decision | `#sdlcDecision` | ❌ Don't manually create `decisions/` files |
+| Create release | `#sdlcRelease` | ❌ Don't manually create `releases/` files |
 
 ## What You CAN Edit Directly (after tools create the structure)
 
 - `.sdlc/context/architecture.md` — system design
 - `.sdlc/context/conventions.md` — coding standards
 - `.sdlc/work/active/<id>/brief.md` — work item requirements
-- `.sdlc/work/active/<id>/plan.md` — task checklist (`- [ ]` → `- [x]`)
 
 ## What You Should NEVER Edit Directly
 
 - `.sdlc/manifest.json`, `.sdlc/index/*.json` — managed by tools
+- `.sdlc/work/active/<id>/plan.md` checkboxes — use `#sdlcPlanToggle` to keep counters in sync
 
 ## Workflow with Approval Gates
 
@@ -65,11 +68,13 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 2. Write brief + plan
 3. ⛔ STOP — Show plan to user — WAIT FOR APPROVAL
 4. Implement Task 1
-5. ⛔ STOP — Show changes — WAIT FOR APPROVAL
-6. Implement Task 2
-7. ⛔ STOP — Show changes — WAIT FOR APPROVAL
-8. ... repeat for each task ...
-9. All tasks done
-10. ⛔ STOP — Verify acceptance criteria — WAIT FOR APPROVAL
-11. Complete work item (#sdlcComplete)
+5. Mark task done (#sdlcPlanToggle)
+6. ⛔ STOP — Show changes — WAIT FOR APPROVAL
+7. Implement Task 2
+8. Mark task done (#sdlcPlanToggle)
+9. ⛔ STOP — Show changes — WAIT FOR APPROVAL
+10. ... repeat for each task ...
+11. All tasks done
+12. ⛔ STOP — Verify acceptance criteria — WAIT FOR APPROVAL
+13. Complete work item (#sdlcComplete)
 ```

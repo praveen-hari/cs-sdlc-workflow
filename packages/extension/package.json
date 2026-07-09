@@ -30,25 +30,43 @@
         "command": "sdlc-workflow.init",
         "title": "Initialize SDLC Tracking",
         "category": "SDLC Workflow",
-        "icon": "$(rocket)"
+        "icon": "$(rocket)",
+        "enablement": "!sdlc-workflow:projectLoaded"
       },
       {
         "command": "sdlc-workflow.start",
         "title": "Start New Work Item",
         "category": "SDLC Workflow",
-        "icon": "$(add)"
+        "icon": "$(add)",
+        "enablement": "sdlc-workflow:projectLoaded"
       },
       {
         "command": "sdlc-workflow.status",
         "title": "Show Project Status",
         "category": "SDLC Workflow",
-        "icon": "$(info)"
+        "icon": "$(info)",
+        "enablement": "sdlc-workflow:projectLoaded"
       },
       {
         "command": "sdlc-workflow.done",
         "title": "Complete Active Work Item",
         "category": "SDLC Workflow",
-        "icon": "$(check)"
+        "icon": "$(check)",
+        "enablement": "sdlc-workflow:projectLoaded && sdlc-workflow:hasActiveWork"
+      },
+      {
+        "command": "sdlc-workflow.abandon",
+        "title": "Abandon Active Work Item",
+        "category": "SDLC Workflow",
+        "icon": "$(trash)",
+        "enablement": "sdlc-workflow:projectLoaded && sdlc-workflow:hasActiveWork"
+      },
+      {
+        "command": "sdlc-workflow.release",
+        "title": "Create Release",
+        "category": "SDLC Workflow",
+        "icon": "$(tag)",
+        "enablement": "sdlc-workflow:projectLoaded"
       },
       {
         "command": "sdlc-workflow.openDashboard",
@@ -66,23 +84,28 @@
         "command": "sdlc-workflow.sync",
         "title": "Sync SDLC Data",
         "category": "SDLC Workflow",
-        "icon": "$(sync)"
+        "icon": "$(sync)",
+        "enablement": "sdlc-workflow:projectLoaded"
       },
       {
         "command": "sdlc-workflow.snapshot",
         "title": "Take Snapshot",
         "category": "SDLC Workflow",
-        "icon": "$(device-camera)"
+        "icon": "$(device-camera)",
+        "enablement": "sdlc-workflow:projectLoaded"
       }
     ],
     "languageModelTools": [
       {
         "name": "sdlc-workflow_initProject",
         "displayName": "Initialize SDLC Project",
-        "modelDescription": "Creates a new .sdlc/ directory with manifest.json, context templates, and empty indexes. Use when the user wants to set up SDLC tracking for their workspace. This is a one-time operation — it will fail if .sdlc/ already exists.",
+        "userDescription": "Create a new .sdlc/ directory to start tracking work in this workspace",
+        "modelDescription": "Creates a new .sdlc/ directory with manifest.json, context templates, and empty indexes. Use when the user wants to set up SDLC tracking for their workspace. This is a one-time operation — it will fail if .sdlc/ already exists. Do NOT use if the project already has a .sdlc/ directory.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "sdlcInit",
         "icon": "$(rocket)",
+        "tags": ["sdlc", "sdlc-workflow", "project-setup"],
+        "when": "!sdlc-workflow:projectLoaded",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -103,10 +126,13 @@
       {
         "name": "sdlc-workflow_getProjectStatus",
         "displayName": "Get SDLC Project Status",
-        "modelDescription": "Returns the current SDLC project status including project name, tech stack, modules, active work items, recent completions, counters, and health metrics from manifest.json and indexes. Use when the user asks about project status or overview. For reading individual files like architecture.md or conventions.md, read them directly instead.",
+        "userDescription": "View project status, active work items, and health metrics",
+        "modelDescription": "Returns the current SDLC project status including project name, tech stack, modules, active work items, recent completions, counters, and health metrics from manifest.json and indexes. Use when the user asks about project status, overview, or what to work on next. For reading individual files like architecture.md or conventions.md, read them directly instead.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "sdlcStatus",
         "icon": "$(info)",
+        "tags": ["sdlc", "sdlc-workflow", "project-status"],
+        "when": "sdlc-workflow:projectLoaded",
         "inputSchema": {
           "type": "object",
           "properties": {}
@@ -115,10 +141,13 @@
       {
         "name": "sdlc-workflow_createWorkItem",
         "displayName": "Create SDLC Work Item",
-        "modelDescription": "Creates a new SDLC work item with proper ID generation, brief.md template, plan.md template, and updates the work index and manifest counters atomically. Use when the user wants to start working on a new feature, bug fix, or task. For reading or editing existing work items, read/edit the files in .sdlc/work/active/{id}/ directly.",
+        "userDescription": "Start tracking a new feature, bug fix, or task",
+        "modelDescription": "Creates a new SDLC work item with proper ID generation, brief.md template, plan.md template, and updates the work index and manifest counters atomically. Use when the user wants to start working on a new feature, bug fix, or task. After creating, write the brief and plan, then STOP and wait for user approval before implementing. For reading or editing existing work items, read/edit the files in .sdlc/work/active/{id}/ directly.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "sdlcCreate",
         "icon": "$(add)",
+        "tags": ["sdlc", "sdlc-workflow", "work-management"],
+        "when": "sdlc-workflow:projectLoaded",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -166,10 +195,13 @@
       {
         "name": "sdlc-workflow_completeWorkItem",
         "displayName": "Complete SDLC Work Item",
-        "modelDescription": "Marks an active SDLC work item as completed — archives it from work/active/ to work/archive/, updates the work index, and increments manifest counters atomically. Use when the user says they are done with a task or when all acceptance criteria have been met.",
+        "userDescription": "Mark an active work item as completed and archive it",
+        "modelDescription": "Marks an active SDLC work item as completed — archives it from work/active/ to work/archive/, updates the work index, and increments manifest counters atomically. Use ONLY when the user explicitly says they are done ('complete', 'done', 'ship it') and all acceptance criteria have been verified. NEVER call this without user approval.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "sdlcComplete",
         "icon": "$(check)",
+        "tags": ["sdlc", "sdlc-workflow", "work-management"],
+        "when": "sdlc-workflow:projectLoaded && sdlc-workflow:hasActiveWork",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -184,12 +216,81 @@
         }
       },
       {
+        "name": "sdlc-workflow_abandonWorkItem",
+        "displayName": "Abandon SDLC Work Item",
+        "userDescription": "Cancel and archive an active work item without completing it",
+        "modelDescription": "Abandons an active SDLC work item — archives it from work/active/ to work/archive/ with status 'abandoned', updates the work index and manifest counters. Use when the user wants to cancel, discard, or stop working on an item. ALWAYS confirm with the user before abandoning.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcAbandon",
+        "icon": "$(trash)",
+        "tags": ["sdlc", "sdlc-workflow", "work-management"],
+        "when": "sdlc-workflow:projectLoaded && sdlc-workflow:hasActiveWork",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The work item ID to abandon"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      },
+      {
+        "name": "sdlc-workflow_createRelease",
+        "displayName": "Create SDLC Release",
+        "userDescription": "Create a new versioned release record",
+        "modelDescription": "Creates a new release record with semantic version, title, highlights, features, bug fixes, and breaking changes. Updates the releases index and manifest atomically. Use when the user wants to cut a release, tag a version, or record a milestone.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcRelease",
+        "icon": "$(tag)",
+        "tags": ["sdlc", "sdlc-workflow", "release-management"],
+        "when": "sdlc-workflow:projectLoaded",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Semantic version string (e.g., '1.0.0', '0.2.0')"
+            },
+            "title": {
+              "type": "string",
+              "description": "Release title or codename"
+            },
+            "highlights": {
+              "type": "string",
+              "description": "Key highlights of this release"
+            },
+            "features": {
+              "type": "string",
+              "description": "New features added in this release"
+            },
+            "bugFixes": {
+              "type": "string",
+              "description": "Bugs fixed in this release"
+            },
+            "breakingChanges": {
+              "type": "string",
+              "description": "Breaking changes in this release"
+            }
+          },
+          "required": [
+            "version"
+          ]
+        }
+      },
+      {
         "name": "sdlc-workflow_logDecision",
         "displayName": "Log SDLC Decision",
-        "modelDescription": "Creates an architectural decision record (ADR) with auto-incrementing ID, proper file naming, and atomic index update. Use when the user makes a significant technical decision or chooses between alternatives.",
+        "userDescription": "Record an architectural or technical decision (ADR)",
+        "modelDescription": "Creates an architectural decision record (ADR) with auto-incrementing ID, proper file naming, and atomic index update. Use when the user makes a significant technical decision, chooses between alternatives, or says 'decide', 'log decision', or 'ADR'. ALWAYS confirm the decision details with the user before recording.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "sdlcDecision",
         "icon": "$(law)",
+        "tags": ["sdlc", "sdlc-workflow", "decision-management"],
+        "when": "sdlc-workflow:projectLoaded",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -229,6 +330,38 @@
           },
           "required": [
             "title"
+          ]
+        }
+      },
+      {
+        "name": "sdlc-workflow_updatePlanProgress",
+        "displayName": "Update Plan Progress",
+        "userDescription": "Toggle task checkboxes in a work item's plan",
+        "modelDescription": "Toggles a task checkbox in a work item's plan.md and syncs the front matter progress counters. Use after implementing a task to mark it as done (or to unmark it). This ensures the dashboard and indexes stay in sync. Provide the work item ID and the 1-based task number to toggle.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "sdlcPlanToggle",
+        "icon": "$(tasklist)",
+        "tags": ["sdlc", "sdlc-workflow", "work-management"],
+        "when": "sdlc-workflow:projectLoaded && sdlc-workflow:hasActiveWork",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The work item ID"
+            },
+            "taskNumber": {
+              "type": "number",
+              "description": "The 1-based task number to toggle (order of appearance in plan.md)"
+            },
+            "completed": {
+              "type": "boolean",
+              "description": "Set to true to mark complete, false to unmark. Default: true"
+            }
+          },
+          "required": [
+            "id",
+            "taskNumber"
           ]
         }
       }

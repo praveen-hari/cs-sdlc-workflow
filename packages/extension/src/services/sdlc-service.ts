@@ -94,21 +94,35 @@ export class SdlcService {
 
     const rootPath = workspaceFolders[0]!.uri.fsPath;
 
+    // Step 1: Discover the .sdlc/ directory
+    let sdlcRoot: string;
+    let projectRoot: string;
     try {
       this._output.appendLine(`Searching for .sdlc/ from: ${rootPath}`);
-      const sdlcRoot = await discoverSdlc(rootPath);
-      const projectRoot = projectRootFromSdlc(sdlcRoot);
+      sdlcRoot = await discoverSdlc(rootPath);
+      projectRoot = projectRootFromSdlc(sdlcRoot);
       this._output.appendLine(`Found .sdlc/ at: ${sdlcRoot}, project root: ${projectRoot}`);
+    } catch (err) {
+      this._output.appendLine(`No .sdlc/ directory found: ${err instanceof Error ? err.message : String(err)}`);
+      this._loaded = false;
+      return false;
+    }
 
+    // Step 2: Load data — manifest is required, everything else degrades gracefully
+    try {
       this._sdlcRoot = projectRoot;
       await this._loadData(projectRoot);
       this._loaded = true;
       this._onDidChange.fire();
       return true;
     } catch (err) {
-      this._output.appendLine(`Failed to discover .sdlc/: ${err instanceof Error ? err.message : String(err)}`);
-      this._loaded = false;
-      return false;
+      // Even if _loadData fails (e.g., manifest is broken), we still found .sdlc/
+      // Mark as loaded so the dashboard shows the project (with degraded data)
+      this._output.appendLine(`Warning: .sdlc/ found but data loading had errors: ${err instanceof Error ? err.message : String(err)}`);
+      this._sdlcRoot = projectRoot;
+      this._loaded = true;
+      this._onDidChange.fire();
+      return true;
     }
   }
 
