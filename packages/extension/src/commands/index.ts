@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import type { SdlcService } from '../services/sdlc-service.js';
 import type { ExtensionState } from '../services/state.js';
-import type { MainViewProvider } from '../views/main-view-provider.js';
 
 /**
  * Register all extension commands.
@@ -10,7 +9,7 @@ export function registerCommands(
   context: vscode.ExtensionContext,
   sdlcService: SdlcService,
   _state: ExtensionState,
-  mainViewProvider: MainViewProvider,
+  openDashboard: () => void,
   output: vscode.OutputChannel,
 ): void {
   // ── Init ─────────────────────────────────────────────────────────────
@@ -23,7 +22,7 @@ export function registerCommands(
           'Re-initialize',
         );
         if (choice === 'Open Dashboard') {
-          mainViewProvider.switchScreen('overview');
+          openDashboard();
           return;
         }
         if (choice !== 'Re-initialize') {
@@ -93,9 +92,7 @@ export function registerCommands(
   // ── Open Dashboard ───────────────────────────────────────────────────
   context.subscriptions.push(
     vscode.commands.registerCommand('sdlc-workflow.openDashboard', () => {
-      mainViewProvider.switchScreen('overview');
-      // Focus the sidebar
-      vscode.commands.executeCommand('sdlc-workflow.mainView.focus');
+      openDashboard();
     }),
   );
 

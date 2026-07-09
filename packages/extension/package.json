@@ -87,26 +87,18 @@
     "views": {
       "sdlc-workflow": [
         {
-          "type": "webview",
-          "id": "sdlc-workflow.mainView",
-          "name": "SDLC Workflow"
+          "id": "sdlc-workflow.welcome",
+          "name": "SDLC Workflow",
+          "type": "tree"
         }
       ]
     },
-    "menus": {
-      "view/title": [
-        {
-          "command": "sdlc-workflow.sync",
-          "when": "view == sdlc-workflow.mainView",
-          "group": "navigation"
-        },
-        {
-          "command": "sdlc-workflow.openInChat",
-          "when": "view == sdlc-workflow.mainView",
-          "group": "navigation"
-        }
-      ]
-    },
+    "viewsWelcome": [
+      {
+        "view": "sdlc-workflow.welcome",
+        "contents": "Open the SDLC Workflow dashboard to manage your project.\n[Open Dashboard](command:sdlc-workflow.openDashboardView)\nOr use the commands below to get started.\n[Initialize Project](command:sdlc-workflow.init)\n[Start New Work](command:sdlc-workflow.start)"
+      }
+    ],
     "languageModelTools": [
       {
         "name": "sdlc-workflow_getProjectStatus",

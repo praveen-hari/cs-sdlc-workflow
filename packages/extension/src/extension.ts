@@ -4,7 +4,7 @@ import { SdlcFileWatcher } from './services/file-watcher.js';
 import { ExtensionState } from './services/state.js';
 import { registerCommands } from './commands/index.js';
 import { registerTools } from './tools/index.js';
-import { MainViewProvider } from './views/main-view-provider.js';
+import { DashboardPanel } from './views/dashboard-panel.js';
 
 export function activate(context: vscode.ExtensionContext): void {
   const outputChannel = vscode.window.createOutputChannel('SDLC Workflow');
@@ -15,24 +15,18 @@ export function activate(context: vscode.ExtensionContext): void {
   const sdlcService = new SdlcService(outputChannel);
   const fileWatcher = new SdlcFileWatcher(sdlcService, outputChannel);
 
-  // ── Sidebar webview ────────────────────────────────────────────────────
-  const mainViewProvider = new MainViewProvider(
-    context.extensionUri,
-    sdlcService,
-    state,
-    outputChannel,
-  );
+  // ── Dashboard panel (opens in editor area on icon click) ───────────────
+  const openDashboard = () => {
+    DashboardPanel.open(context.extensionUri, sdlcService, state, outputChannel);
+  };
 
+  // Open dashboard when clicking the Activity Bar icon
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      'sdlc-workflow.mainView',
-      mainViewProvider,
-      { webviewOptions: { retainContextWhenHidden: true } },
-    ),
+    vscode.commands.registerCommand('sdlc-workflow.openDashboardView', openDashboard),
   );
 
   // ── Commands ───────────────────────────────────────────────────────────
-  registerCommands(context, sdlcService, state, mainViewProvider, outputChannel);
+  registerCommands(context, sdlcService, state, openDashboard, outputChannel);
 
   // ── Language Model Tools ────────────────────────────────────────────────
   registerTools(context, sdlcService);

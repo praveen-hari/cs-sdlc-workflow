@@ -77,9 +77,11 @@ Extension activates, commands registered, SDK reads `.sdlc/` data, sidebar webvi
 
 ---
 
-## Phase 2 — Language Model Tools
+## Phase 2 — Language Model Tools ✅ COMPLETE
 
 **Goal:** Agent mode can read/write SDLC data autonomously.
+
+**Completed:** July 9, 2026 · Commit `cb92ab5`
 
 ### Tools to Register
 
@@ -333,7 +335,7 @@ packages/extension/
 | Phase | What | Depends On | Status |
 |-------|------|------------|--------|
 | **1** | Scaffold + SDK integration | SDK (done ✅) | ✅ **DONE** (Jul 9) |
-| **2** | Language Model Tools + prompt-tsx | Phase 1 | ⬜ Next |
+| **2** | Language Model Tools (7 tools) | Phase 1 | ✅ **DONE** (Jul 9) |
 | **3** | Sidebar Webview UI (rich screens) | Phase 1 | ⬜ |
 | **4** | Skills + Agents + Instructions | Phase 2 | ⬜ |
 | **5** | Polish + Packaging | Phase 3, 4 | ⬜ |
