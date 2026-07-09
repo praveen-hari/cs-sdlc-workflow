@@ -7,7 +7,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
-  initSdlc, initSdlcFromScan,
+  initSdlc,
   startWork, completeWork, abandonWork,
   createDecision, supersedeDecision,
   createRelease,
@@ -16,8 +16,10 @@ import {
   readWorkItem, readDecision,
   validateConsistency, rebuildIndexes, recalculateCounters,
   updatePhase,
+  updateWorkItem,
+  createContextDoc, updateContextDoc,
 } from '@syncfusion/cs-sdlc';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -82,22 +84,6 @@ describe('CLI integration: full lifecycle', () => {
     expect(final.counters.decisions).toBe(1);
     expect(final.counters.releases).toBe(1);
     expect(final.health?.grade).toBe('B+');
-  });
-
-  it('init --scan detects project stack', async () => {
-    await writeFile(
-      join(projectRoot, 'package.json'),
-      JSON.stringify({
-        name: 'scan-test',
-        dependencies: { react: '^18.0.0' },
-        devDependencies: { typescript: '^5.0.0', vitest: '^2.0.0' },
-      }),
-    );
-
-    const result = await initSdlcFromScan(projectRoot);
-    expect(result.manifest.project.mode).toBe('brownfield');
-    expect(result.detectedStack?.language).toBe('typescript');
-    expect(result.detectedStack?.framework).toBe('react');
   });
 
   it('list commands return correct data', async () => {

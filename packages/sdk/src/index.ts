@@ -100,13 +100,16 @@ export type {
 export { initSdlc } from './operations/init.js';
 export type { InitOptions } from './operations/init.js';
 
-export { initSdlcFromScan } from './operations/init-scan.js';
-export type { ScanResult } from './operations/init-scan.js';
-
 export { startWork } from './operations/work-start.js';
 export type { StartWorkOptions, StartWorkResult } from './operations/work-start.js';
 
 export { completeWork, abandonWork } from './operations/work-complete.js';
+
+export { updateWorkItem } from './operations/work-update.js';
+export type { UpdateWorkItemOptions } from './operations/work-update.js';
+
+export { createContextDoc, updateContextDoc } from './operations/context-crud.js';
+export type { CreateContextDocOptions, UpdateContextDocOptions } from './operations/context-crud.js';
 
 export { createDecision, supersedeDecision } from './operations/decision-create.js';
 export type { CreateDecisionOptions, CreateDecisionResult } from './operations/decision-create.js';
