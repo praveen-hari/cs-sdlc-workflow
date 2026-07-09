@@ -9,28 +9,93 @@ argument-hint: 'Describe your project or say "scan" to auto-detect'
 ## Procedure
 
 ### Step 1: Detect Project Type
-- Check if source code exists → **brownfield** (scan) or **greenfield** (ask user)
+- Check if source code exists → **brownfield** (scan) or **greenfield** (interview)
 
-### Step 2: Gather Information
-- **Brownfield**: Read package.json, tsconfig, eslint, README, folder structure, test config, CI config
-- **Greenfield**: Ask "What are you building?", "Who will use it?", "What's the tech stack?"
+### Step 2a: Brownfield — Auto-Scan
+Read package.json, tsconfig, eslint, README, folder structure, test config, CI config.
+Then go to Step 3.
 
-### Step 3: ⛔ CONFIRM WITH USER
-Show what was detected:
+### Step 2b: Greenfield — Interview (One Question at a Time)
+
+**Start with a hypothesis and confidence number:**
 ```
-I found the following:
-- Name: my-app
-- Stack: TypeScript + React + Node.js
-- Testing: Vitest
-- Build: npm run build
-- Modules: 3 (web-app, api, shared)
-
-Is this correct? Should I proceed with initialization?
+HYPOTHESIS: You want to build a web application.
+CONFIDENCE: ~20% — missing: what it does, who it's for, tech stack, first feature.
 ```
-**STOP. Wait for user to confirm before creating anything.**
+
+**Ask ONE question at a time. Wait for the answer before asking the next. Attach your best guess to each question.**
+
+**Question 1: What are you building?**
+```
+Q: What are you building and what problem does it solve?
+GUESS: Based on the empty workspace, I'm guessing a web application — but it could be a CLI tool, API, library, or mobile app. What is it?
+```
+⛔ Wait for answer.
+
+**Question 2: Who will use it?**
+```
+Q: Who are the target users?
+GUESS: <guess based on their answer to Q1>
+```
+⛔ Wait for answer.
+
+**Question 3: What tech stack?**
+```
+Q: What tech stack do you want to use? Or should I suggest one based on what you're building?
+GUESS: <suggest based on Q1 + Q2 — e.g., "For a web app with that audience, I'd suggest React + TypeScript + Node.js">
+```
+⛔ Wait for answer.
+
+**Question 4: What's the first feature?**
+```
+Q: What's the first thing you want to build? This will become your first work item after setup.
+GUESS: <guess based on previous answers>
+```
+⛔ Wait for answer.
+
+**If any answer is vague** (e.g., "something modern", "the usual stack", "make it scalable"):
+> Ask: "If you didn't have to justify this to anyone, what would you actually want?"
+
+**Do NOT batch questions.** Batching encourages skim-reading and surface answers. The third question often depends on the answer to the first.
+
+### Step 3: ⛔ CONFIRM WITH USER — Restate and Wait
+
+Show a concrete summary using the user's own words:
+
+**Brownfield:**
+```
+Here's what I found:
+
+- Project:    <name>
+- Stack:      <detected stack>
+- Testing:    <framework>
+- Build:      <command>
+- Modules:    <count> (<names>)
+- Out of scope: <what we're NOT setting up>
+
+Is this correct? Say "yes" to proceed or tell me what to change.
+```
+
+**Greenfield:**
+```
+Here's what I understand:
+
+- Outcome:    <what they're building, in their words>
+- Users:      <who it's for>
+- Stack:      <chosen tech stack>
+- First work: <first feature to build>
+- Out of scope: <what we're NOT building yet>
+
+Is this correct? Say "yes" to proceed or tell me what to change.
+```
+
+**⛔ STOP. Wait for EXPLICIT "yes".** The following are NOT yes:
+- "Whatever you think is best" → Re-ask with two concrete options
+- "Sounds good" → Ask: "Anything you'd change?"
+- "Sure, let's go" → Ask: "Before I create everything — anything to refine?"
 
 ### Step 4: Create .sdlc/
-Only after user confirms, use `#sdlcInit` tool.
+Only after user explicitly confirms, use `#sdlcInit` tool.
 
 ### Step 5: Populate Context Docs
 

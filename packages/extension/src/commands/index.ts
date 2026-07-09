@@ -32,8 +32,10 @@ export function registerCommands(
 
       await openInChat(
         'Initialize SDLC tracking for this workspace. ' +
-        'Scan the project to detect the tech stack, modules, and conventions, ' +
-        'then create the .sdlc/ directory with the project context.',
+        'If source code exists, scan it to auto-detect the project details and show me a summary. ' +
+        'If the workspace is empty, interview me one question at a time to gather what I\'m building. ' +
+        'Wait for my explicit confirmation before creating the .sdlc/ directory. ' +
+        'Do NOT create anything until I say "yes".',
       );
     }),
   );

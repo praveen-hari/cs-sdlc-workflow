@@ -26,8 +26,10 @@ export function Onboarding() {
             class="onboarding-option"
             onClick={() => openInChat(
               'Scan this workspace and initialize SDLC tracking. ' +
-              'Detect the tech stack, folder structure, modules, and conventions automatically, ' +
-              'then create the .sdlc/ directory with populated context documents.'
+              'Read package.json, tsconfig, folder structure, test config, and README to auto-detect the project details. ' +
+              'Then show me a summary of what you found — project name, tech stack, modules, testing framework, build commands — ' +
+              'and wait for my explicit confirmation before creating the .sdlc/ directory. ' +
+              'Do NOT create anything until I say "yes".'
             )}
           >
             <div class="onboarding-option-icon is-success">
@@ -49,9 +51,14 @@ export function Onboarding() {
           <button
             class="onboarding-option"
             onClick={() => openInChat(
-              'Initialize a new SDLC project for this workspace. ' +
-              'Ask me for the project name, what I want to build, and who will use it. ' +
-              'Then create the .sdlc/ directory with the project context.'
+              'I want to start a new project from scratch. ' +
+              'Interview me to gather the details before creating anything. ' +
+              'Ask ONE question at a time and wait for my answer before asking the next. ' +
+              'Attach your best guess to each question so I can confirm or correct. ' +
+              'I need you to find out: 1) What I\'m building and why, 2) Who the target users are, ' +
+              '3) What tech stack to use, 4) What the first feature should be. ' +
+              'After gathering all answers, show me a structured summary and wait for my explicit "yes" before creating the .sdlc/ directory. ' +
+              'Do NOT create anything until I confirm.'
             )}
           >
             <div class="onboarding-option-icon is-accent">
