@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDLC Studio — Welcome</title>
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../tokens.css" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <link rel="stylesheet" href="../shared/components.css" />
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--color-background);
+    }
+
+    .onboarding-shell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      padding: var(--space-xl);
+    }
+
+    .onboarding-container {
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .onboarding-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto var(--space-lg);
+      background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+      font-size: 24px;
+    }
+
+    .onboarding-title {
+      font-size: var(--font-h1-size);
+      font-weight: 400;
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .onboarding-subtitle {
+      font-size: var(--font-body-size);
+      color: var(--color-secondary);
+      line-height: 1.5;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .onboarding-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .onboarding-option {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-lg);
+      padding: var(--space-lg) var(--space-xl);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      font-family: inherit;
+      color: inherit;
+    }
+
+    .onboarding-option:hover {
+      border-color: var(--color-accent);
+      background: var(--color-listHoverBackground);
+    }
+
+    .onboarding-option:active {
+      background: var(--color-listActiveBackground);
+    }
+
+    .onboarding-option-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .onboarding-option-icon.is-scan {
+      background: color-mix(in srgb, var(--color-success) 12%, transparent);
+      color: var(--color-success);
+    }
+
+    .onboarding-option-icon.is-new {
+      background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+      color: var(--color-accent);
+    }
+
+    .onboarding-option-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .onboarding-option-title {
+      font-size: var(--font-body-size);
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 2px;
+    }
+
+    .onboarding-option-desc {
+      font-size: var(--font-small-size);
+      color: var(--color-secondary);
+      line-height: 1.4;
+    }
+
+    .onboarding-option-arrow {
+      color: var(--color-secondary);
+      font-size: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    .onboarding-option:hover .onboarding-option-arrow {
+      color: var(--color-accent);
+      transform: translateX(2px);
+    }
+
+    .onboarding-footer {
+      font-size: var(--font-caption-size);
+      color: var(--color-descriptionForeground);
+      line-height: 1.5;
+    }
+
+    .onboarding-footer code {
+      font-family: var(--font-code-family);
+      font-size: var(--font-caption-size);
+      background: var(--color-inputBackground);
+      padding: 1px 5px;
+      border-radius: var(--radius-sm);
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="onboarding-shell">
+    <div class="onboarding-container">
+
+      <!-- Icon -->
+      <div class="onboarding-icon">
+        <i class="icon-rocket"></i>
+      </div>
+
+      <!-- Title -->
+      <h1 class="onboarding-title">Welcome to SDLC Studio</h1>
+      <p class="onboarding-subtitle">
+        Set up AI-assisted development for your project.<br />
+        The agent will understand your codebase, follow your conventions,<br />
+        and track work from idea to completion.
+      </p>
+
+      <!-- Two Options -->
+      <div class="onboarding-options">
+
+        <!-- Option 1: Existing Project -->
+        <button class="onboarding-option" onclick="alert('Opens chat with: /project-setup scan')">
+          <div class="onboarding-option-icon is-scan">
+            <i class="icon-folder-search"></i>
+          </div>
+          <div class="onboarding-option-content">
+            <div class="onboarding-option-title">Set Up Existing Project</div>
+            <div class="onboarding-option-desc">
+              Scan your workspace to detect the tech stack, folder structure, and conventions automatically. Best for projects that already have code.
+            </div>
+          </div>
+          <div class="onboarding-option-arrow">
+            <i class="icon-chevron-right"></i>
+          </div>
+        </button>
+
+        <!-- Option 2: New Project -->
+        <button class="onboarding-option" onclick="alert('Opens chat with: /project-setup new')">
+          <div class="onboarding-option-icon is-new">
+            <i class="icon-sparkles"></i>
+          </div>
+          <div class="onboarding-option-content">
+            <div class="onboarding-option-title">Start New Project</div>
+            <div class="onboarding-option-desc">
+              Describe what you want to build and I'll help you choose the right tech stack, set up the project structure, and configure everything.
+            </div>
+          </div>
+          <div class="onboarding-option-arrow">
+            <i class="icon-chevron-right"></i>
+          </div>
+        </button>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="onboarding-footer">
+        You can also type <code>/project-setup</code> in chat anytime to start this process.
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

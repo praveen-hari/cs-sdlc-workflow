@@ -112,7 +112,7 @@
     <!-- Actions -->
     <div class="form-actions">
       <button class="btn btn-primary" style="height: 32px; padding: 0 var(--space-xl);" onclick="document.getElementById('work-create').style.display='none'; document.getElementById('work-active').style.display='flex';">
-        <i class="icon-rocket" style="font-size:14px"></i> Create Work Item
+        <i class="icon-rocket" style="font-size:14px"></i> Create & Open in Chat
       </button>
       <button class="btn btn-secondary" onclick="document.getElementById('work-create').style.display='none'; document.getElementById('work-empty').style.display='flex';">
         Cancel
@@ -149,6 +149,9 @@
       <div class="progress-bar" style="height:4px; flex:1;"><div class="progress-fill" style="width:60%"></div></div>
       <span style="font-size: var(--font-small-size); color: var(--color-primary); font-weight: 600;">60%</span>
       <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">3 / 5 tasks</span>
+    </div>
+    <div style="margin-top: var(--space-md);">
+      <button class="btn btn-primary btn-sm"><i class="icon-message-square" style="font-size:12px"></i> Continue in Chat</button>
     </div>
   </div>
 
@@ -326,9 +329,10 @@
         <h3>Review Actions</h3>
       </div>
       <p class="text-secondary" style="font-size: var(--font-small-size); margin-bottom: var(--space-lg);">
-        Once all tasks are complete, review the agent's work and decide whether to approve, request changes, or reject.
+        Once all tasks are complete, verify acceptance criteria and review the agent's work.
       </p>
       <div class="review-actions">
+        <button class="btn btn-primary"><i class="icon-shield-check" style="font-size:14px"></i> Verify in Chat</button>
         <button class="btn btn-success" disabled><i class="icon-check-circle" style="font-size:14px"></i> Approve</button>
         <button class="btn btn-secondary" disabled><i class="icon-message-circle" style="font-size:14px"></i> Request Changes</button>
         <button class="btn btn-danger" disabled><i class="icon-x-circle" style="font-size:14px"></i> Reject</button>

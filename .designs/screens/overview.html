@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<!-- Workflow Cards -->
+<!-- Status Cards Row -->
 <div class="overview-cards">
 
   <!-- Card 1: Agent Configuration -->
@@ -18,11 +18,10 @@
       </div>
       <span class="badge badge-success" style="font-size:10px;">Ready</span>
     </div>
-    <div class="overview-status-title">Agent Configuration</div>
+    <div class="overview-status-title">Plugins</div>
     <div class="overview-status-details">
-      <span><i class="icon-lightbulb" style="font-size:11px"></i> 7 skills</span>
-      <span><i class="icon-plug" style="font-size:11px"></i> 2 MCP</span>
-      <span><i class="icon-check-circle" style="font-size:11px"></i> 3 standards</span>
+      <span><i class="icon-puzzle" style="font-size:11px"></i> 7 installed</span>
+      <span><i class="icon-sparkles" style="font-size:11px"></i> 2 recommended</span>
     </div>
     <div class="overview-status-bar">
       <div class="progress-bar" style="height:3px;"><div class="progress-fill is-success" style="width:85%"></div></div>
@@ -50,24 +49,65 @@
     </div>
   </div>
 
-  <!-- Card 3: Active Work -->
-  <div class="overview-status-card is-active" onclick="switchView('work')">
+  <!-- Card 3: Project Health -->
+  <div class="overview-status-card is-ready" style="cursor: default;">
     <div class="overview-status-top">
-      <div class="overview-status-icon" style="background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-accent);">
-        <i class="icon-hammer" style="font-size:20px"></i>
+      <div class="overview-status-icon" style="background: color-mix(in srgb, var(--color-success) 12%, transparent); color: var(--color-success);">
+        <i class="icon-heart-pulse" style="font-size:20px"></i>
       </div>
-      <span class="badge badge-accent" style="font-size:10px;">In Progress</span>
+      <span class="badge badge-success" style="font-size:10px;">B+</span>
     </div>
-    <div class="overview-status-title">Active Work</div>
+    <div class="overview-status-title">Project Health</div>
     <div class="overview-status-details">
-      <span style="color: var(--color-primary); font-weight: 500;">FEAT-001: User Dashboard</span>
+      <span><i class="icon-shield-check" style="font-size:11px"></i> 85% coverage</span>
+      <span><i class="icon-test-tubes" style="font-size:11px"></i> 198/200</span>
+      <span><i class="icon-lock" style="font-size:11px"></i> 0 vulns</span>
     </div>
     <div class="overview-status-bar">
-      <div class="progress-bar" style="height:3px;"><div class="progress-fill" style="width:60%"></div></div>
-      <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">3/5 tasks · 60%</span>
+      <div class="progress-bar" style="height:3px;"><div class="progress-fill is-success" style="width:82%"></div></div>
+      <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">Score: 82</span>
     </div>
   </div>
 
+</div>
+
+<!-- Active Work -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>Active Work</h3>
+    <span class="badge badge-accent" style="font-size:10px;">In Progress</span>
+  </div>
+  <div class="mcp-list">
+    <div class="mcp-item" style="border-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-border)); cursor: pointer;" onclick="switchView('work')">
+      <div class="mcp-status"><span class="status-dot is-active"></span></div>
+      <div class="mcp-info">
+        <div class="mcp-name" style="font-family: inherit;">FEAT-001: User Dashboard</div>
+        <div class="mcp-desc">feature · high priority</div>
+        <div style="margin-top: var(--space-sm); display: flex; align-items: center; gap: var(--space-md);">
+          <div class="progress-bar" style="height:3px; flex: 1; max-width: 160px;"><div class="progress-fill" style="width:60%"></div></div>
+          <span style="font-size: var(--font-caption-size); color: var(--color-secondary);">3/5 tasks</span>
+        </div>
+        <div style="margin-top: var(--space-sm); font-size: var(--font-small-size); color: var(--color-accent);">
+          <i class="icon-arrow-right" style="font-size:11px"></i> Next: Add localStorage persistence
+        </div>
+      </div>
+      <button class="btn btn-sm btn-primary" style="flex-shrink: 0;">Continue in Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="config-section">
+  <div class="config-section-header">
+    <h3>Quick Actions</h3>
+  </div>
+  <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+    <button class="btn btn-secondary"><i class="icon-plus" style="font-size:14px"></i> New Feature</button>
+    <button class="btn btn-secondary"><i class="icon-bug" style="font-size:14px"></i> Fix Bug</button>
+    <button class="btn btn-secondary"><i class="icon-camera" style="font-size:14px"></i> Snapshot</button>
+    <button class="btn btn-secondary"><i class="icon-refresh-cw" style="font-size:14px"></i> Sync</button>
+    <button class="btn btn-secondary"><i class="icon-check-circle" style="font-size:14px"></i> Verify</button>
+  </div>
 </div>
 
 <!-- Alerts -->
