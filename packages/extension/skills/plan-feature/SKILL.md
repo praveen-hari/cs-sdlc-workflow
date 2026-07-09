@@ -6,89 +6,58 @@ argument-hint: 'Describe the feature you want to build'
 
 # Plan Feature
 
-## When to Use
-- User describes a feature they want to build
-- User says "new feature", "I want to add", "plan this", "start working on"
-- Before any implementation begins
-
 ## Procedure
 
 ### Step 1: Understand the Idea
-
-Read project context first:
-- Read `.sdlc/context/architecture.md` to understand the system
-- Read `.sdlc/context/conventions.md` to understand coding standards
-- Read `.sdlc/manifest.json` to know the tech stack and modules
-
-Then ask smart questions based on context:
-- "What should this feature do?"
-- "Any specific requirements?"
-- "What does success look like?" (acceptance criteria)
+- Read `.sdlc/context/architecture.md` and `.sdlc/context/conventions.md`
+- Ask clarifying questions if the idea is vague
 
 ### Step 2: Create Work Item
+Use `#sdlcCreate` tool with title, type, and priority.
 
-Use the `#sdlcCreate` tool:
+### Step 3: Write Brief + Plan
+Edit `brief.md` with What/Why/Acceptance Criteria/Scope.
+Edit `plan.md` with ordered task breakdown.
+
+### Step 4: ⛔ STOP — PLAN APPROVAL REQUIRED
+
+Show the complete plan to the user:
+
 ```
-Tool: #sdlcCreate
-Input: { "title": "<feature description>", "type": "feature", "priority": "<priority>" }
-```
+📋 Work Item Created: <id>
 
-### Step 3: Write the Brief
-
-Edit `.sdlc/work/active/<id>/brief.md` directly with:
-
-```markdown
-# <Feature Title>
-
-## What
-<Clear description>
-
-## Why
-<Motivation and context>
+## Brief
+**What:** <description>
+**Why:** <motivation>
 
 ## Acceptance Criteria
-- [ ] Criterion 1 (testable, specific)
+- [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
 
-## Scope
-### In Scope
-- ...
-### Out of Scope
-- ...
+## Implementation Plan
+1. Task 1: <description>
+2. Task 2: <description>
+3. Task 3: <description>
+
+Does this plan look right?
+- Say **"approved"** to start implementing
+- Or tell me what to change
 ```
 
-### Step 4: Create Implementation Plan
+**⛔ STOP HERE. Do NOT start implementing until the user explicitly approves the plan.**
 
-Edit `.sdlc/work/active/<id>/plan.md` directly:
+If the user requests changes:
+1. Make the changes to brief.md and plan.md
+2. Show the updated plan
+3. Ask for approval again
+4. Repeat until approved
 
-```markdown
----
-totalTasks: <N>
-completedTasks: 0
----
-
-# Implementation Plan
-
-## Task 1: <Foundation>
-- [ ] Sub-task 1a
-- [ ] Sub-task 1b
-
-## Task 2: <Core Implementation>
-- [ ] Sub-task 2a
-
-## Task 3: <Testing>
-- [ ] Write unit tests
-- [ ] Write integration tests
-```
-
-### Step 5: Review with User
-
-Show the brief + plan. Iterate until approved.
+### Step 5: Only After Approval
+Once the user says "approved", "yes", "looks good", "proceed", or similar — THEN hand off to the implement-task skill.
 
 ## Key Rules
-- Read project context BEFORE planning — follow existing patterns
+- NEVER start coding before plan approval
 - Acceptance criteria must be testable (pass/fail)
-- Tasks ordered by dependency (foundation → core → tests → polish)
+- Tasks ordered by dependency
 - Each task completable in one session
-- Use `#sdlcCreate` tool for work item creation, edit files directly for content

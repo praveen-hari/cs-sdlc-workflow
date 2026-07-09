@@ -1,62 +1,39 @@
 ---
 name: log-decision
-description: 'Log an architectural or technical decision as an ADR. Use when the user makes a significant decision, says "decide", "log decision", "ADR", "should we use X or Y", or when choosing between alternatives during implementation.'
+description: 'Log an architectural or technical decision as an ADR. Use when the user makes a significant decision, says "decide", "log decision", "ADR", "should we use X or Y".'
 argument-hint: 'Describe the decision or the alternatives being considered'
 ---
 
 # Log Decision
 
-## When to Use
-- User makes a significant technical decision
-- User chooses between alternatives (e.g., "should we use PostgreSQL or MongoDB?")
-- User says "decide", "log decision", "ADR", "record this decision"
-- During implementation when an architectural choice is made
-
 ## Procedure
 
 ### Step 1: Understand the Decision
-
-If the user hasn't fully described the decision, ask:
-- "What decision needs to be made?"
-- "What are the alternatives?"
-- "What are the constraints?"
+If not fully described, ask: "What decision needs to be made?" and "What are the alternatives?"
 
 ### Step 2: Analyze Options
+For each alternative, discuss pros, cons, effort, and fit with existing architecture.
 
-For each alternative, discuss:
-- **Pros**: What's good about this option
-- **Cons**: What's bad or risky
-- **Effort**: How much work to implement
-- **Fit**: How well it fits the existing architecture
+### Step 3: ⛔ CONFIRM BEFORE RECORDING
 
-Read `.sdlc/context/architecture.md` to understand the current system.
-
-### Step 3: Record the Decision
-
-Use the `#sdlcDecision` tool:
-
+Show the proposed decision:
 ```
-Tool: #sdlcDecision
-Input: {
-  "title": "<Decision title>",
-  "context": "<What prompted this decision>",
-  "decision": "<What was decided>",
-  "rationale": "<Why this option was chosen over alternatives>",
-  "status": "accepted"
-}
+📝 Decision Record
+
+**Title:** Use PostgreSQL over MongoDB
+**Context:** Need a database for user data with complex queries
+**Decision:** PostgreSQL 16 with Prisma ORM
+**Rationale:** Team experience, ACID compliance, JSON support
+
+Record this decision? Say "yes" to save or tell me what to change.
 ```
 
-### Step 4: Update Architecture (if needed)
+**⛔ STOP. Wait for user confirmation before recording.**
 
-If the decision affects the system architecture, edit `.sdlc/context/architecture.md` directly to reflect the change.
-
-### Step 5: Confirm
-
-Show the recorded decision to the user with the assigned ID.
+### Step 4: Record (only after confirmation)
+Use `#sdlcDecision` tool. Update architecture.md if the decision changes the system.
 
 ## Key Rules
-- Use `#sdlcDecision` tool — it handles auto-incrementing IDs and index updates
+- Always confirm with user before recording
 - Include rationale — future developers need to understand WHY
-- Reference alternatives that were considered and rejected
-- Update architecture.md if the decision changes the system design
 - Not every choice needs an ADR — only significant, hard-to-reverse decisions
