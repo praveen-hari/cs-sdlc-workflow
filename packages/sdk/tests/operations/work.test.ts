@@ -6,7 +6,7 @@ import { ItemNotFoundError } from '../../src/core/errors.js';
 import { readJson, readMarkdown } from '../../src/core/reader.js';
 import { manifestSchema } from '../../src/schemas/manifest.js';
 import { workIndexSchema } from '../../src/schemas/indexes.js';
-import { briefFrontMatterSchema } from '../../src/schemas/objects.js';
+import { specFrontMatterSchema } from '../../src/schemas/objects.js';
 import { mkdtemp, rm, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -23,21 +23,21 @@ describe('startWork', () => {
     await rm(projectRoot, { recursive: true, force: true });
   });
 
-  it('creates a work item directory with brief.md', async () => {
+  it('creates a work item directory with spec.md', async () => {
     const { id } = await startWork(projectRoot, { description: 'Add Dark Mode' });
 
     expect(id).toBe('add-dark-mode');
 
-    const brief = await readMarkdown(
-      join(projectRoot, '.sdlc', 'work', 'active', id, 'brief.md'),
-      briefFrontMatterSchema,
+    const spec = await readMarkdown(
+      join(projectRoot, '.sdlc', 'work', 'active', id, 'spec.md'),
+      specFrontMatterSchema,
     );
-    expect(brief.frontMatter?.type).toBe('feature');
-    expect(brief.frontMatter?.title).toBe('Add Dark Mode');
-    expect(brief.frontMatter?.createdAt).toBeTruthy();
+    expect(spec.frontMatter?.type).toBe('feature');
+    expect(spec.frontMatter?.title).toBe('Add Dark Mode');
+    expect(spec.frontMatter?.createdAt).toBeTruthy();
   });
 
-  it('creates plan.md by default', async () => {
+  it('creates todo.md by default', async () => {
     const { id } = await startWork(projectRoot, { description: 'Add Feature' });
 
     const s = await stat(join(projectRoot, '.sdlc', 'work', 'active', id, 'plan.md'));
@@ -130,7 +130,7 @@ describe('completeWork', () => {
     expect(s.isDirectory()).toBe(true);
   });
 
-  it('sets completedAt and status in brief.md', async () => {
+  it('sets completedAt and status in spec.md', async () => {
     const { id } = await startWork(projectRoot, { description: 'Add Feature' });
     await completeWork(projectRoot, id);
 
@@ -140,11 +140,11 @@ describe('completeWork', () => {
       workIndexSchema,
     );
     const recentEntry = workIndex.recent[0];
-    const briefPath = join(projectRoot, '.sdlc', recentEntry!.path, 'brief.md');
-    const brief = await readMarkdown(briefPath);
+    const specPath = join(projectRoot, '.sdlc', recentEntry!.path, 'spec.md');
+    const spec = await readMarkdown(specPath);
 
-    expect(brief.frontMatter).toHaveProperty('status', 'completed');
-    expect(brief.frontMatter).toHaveProperty('completedAt');
+    expect(spec.frontMatter).toHaveProperty('status', 'completed');
+    expect(spec.frontMatter).toHaveProperty('completedAt');
   });
 
   it('updates counters: decrements activeWork, increments totalCompleted', async () => {
@@ -219,10 +219,10 @@ describe('abandonWork', () => {
       join(projectRoot, '.sdlc', 'index', 'work.json'),
       workIndexSchema,
     );
-    const briefPath = join(projectRoot, '.sdlc', workIndex.recent[0]!.path, 'brief.md');
-    const brief = await readMarkdown(briefPath);
+    const specPath = join(projectRoot, '.sdlc', workIndex.recent[0]!.path, 'spec.md');
+    const spec = await readMarkdown(specPath);
 
-    expect(brief.frontMatter).toHaveProperty('status', 'abandoned');
+    expect(spec.frontMatter).toHaveProperty('status', 'abandoned');
   });
 
   it('archives and updates counters same as complete', async () => {

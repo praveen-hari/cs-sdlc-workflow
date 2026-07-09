@@ -15,13 +15,13 @@ import { manifestSchema } from '../schemas/manifest.js';
 import { workIndexSchema } from '../schemas/indexes.js';
 import { decisionsIndexSchema } from '../schemas/indexes.js';
 import { releasesIndexSchema } from '../schemas/indexes.js';
-import { briefFrontMatterSchema, decisionFrontMatterSchema, releaseFrontMatterSchema } from '../schemas/objects.js';
+import { specFrontMatterSchema, decisionFrontMatterSchema, releaseFrontMatterSchema } from '../schemas/objects.js';
 import { readJson, readMarkdown, fileExists } from '../core/reader.js';
 import { writeJsonAtomic } from '../core/writer.js';
 import {
   SDLC_DIR, MANIFEST_FILE, INDEX_DIR, WORK_INDEX_FILE, DECISIONS_INDEX_FILE,
   RELEASES_INDEX_FILE, WORK_DIR, ACTIVE_DIR, ARCHIVE_DIR, DECISIONS_DIR,
-  RELEASES_DIR, BRIEF_FILE, MAX_RECENT_ITEMS,
+  RELEASES_DIR, SPEC_FILE, BRIEF_FILE, MAX_RECENT_ITEMS,
 } from '../core/constants.js';
 
 /**
@@ -212,9 +212,14 @@ async function buildWorkIndex(sdlcDir: string): Promise<WorkIndex> {
     const dirs = await readdir(activeDir);
     for (const dir of dirs) {
       try {
+        // Try spec.md (new) then brief.md (legacy)
+        let specPath = join(activeDir, dir, SPEC_FILE);
+        if (!(await fileExists(specPath))) {
+          specPath = join(activeDir, dir, BRIEF_FILE);
+        }
         const brief = await readMarkdown(
-          join(activeDir, dir, BRIEF_FILE),
-          briefFrontMatterSchema,
+          specPath,
+          specFrontMatterSchema,
         );
         if (brief.frontMatter) {
           active.push({
@@ -242,9 +247,14 @@ async function buildWorkIndex(sdlcDir: string): Promise<WorkIndex> {
         for (const item of items) {
           if (recent.length >= MAX_RECENT_ITEMS) break;
           try {
+            // Try spec.md (new) then brief.md (legacy)
+            let archiveSpecPath = join(archiveDir, month, item, SPEC_FILE);
+            if (!(await fileExists(archiveSpecPath))) {
+              archiveSpecPath = join(archiveDir, month, item, BRIEF_FILE);
+            }
             const brief = await readMarkdown(
-              join(archiveDir, month, item, BRIEF_FILE),
-              briefFrontMatterSchema,
+              archiveSpecPath,
+              specFrontMatterSchema,
             );
             if (brief.frontMatter?.completedAt) {
               recent.push({

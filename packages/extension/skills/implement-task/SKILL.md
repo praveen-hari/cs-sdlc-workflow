@@ -9,8 +9,9 @@ argument-hint: 'Continue working on the active task or specify a work item ID'
 ## Procedure
 
 ### Step 1: Load Context
-1. Read `.sdlc/work/active/<id>/brief.md` for requirements and boundaries
-2. Read `.sdlc/work/active/<id>/plan.md` for task checklist
+1. Read `.sdlc/work/active/<id>/spec.md` for requirements and boundaries
+2. Read `.sdlc/work/active/<id>/todo.md` for task checklist
+3. Read `.sdlc/work/active/<id>/plan.md` for implementation approach
 3. Read `.sdlc/context/conventions.md` for coding standards
 4. Find the first unchecked task (`- [ ]`) — this is the current task
 5. Check if this is a **bug** type work item — if so, use the Prove-It Pattern (Step 2b)

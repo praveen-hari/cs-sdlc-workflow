@@ -251,16 +251,16 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
           <Button
             size="sm"
             icon="codicon-go-to-file"
-            onClick={() => openFile(`work/active/${w.id}/brief.md`)}
+            onClick={() => openFile(`work/active/${w.id}/spec.md`)}
           >
-            Open Brief
+            Open Spec
           </Button>
           <Button
             size="sm"
             icon="codicon-go-to-file"
-            onClick={() => openFile(`work/active/${w.id}/plan.md`)}
+            onClick={() => openFile(`work/active/${w.id}/todo.md`)}
           >
-            Open Plan
+            Open Todo
           </Button>
         </div>
       </div>
@@ -284,7 +284,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
           {detail?.briefBody ? (
             <div class="brief-content" dangerouslySetInnerHTML={{ __html: markdownToHtml(detail.briefBody) }} />
           ) : (
-            <div class="text-secondary text-sm">No brief content yet. Open the brief file to edit.</div>
+            <div class="text-secondary text-sm">No spec content yet. Open the spec file to edit.</div>
           )}
         </div>
       )}
@@ -365,7 +365,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
               </div>
             </>
           ) : (
-            <div class="text-secondary text-sm">No plan tasks found. Open plan.md to add tasks.</div>
+            <div class="text-secondary text-sm">No tasks found. Open todo.md to add tasks.</div>
           )}
         </div>
       )}

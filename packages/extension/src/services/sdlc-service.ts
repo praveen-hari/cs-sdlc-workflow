@@ -187,15 +187,17 @@ export class SdlcService {
     // only when ALL its sub-checkboxes are checked.
     const activeWorkDetails: Record<string, ActiveWorkDetail> = {};
     for (const [id, item] of this._activeWorkItems) {
-      const mainTasks = parsePlanMainTasks(item.plan?.body ?? '');
+      // Parse tasks from todo.md (or plan.md for legacy items)
+      const todoBody = item.todo?.body ?? item.plan?.body ?? '';
+      const mainTasks = parsePlanMainTasks(todoBody);
       const totalTasks = mainTasks.length;
       const completedTasks = mainTasks.filter(t => t.completed).length;
 
       activeWorkDetails[id] = {
         id,
-        briefFrontMatter: item.brief.frontMatter as Record<string, unknown> | null,
-        briefBody: item.brief.body,
-        hasPlan: item.plan !== null,
+        briefFrontMatter: item.spec.frontMatter as Record<string, unknown> | null,
+        briefBody: item.spec.body,
+        hasPlan: item.plan !== null || item.todo !== null,
         planBody: item.plan?.body ?? null,
         planFrontMatter: item.plan?.frontMatter as Record<string, unknown> | null,
         totalTasks,

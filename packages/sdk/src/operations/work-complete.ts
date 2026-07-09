@@ -11,7 +11,7 @@ import { rename, mkdir } from 'node:fs/promises';
 import type { Manifest, WorkIndex } from '../types/index.js';
 import { manifestSchema } from '../schemas/manifest.js';
 import { workIndexSchema } from '../schemas/indexes.js';
-import { briefFrontMatterSchema } from '../schemas/objects.js';
+import { specFrontMatterSchema } from '../schemas/objects.js';
 import { readJson, readMarkdown } from '../core/reader.js';
 import { writeJsonAtomic, writeMarkdown } from '../core/writer.js';
 import { serializeFrontMatter } from '../core/frontmatter.js';
@@ -20,7 +20,7 @@ import { nowISO, monthFromISO } from '../utils/dates.js';
 import { MAX_RECENT_ITEMS } from '../core/constants.js';
 import {
   SDLC_DIR, MANIFEST_FILE, INDEX_DIR, WORK_INDEX_FILE,
-  WORK_DIR, ACTIVE_DIR, ARCHIVE_DIR, BRIEF_FILE,
+  WORK_DIR, ACTIVE_DIR, ARCHIVE_DIR, SPEC_FILE, BRIEF_FILE,
 } from '../core/constants.js';
 
 interface ArchiveResult {
@@ -74,16 +74,20 @@ async function archiveWork(
   const completedAt = nowISO();
   const archiveMonth = monthFromISO(completedAt);
 
-  // Update brief.md front matter
-  const briefPath = join(activeDir, BRIEF_FILE);
-  const brief = await readMarkdown(briefPath, briefFrontMatterSchema);
+  // Update spec.md (or brief.md for legacy) front matter
+  const { fileExists } = await import('../core/reader.js');
+  let specPath = join(activeDir, SPEC_FILE);
+  if (!(await fileExists(specPath))) {
+    specPath = join(activeDir, BRIEF_FILE);
+  }
+  const brief = await readMarkdown(specPath, specFrontMatterSchema);
   const updatedFrontMatter = {
     ...brief.frontMatter,
     completedAt,
     status,
   };
   await writeMarkdown(
-    briefPath,
+    specPath,
     serializeFrontMatter(updatedFrontMatter as Record<string, unknown>, brief.body),
   );
 

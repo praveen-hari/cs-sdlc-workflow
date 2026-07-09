@@ -1,5 +1,5 @@
 /**
- * Plan task operations — parse, toggle, and sync checkboxes in plan.md.
+ * Task operations — parse, toggle, and sync checkboxes in todo.md (or plan.md for legacy).
  *
  * @module
  */
@@ -8,10 +8,10 @@ import { join } from 'node:path';
 import { readMarkdown, fileExists } from '../core/reader.js';
 import { writeMarkdown } from '../core/writer.js';
 import { serializeFrontMatter } from '../core/frontmatter.js';
-import { planFrontMatterSchema } from '../schemas/objects.js';
+import { todoFrontMatterSchema } from '../schemas/objects.js';
 import { ItemNotFoundError } from '../core/errors.js';
 import {
-  SDLC_DIR, WORK_DIR, ACTIVE_DIR, PLAN_FILE,
+  SDLC_DIR, WORK_DIR, ACTIVE_DIR, TODO_FILE, PLAN_FILE,
 } from '../core/constants.js';
 
 export interface PlanTask {
@@ -40,9 +40,9 @@ export async function listPlanTasks(
   projectRoot: string,
   workId: string,
 ): Promise<PlanSummary> {
-  const planPath = resolvePlanPath(projectRoot, workId);
+  const planPath = await resolveTodoPath(projectRoot, workId);
   if (!(await fileExists(planPath))) {
-    throw new ItemNotFoundError('Plan', workId);
+    throw new ItemNotFoundError('Todo/Plan', workId);
   }
 
   const doc = await readMarkdown(planPath);
@@ -67,12 +67,12 @@ export async function updatePlanTask(
   taskNumber: number,
   completed: boolean,
 ): Promise<PlanSummary> {
-  const planPath = resolvePlanPath(projectRoot, workId);
+  const planPath = await resolveTodoPath(projectRoot, workId);
   if (!(await fileExists(planPath))) {
-    throw new ItemNotFoundError('Plan', workId);
+    throw new ItemNotFoundError('Todo/Plan', workId);
   }
 
-  const doc = await readMarkdown(planPath, planFrontMatterSchema);
+  const doc = await readMarkdown(planPath, todoFrontMatterSchema);
   const lines = doc.body.split('\n');
   const tasks = parseCheckboxes(doc.body);
 
@@ -131,12 +131,12 @@ export async function syncPlanProgress(
   projectRoot: string,
   workId: string,
 ): Promise<PlanSummary> {
-  const planPath = resolvePlanPath(projectRoot, workId);
+  const planPath = await resolveTodoPath(projectRoot, workId);
   if (!(await fileExists(planPath))) {
-    throw new ItemNotFoundError('Plan', workId);
+    throw new ItemNotFoundError('Todo/Plan', workId);
   }
 
-  const doc = await readMarkdown(planPath, planFrontMatterSchema);
+  const doc = await readMarkdown(planPath, todoFrontMatterSchema);
   const tasks = parseCheckboxes(doc.body);
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((t) => t.completed).length;
@@ -159,8 +159,12 @@ export async function syncPlanProgress(
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function resolvePlanPath(projectRoot: string, workId: string): string {
-  return join(projectRoot, SDLC_DIR, WORK_DIR, ACTIVE_DIR, workId, PLAN_FILE);
+async function resolveTodoPath(projectRoot: string, workId: string): Promise<string> {
+  // Prefer todo.md (new), fall back to plan.md (legacy)
+  const todoPath = join(projectRoot, SDLC_DIR, WORK_DIR, ACTIVE_DIR, workId, TODO_FILE);
+  if (await fileExists(todoPath)) return todoPath;
+  const planPath = join(projectRoot, SDLC_DIR, WORK_DIR, ACTIVE_DIR, workId, PLAN_FILE);
+  return planPath;
 }
 
 function parseCheckboxes(body: string): PlanTask[] {

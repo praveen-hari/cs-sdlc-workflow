@@ -80,7 +80,9 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 
 - `.sdlc/context/architecture.md` — system design
 - `.sdlc/context/conventions.md` — coding standards
-- `.sdlc/work/active/<id>/brief.md` — work item requirements
+- `.sdlc/work/active/<id>/spec.md` — feature specification (What/Why/AC/Testing/Boundaries)
+- `.sdlc/work/active/<id>/plan.md` — implementation plan (approach, architecture decisions)
+- `.sdlc/work/active/<id>/todo.md` — task checklist (checkboxes)
 
 ## What You Should NEVER Edit Directly
 

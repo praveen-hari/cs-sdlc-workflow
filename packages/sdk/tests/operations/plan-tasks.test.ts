@@ -6,7 +6,7 @@ import { ItemNotFoundError } from '../../src/core/errors.js';
 import { writeMarkdown } from '../../src/core/writer.js';
 import { serializeFrontMatter } from '../../src/core/frontmatter.js';
 import { readMarkdown } from '../../src/core/reader.js';
-import { planFrontMatterSchema } from '../../src/schemas/objects.js';
+import { todoFrontMatterSchema } from '../../src/schemas/objects.js';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -22,8 +22,8 @@ describe('plan task operations', () => {
     workId = result.id;
 
     // Write a plan with real tasks
-    const planPath = join(projectRoot, '.sdlc', 'work', 'active', workId, 'plan.md');
-    const body = `# Implementation Plan
+    const todoPath = join(projectRoot, '.sdlc', 'work', 'active', workId, 'todo.md');
+    const body = `# Tasks
 
 ## Task 1: Setup
 - [ ] Create project structure
@@ -38,7 +38,7 @@ describe('plan task operations', () => {
 - [ ] Write unit tests
 - [ ] Write integration tests
 `;
-    await writeMarkdown(planPath, serializeFrontMatter({ totalTasks: 0, completedTasks: 0 }, body));
+    await writeMarkdown(todoPath, serializeFrontMatter({ totalTasks: 0, completedTasks: 0 }, body));
   });
 
   afterEach(async () => {
@@ -46,7 +46,7 @@ describe('plan task operations', () => {
   });
 
   describe('listPlanTasks', () => {
-    it('lists all checkboxes in plan.md', async () => {
+    it('lists all checkboxes in todo.md', async () => {
       const summary = await listPlanTasks(projectRoot, workId);
       expect(summary.totalTasks).toBe(7);
       expect(summary.completedTasks).toBe(0);
@@ -80,8 +80,8 @@ describe('plan task operations', () => {
       await updatePlanTask(projectRoot, workId, 2, true);
       await updatePlanTask(projectRoot, workId, 3, true);
 
-      const planPath = join(projectRoot, '.sdlc', 'work', 'active', workId, 'plan.md');
-      const doc = await readMarkdown(planPath, planFrontMatterSchema);
+      const todoPath2 = join(projectRoot, '.sdlc', 'work', 'active', workId, 'todo.md');
+      const doc = await readMarkdown(todoPath2, todoFrontMatterSchema);
       expect(doc.frontMatter?.totalTasks).toBe(7);
       expect(doc.frontMatter?.completedTasks).toBe(3);
       expect(doc.frontMatter?.currentTask).toBe(4); // first uncompleted
@@ -118,23 +118,23 @@ describe('plan task operations', () => {
 
   describe('syncPlanProgress', () => {
     it('syncs front matter from checkbox state', async () => {
-      // Manually write a plan with some checked boxes but wrong front matter
-      const planPath = join(projectRoot, '.sdlc', 'work', 'active', workId, 'plan.md');
-      const body = `# Plan
+      // Manually write a todo with some checked boxes but wrong front matter
+      const todoPath3 = join(projectRoot, '.sdlc', 'work', 'active', workId, 'todo.md');
+      const body = `# Tasks
 
 - [x] Task A done
 - [x] Task B done
 - [ ] Task C pending
 - [x] Task D done
 `;
-      await writeMarkdown(planPath, serializeFrontMatter({ totalTasks: 0, completedTasks: 0 }, body));
+      await writeMarkdown(todoPath3, serializeFrontMatter({ totalTasks: 0, completedTasks: 0 }, body));
 
       const summary = await syncPlanProgress(projectRoot, workId);
       expect(summary.totalTasks).toBe(4);
       expect(summary.completedTasks).toBe(3);
 
       // Verify front matter was updated
-      const doc = await readMarkdown(planPath, planFrontMatterSchema);
+      const doc = await readMarkdown(todoPath3, todoFrontMatterSchema);
       expect(doc.frontMatter?.totalTasks).toBe(4);
       expect(doc.frontMatter?.completedTasks).toBe(3);
       expect(doc.frontMatter?.currentTask).toBe(3); // Task C is first uncompleted

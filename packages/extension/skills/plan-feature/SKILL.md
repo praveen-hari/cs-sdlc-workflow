@@ -38,7 +38,7 @@ REFRAMED SUCCESS CRITERIA:
 Use `#sdlcCreate` tool with title, type, and priority.
 
 ### Step 3: Write Brief
-Edit `brief.md` covering these sections:
+Edit `spec.md` covering these sections:
 
 1. **What** — What are we building? One paragraph.
 2. **Why** — What problem does this solve? Who benefits?
@@ -132,7 +132,7 @@ Does this plan look right?
 **⛔ STOP HERE. Do NOT start implementing until the user explicitly approves the plan.**
 
 If the user requests changes:
-1. Make the changes to brief.md and plan.md
+1. Make the changes to spec.md, plan.md, and todo.md
 2. Show the updated plan
 3. Ask for approval again
 4. Repeat until approved

@@ -9,7 +9,7 @@ argument-hint: 'Review the active work item or specify an ID'
 ## Procedure
 
 ### Step 1: Load Work Item
-1. Read `.sdlc/work/active/<id>/brief.md` for acceptance criteria and boundaries
+1. Read `.sdlc/work/active/<id>/spec.md` for acceptance criteria and boundaries
 2. Read `.sdlc/work/active/<id>/plan.md` for task completion status
 3. Read `.sdlc/context/conventions.md` for project standards
 
@@ -62,7 +62,7 @@ Review the implementation across five dimensions. Label every finding with sever
 
 ### Step 4: Verify Each Acceptance Criterion
 
-For each criterion in `brief.md`, check the implementation and report:
+For each criterion in `spec.md`, check the implementation and report:
 
 ```
 ## Acceptance Criteria Verification

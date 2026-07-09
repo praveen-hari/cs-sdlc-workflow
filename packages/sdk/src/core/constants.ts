@@ -24,8 +24,12 @@ export const DECISIONS_INDEX_FILE = 'decisions.json';
 export const RELEASES_INDEX_FILE = 'releases.json';
 export const LATEST_SNAPSHOT_FILE = 'latest.json';
 
-export const BRIEF_FILE = 'brief.md';
+export const SPEC_FILE = 'spec.md';
 export const PLAN_FILE = 'plan.md';
+export const TODO_FILE = 'todo.md';
+
+/** @deprecated Use SPEC_FILE instead. Kept for backward compatibility with existing .sdlc/ directories. */
+export const BRIEF_FILE = 'brief.md';
 
 export const ARCHITECTURE_FILE = 'architecture.md';
 export const CONVENTIONS_FILE = 'conventions.md';

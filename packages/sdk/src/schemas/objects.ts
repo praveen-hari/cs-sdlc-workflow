@@ -60,8 +60,8 @@ export const stackFrontMatterSchema = z
 
 // ─── Work Item Front Matter ─────────────────────────────────────────────────
 
-/** brief.md front matter per §5.4.2. */
-export const briefFrontMatterSchema = z
+/** spec.md front matter (work item specification). */
+export const specFrontMatterSchema = z
   .object({
     type: workTypeSchema,
     title: z.string().min(1).max(200),
@@ -73,12 +73,23 @@ export const briefFrontMatterSchema = z
   })
   .passthrough();
 
-/** plan.md front matter per §5.4.3. */
+/** @deprecated Use specFrontMatterSchema. Kept for backward compatibility. */
+export const briefFrontMatterSchema = specFrontMatterSchema;
+
+/** plan.md front matter (implementation plan). */
 export const planFrontMatterSchema = z
   .object({
     totalTasks: z.number().int().min(0).optional(),
     completedTasks: z.number().int().min(0).optional(),
     currentTask: z.number().int().min(1).optional(),
+  })
+  .passthrough();
+
+/** todo.md front matter (task checklist). */
+export const todoFrontMatterSchema = z
+  .object({
+    totalTasks: z.number().int().min(0).optional(),
+    completedTasks: z.number().int().min(0).optional(),
   })
   .passthrough();
 

@@ -11,14 +11,14 @@ import { join } from 'node:path';
 import type { Manifest, WorkIndex } from '../types/index.js';
 import { manifestSchema } from '../schemas/manifest.js';
 import { workIndexSchema } from '../schemas/indexes.js';
-import { briefFrontMatterSchema } from '../schemas/objects.js';
+import { specFrontMatterSchema } from '../schemas/objects.js';
 import { readJson, readMarkdown, fileExists } from '../core/reader.js';
 import { writeJsonAtomic, writeMarkdown } from '../core/writer.js';
 import { serializeFrontMatter } from '../core/frontmatter.js';
 import { ItemNotFoundError } from '../core/errors.js';
 import {
   SDLC_DIR, MANIFEST_FILE, INDEX_DIR, WORK_INDEX_FILE,
-  WORK_DIR, ACTIVE_DIR, BRIEF_FILE,
+  WORK_DIR, ACTIVE_DIR, SPEC_FILE, BRIEF_FILE,
 } from '../core/constants.js';
 
 export interface UpdateWorkItemOptions {
@@ -55,17 +55,21 @@ export async function updateWorkItem(
   options: UpdateWorkItemOptions,
 ): Promise<UpdateWorkItemResult> {
   const sdlcDir = join(projectRoot, SDLC_DIR);
-  const briefPath = join(sdlcDir, WORK_DIR, ACTIVE_DIR, id, BRIEF_FILE);
+  // Try spec.md (new) then brief.md (legacy)
+  let specPath = join(sdlcDir, WORK_DIR, ACTIVE_DIR, id, SPEC_FILE);
+  if (!(await fileExists(specPath))) {
+    specPath = join(sdlcDir, WORK_DIR, ACTIVE_DIR, id, BRIEF_FILE);
+  }
 
   // Verify work item exists in active
-  if (!(await fileExists(briefPath))) {
+  if (!(await fileExists(specPath))) {
     throw new ItemNotFoundError('Active work item', id);
   }
 
   // Read current state
   const manifest = await readJson(join(sdlcDir, MANIFEST_FILE), manifestSchema);
   const workIndex = await readJson(join(sdlcDir, INDEX_DIR, WORK_INDEX_FILE), workIndexSchema);
-  const brief = await readMarkdown(briefPath, briefFrontMatterSchema);
+  const brief = await readMarkdown(specPath, specFrontMatterSchema);
 
   // Merge front matter updates
   const updatedFrontMatter: Record<string, unknown> = {
@@ -87,9 +91,9 @@ export async function updateWorkItem(
   // Use new body if provided, otherwise keep existing
   const body = options.body ?? brief.body;
 
-  // Write updated brief.md
+  // Write updated spec.md
   await writeMarkdown(
-    briefPath,
+    specPath,
     serializeFrontMatter(updatedFrontMatter, body),
   );
 

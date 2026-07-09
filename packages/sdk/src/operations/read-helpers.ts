@@ -14,7 +14,7 @@ import type {
 import { manifestSchema } from '../schemas/manifest.js';
 import { workIndexSchema, decisionsIndexSchema, releasesIndexSchema } from '../schemas/indexes.js';
 import {
-  briefFrontMatterSchema, planFrontMatterSchema,
+  specFrontMatterSchema, planFrontMatterSchema, todoFrontMatterSchema,
   decisionFrontMatterSchema, releaseFrontMatterSchema,
 } from '../schemas/objects.js';
 import { latestSnapshotSchema, historySnapshotSchema } from '../schemas/snapshots.js';
@@ -24,7 +24,7 @@ import {
   SDLC_DIR, MANIFEST_FILE, INDEX_DIR, WORK_INDEX_FILE,
   DECISIONS_INDEX_FILE, RELEASES_INDEX_FILE, CONTEXT_DIR,
   WORK_DIR, ACTIVE_DIR, ARCHIVE_DIR, DECISIONS_DIR, RELEASES_DIR,
-  SNAPSHOTS_DIR, HISTORY_DIR, LATEST_SNAPSHOT_FILE, BRIEF_FILE, PLAN_FILE,
+  SNAPSHOTS_DIR, HISTORY_DIR, LATEST_SNAPSHOT_FILE, SPEC_FILE, BRIEF_FILE, PLAN_FILE, TODO_FILE,
 } from '../core/constants.js';
 
 export async function readManifest(projectRoot: string): Promise<Manifest> {
@@ -52,21 +52,34 @@ export async function readContextDoc(projectRoot: string, name: string): Promise
 export async function readWorkItem(projectRoot: string, id: string): Promise<WorkItem> {
   const sdlcDir = join(projectRoot, SDLC_DIR);
 
-  // Check active first
-  let briefPath = join(sdlcDir, WORK_DIR, ACTIVE_DIR, id, BRIEF_FILE);
-  let planPath = join(sdlcDir, WORK_DIR, ACTIVE_DIR, id, PLAN_FILE);
+  // Check active first — try spec.md (new) then brief.md (legacy)
+  let baseDir = join(sdlcDir, WORK_DIR, ACTIVE_DIR, id);
+  let specPath = join(baseDir, SPEC_FILE);
+  let planPath = join(baseDir, PLAN_FILE);
+  let todoPath = join(baseDir, TODO_FILE);
 
-  if (!(await fileExists(briefPath))) {
+  // Fallback to brief.md for backward compatibility
+  if (!(await fileExists(specPath))) {
+    specPath = join(baseDir, BRIEF_FILE);
+  }
+
+  if (!(await fileExists(specPath))) {
     // Search archive
     const archiveDir = join(sdlcDir, WORK_DIR, ARCHIVE_DIR);
     let found = false;
     try {
       const months = await readdir(archiveDir);
       for (const month of months) {
-        const candidate = join(archiveDir, month, id, BRIEF_FILE);
+        // Try spec.md first, then brief.md
+        let candidate = join(archiveDir, month, id, SPEC_FILE);
+        if (!(await fileExists(candidate))) {
+          candidate = join(archiveDir, month, id, BRIEF_FILE);
+        }
         if (await fileExists(candidate)) {
-          briefPath = candidate;
-          planPath = join(archiveDir, month, id, PLAN_FILE);
+          baseDir = join(archiveDir, month, id);
+          specPath = candidate;
+          planPath = join(baseDir, PLAN_FILE);
+          todoPath = join(baseDir, TODO_FILE);
           found = true;
           break;
         }
@@ -78,13 +91,17 @@ export async function readWorkItem(projectRoot: string, id: string): Promise<Wor
     }
   }
 
-  const brief = await readMarkdown(briefPath, briefFrontMatterSchema);
+  const spec = await readMarkdown(specPath, specFrontMatterSchema);
   let plan = null;
   if (await fileExists(planPath)) {
     plan = await readMarkdown(planPath, planFrontMatterSchema);
   }
+  let todo = null;
+  if (await fileExists(todoPath)) {
+    todo = await readMarkdown(todoPath, todoFrontMatterSchema);
+  }
 
-  return { id, brief, plan };
+  return { id, spec, plan, todo, brief: spec };
 }
 
 export async function readDecision(projectRoot: string, id: string): Promise<DecisionRecord> {

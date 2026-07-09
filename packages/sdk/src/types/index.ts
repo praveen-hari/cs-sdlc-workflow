@@ -100,8 +100,10 @@ import type {
   conventionsFrontMatterSchema,
   requirementsFrontMatterSchema,
   stackFrontMatterSchema,
+  specFrontMatterSchema,
   briefFrontMatterSchema,
   planFrontMatterSchema,
+  todoFrontMatterSchema,
   decisionFrontMatterSchema,
   releaseFrontMatterSchema,
 } from '../schemas/objects.js';
@@ -110,8 +112,11 @@ export type ArchitectureFrontMatter = z.infer<typeof architectureFrontMatterSche
 export type ConventionsFrontMatter = z.infer<typeof conventionsFrontMatterSchema>;
 export type RequirementsFrontMatter = z.infer<typeof requirementsFrontMatterSchema>;
 export type StackFrontMatter = z.infer<typeof stackFrontMatterSchema>;
+export type SpecFrontMatter = z.infer<typeof specFrontMatterSchema>;
+/** @deprecated Use SpecFrontMatter. */
 export type BriefFrontMatter = z.infer<typeof briefFrontMatterSchema>;
 export type PlanFrontMatter = z.infer<typeof planFrontMatterSchema>;
+export type TodoFrontMatter = z.infer<typeof todoFrontMatterSchema>;
 export type DecisionFrontMatter = z.infer<typeof decisionFrontMatterSchema>;
 export type ReleaseFrontMatter = z.infer<typeof releaseFrontMatterSchema>;
 
@@ -151,11 +156,17 @@ export interface ParsedDocument<T = Record<string, unknown>> {
   body: string;
 }
 
-/** A work item (brief + optional plan). */
+/** A work item (spec + plan + todo). */
 export interface WorkItem {
   id: Identifier;
-  brief: ParsedDocument<BriefFrontMatter>;
+  /** The feature specification (What/Why/AC/Testing/Boundaries). Formerly brief.md, now spec.md. */
+  spec: ParsedDocument<SpecFrontMatter>;
+  /** The implementation plan (architecture decisions, approach). */
   plan: ParsedDocument<PlanFrontMatter> | null;
+  /** The task checklist (checkboxes). */
+  todo: ParsedDocument<TodoFrontMatter> | null;
+  /** @deprecated Use spec. Alias for backward compatibility. */
+  brief: ParsedDocument<SpecFrontMatter>;
 }
 
 /** A decision record. */
