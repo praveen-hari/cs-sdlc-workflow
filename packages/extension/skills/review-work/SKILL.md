@@ -145,6 +145,30 @@ Would you like me to:
 ### Step 8: Complete (only after approval)
 Once user approves, use `#sdlcComplete` tool to archive the work item.
 
+### Step 9: Quick Reflection
+After completing, ask the user:
+```
+🔄 Quick reflection before we move on:
+
+- What went well in this work item?
+- What was harder than expected?
+- Any conventions or boundaries to update in .sdlc/context/?
+
+(Skip this if you'd rather move on.)
+```
+If the user provides feedback, update `.sdlc/context/conventions.md` or `.sdlc/context/architecture.md` as appropriate. This keeps the project context improving over time.
+
+### Step 10: Suggest Next Action
+```
+✅ Work item completed and archived!
+
+What's next?
+- 🚀 Start a new work item
+- 🏷️ Create a release with #sdlcRelease
+- 📝 Update project context docs
+- 📊 Check project status with #sdlcStatus
+```
+
 ## Key Rules
 - NEVER complete a work item without user approval
 - Be honest — don't mark criteria as passed if they're not

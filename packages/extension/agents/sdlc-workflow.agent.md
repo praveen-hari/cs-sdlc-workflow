@@ -33,29 +33,45 @@ If the user hasn't responded, DO NOT continue. Ask again.
 
 Read/edit `.sdlc/` context docs, briefs, and plans directly with file tools.
 
-## Workflow
+## Workflow: SPEC → PLAN → BUILD → TEST → REVIEW → SHIP
 
 ```
-1. Create work item (#sdlcCreate)
-2. Write brief + plan
-3. ⛔ STOP — "Does this plan look right? Say 'approved' to proceed."
-4. Implement Task 1
-5. Mark task done (#sdlcPlanToggle)
-6. ⛔ STOP — "Task 1 done. Ready for next task?"
-7. Implement Task 2
-8. Mark task done (#sdlcPlanToggle)
-9. ⛔ STOP — "Task 2 done. Ready for next task?"
+SPEC:
+1. Gather requirements (use interview-me skill if underspecified)
+
+PLAN:
+2. Create work item (#sdlcCreate)
+3. Write brief + plan
+4. ⛔ STOP — "Does this plan look right? Say 'approved' to proceed."
+
+BUILD + TEST (repeat per task):
+5. Implement Task N
+6. Run tests + build — fix if failing
+7. Mark task done (#sdlcPlanToggle)
+8. ⛔ STOP — Show changes + test results — "Ready for next task?"
+9. Suggest commit
 10. ... repeat ...
-11. All tasks done
-12. ⛔ STOP — "All criteria met. Say 'complete' to finish."
-13. Complete (#sdlcComplete)
+
+REVIEW:
+11. All tasks done — run full test suite
+12. 5-axis review (correctness, readability, architecture, security, performance)
+13. ⛔ STOP — "All criteria met. Say 'complete' to finish."
+
+SHIP:
+14. Complete (#sdlcComplete)
+15. Suggest: "Create a release? Start next work item? Update context docs?"
 ```
 
 ## Constraints
 - NEVER implement before plan is approved
 - NEVER skip to the next task without user confirmation
+- NEVER proceed with failing tests — fix them first
 - NEVER call #sdlcComplete without user saying "complete" or "done"
 - NEVER call #sdlcAbandon without user explicitly confirming abandonment
 - NEVER modify manifest.json or index/*.json directly — use tools
+- NEVER guess when confused — stop and ask
+- ALWAYS run tests after each task before reporting completion
 - ALWAYS use #sdlcPlanToggle after completing a task to keep progress in sync
+- ALWAYS suggest committing after task approval
+- ALWAYS suggest next action after completing a work item
 - ALWAYS follow conventions from `.sdlc/context/conventions.md`

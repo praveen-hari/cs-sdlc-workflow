@@ -61,20 +61,72 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 - `.sdlc/manifest.json`, `.sdlc/index/*.json` — managed by tools
 - `.sdlc/work/active/<id>/plan.md` checkboxes — use `#sdlcPlanToggle` to keep counters in sync
 
-## Workflow with Approval Gates
+## Core Behaviors (Always Active)
+
+### Test After Every Task
+After implementing any task, you MUST:
+1. Run the test suite (use the test command from `.sdlc/context/conventions.md`)
+2. Run the build (use the build command from `.sdlc/context/conventions.md`)
+3. Report results in the task review summary
+
+**If tests fail, fix them BEFORE marking the task done.** Do NOT proceed with failing tests. Do NOT skip tests to move faster.
+
+### Commit After Task Approval
+After the user approves a completed task, suggest committing:
+```
+Want me to commit these changes?
+Suggested: git commit -m "feat(<scope>): <description>"
+```
+Follow conventional commit format. One atomic commit per task. If the user declines, proceed to the next task — but note that uncommitted changes accumulate risk.
+
+### Manage Confusion — Never Guess
+When you encounter conflicting requirements, unclear specs, or ambiguous instructions:
+1. **STOP.** Do not proceed with a guess.
+2. Name the specific confusion: "I see X in the spec but Y in the existing code."
+3. Present the tradeoff or ask the clarifying question.
+4. **Wait for resolution before continuing.**
+
+**Bad:** Silently picking one interpretation and hoping it's right.
+**Good:** "The brief says 'support dark mode' but conventions.md says 'no CSS-in-JS'. Should I use CSS variables or Tailwind dark: classes?"
+
+### Push Back When Warranted
+You are not a yes-machine. When an approach has clear problems:
+1. Point out the issue directly
+2. Explain the concrete downside (quantify when possible — "this adds ~200ms latency" not "this might be slower")
+3. Propose an alternative
+4. Accept the user's decision if they override with full information
+
+Sycophancy is a failure mode. "Of course!" followed by implementing a bad idea helps no one.
+
+## Full Workflow: SPEC → PLAN → BUILD → TEST → REVIEW → SHIP
 
 ```
-1. Create work item (#sdlcCreate)
-2. Write brief + plan
-3. ⛔ STOP — Show plan to user — WAIT FOR APPROVAL
-4. Implement Task 1
-5. Mark task done (#sdlcPlanToggle)
-6. ⛔ STOP — Show changes — WAIT FOR APPROVAL
-7. Implement Task 2
+SPEC:
+1. Gather requirements (interview-me skill or user description)
+
+PLAN:
+2. Create work item (#sdlcCreate)
+3. Write brief (What/Why/AC/Testing Strategy/Boundaries)
+4. Write plan (tasks with dependencies, sized S/M/L)
+5. ⛔ STOP — Show plan to user — WAIT FOR APPROVAL
+
+BUILD + TEST (repeat for each task):
+6. Implement Task N
+7. Run tests + build — fix if failing
 8. Mark task done (#sdlcPlanToggle)
-9. ⛔ STOP — Show changes — WAIT FOR APPROVAL
-10. ... repeat for each task ...
-11. All tasks done
-12. ⛔ STOP — Verify acceptance criteria — WAIT FOR APPROVAL
-13. Complete work item (#sdlcComplete)
+9. ⛔ STOP — Show changes + test results — WAIT FOR APPROVAL
+10. Suggest commit — "git commit -m 'feat: ...'"
+11. ... repeat for each task ...
+
+REVIEW:
+12. All tasks done
+13. Run full test suite + 5-axis review
+14. ⛔ STOP — Show acceptance criteria verification — WAIT FOR APPROVAL
+
+SHIP:
+15. Complete work item (#sdlcComplete)
+16. Suggest next action:
+    - "Start next work item?"
+    - "Create a release with #sdlcRelease?"
+    - "Update project context docs?"
 ```
