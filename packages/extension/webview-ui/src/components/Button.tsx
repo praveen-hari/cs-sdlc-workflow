@@ -8,6 +8,7 @@ interface ButtonProps {
   prompt?: string;
   command?: string;
   onClick?: () => void;
+  disabled?: boolean;
   class?: string;
   style?: string;
   children: ComponentChildren;
@@ -20,6 +21,7 @@ export function Button({
   prompt,
   command,
   onClick,
+  disabled,
   class: className = '',
   style,
   children,
@@ -39,6 +41,7 @@ export function Button({
       class={`btn btn-${variant} ${size === 'sm' ? 'btn-sm' : ''} ${className}`}
       style={style}
       onClick={handleClick}
+      disabled={disabled}
     >
       {icon && <span class={`codicon ${icon}`} />}
       {children}

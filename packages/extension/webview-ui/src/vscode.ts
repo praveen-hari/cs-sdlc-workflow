@@ -26,6 +26,11 @@ export function executeCommand(command: string, ...args: unknown[]): void {
   postMessage({ type: 'executeCommand', command, args });
 }
 
+/** Open a file in the editor */
+export function openFile(relativePath: string): void {
+  postMessage({ type: 'openFile', path: relativePath });
+}
+
 /** Notify extension of screen change */
 export function switchScreen(screen: string): void {
   postMessage({ type: 'switchScreen', screen });

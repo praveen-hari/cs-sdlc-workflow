@@ -6,17 +6,25 @@ import {
   readWorkIndex,
   readDecisionsIndex,
   readReleasesIndex,
+  readLatestSnapshot,
+  readContextDoc,
+  readWorkItem,
+  listPlanTasks,
 } from '@syncfusion/cs-sdlc';
 import type {
   Manifest,
   WorkIndex,
   DecisionsIndex,
   ReleasesIndex,
+  LatestSnapshot,
+  ContextDocument,
+  WorkItem,
+  PlanSummary,
 } from '@syncfusion/cs-sdlc';
 
 /**
  * Wraps the SDK to provide SDLC operations to the extension.
- * All file I/O goes through this service.
+ * Reads ALL .sdlc/ data for the webview UI.
  */
 export class SdlcService {
   private _sdlcRoot: string | undefined;
@@ -24,6 +32,10 @@ export class SdlcService {
   private _workIndex: WorkIndex | undefined;
   private _decisionsIndex: DecisionsIndex | undefined;
   private _releasesIndex: ReleasesIndex | undefined;
+  private _snapshot: LatestSnapshot | undefined;
+  private _contextDocs: Map<string, ContextDocument> = new Map();
+  private _activeWorkItems: Map<string, WorkItem> = new Map();
+  private _planSummaries: Map<string, PlanSummary> = new Map();
   private _loaded = false;
 
   private readonly _onDidChange = new vscode.EventEmitter<void>();
@@ -57,12 +69,28 @@ export class SdlcService {
     return this._releasesIndex;
   }
 
+  getSnapshot(): LatestSnapshot | undefined {
+    return this._snapshot;
+  }
+
+  getContextDoc(name: string): ContextDocument | undefined {
+    return this._contextDocs.get(name);
+  }
+
+  getContextDocs(): Map<string, ContextDocument> {
+    return this._contextDocs;
+  }
+
+  getActiveWorkItem(id: string): WorkItem | undefined {
+    return this._activeWorkItems.get(id);
+  }
+
+  getPlanSummary(id: string): PlanSummary | undefined {
+    return this._planSummaries.get(id);
+  }
+
   // ── Load / Refresh ───────────────────────────────────────────────────
 
-  /**
-   * Try to find and load .sdlc/ from the workspace.
-   * Returns true if found and loaded.
-   */
   async tryLoad(): Promise<boolean> {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders || workspaceFolders.length === 0) {
@@ -81,15 +109,11 @@ export class SdlcService {
       this._onDidChange.fire();
       return true;
     } catch {
-      // discoverSdlc throws NotFoundError if no .sdlc/ exists
       this._loaded = false;
       return false;
     }
   }
 
-  /**
-   * Reload all data from disk.
-   */
   async refresh(): Promise<void> {
     if (!this._sdlcRoot) {
       return;
@@ -103,11 +127,8 @@ export class SdlcService {
     }
   }
 
-  // ── Operations ───────────────────────────────────────────────────────
+  // ── Status Summary ───────────────────────────────────────────────────
 
-  /**
-   * Get a summary of the current project status.
-   */
   getStatusSummary(): ProjectStatusSummary | undefined {
     if (!this._loaded || !this._manifest) {
       return undefined;
@@ -132,22 +153,118 @@ export class SdlcService {
     };
   }
 
+  /**
+   * Get full data payload for the webview.
+   */
+  getFullData(): FullSdlcData {
+    const status = this.getStatusSummary();
+
+    // Serialize context docs
+    const contextDocs: Record<string, ContextDocData> = {};
+    for (const [name, doc] of this._contextDocs) {
+      contextDocs[name] = {
+        name,
+        frontMatter: doc.document.frontMatter as Record<string, unknown> | null,
+        body: doc.document.body,
+        hasContent: doc.document.body.trim().length > 0 && !doc.document.body.includes('<!-- '),
+      };
+    }
+
+    // Serialize active work items with plan details
+    const activeWorkDetails: Record<string, ActiveWorkDetail> = {};
+    for (const [id, item] of this._activeWorkItems) {
+      const planSummary = this._planSummaries.get(id);
+      activeWorkDetails[id] = {
+        id,
+        briefFrontMatter: item.brief.frontMatter as Record<string, unknown> | null,
+        briefBody: item.brief.body,
+        hasPlan: item.plan !== null,
+        planBody: item.plan?.body ?? null,
+        planFrontMatter: item.plan?.frontMatter as Record<string, unknown> | null,
+        totalTasks: planSummary?.totalTasks ?? 0,
+        completedTasks: planSummary?.completedTasks ?? 0,
+        tasks: planSummary?.tasks ?? [],
+      };
+    }
+
+    // Serialize snapshot
+    const snapshot: SnapshotData | null = this._snapshot
+      ? {
+          grade: (this._snapshot.overall as Record<string, unknown>)?.grade as string ?? null,
+          score: (this._snapshot.overall as Record<string, unknown>)?.score as number ?? null,
+          coverage: (this._snapshot.coverage as Record<string, unknown>)?.total as number ?? null,
+          tests: this._snapshot.tests as { total: number; passing: number; failing: number } ?? null,
+          vulnerabilities: (this._snapshot.security as Record<string, unknown>)?.vulnerabilities as number ?? null,
+          generatedAt: this._snapshot.generatedAt,
+        }
+      : null;
+
+    return {
+      isLoaded: this._loaded,
+      status,
+      workIndex: this._workIndex
+        ? { active: this._workIndex.active, recent: this._workIndex.recent }
+        : null,
+      decisionsIndex: this._decisionsIndex
+        ? { entries: this._decisionsIndex.entries }
+        : null,
+      releasesIndex: this._releasesIndex
+        ? { entries: this._releasesIndex.entries }
+        : null,
+      snapshot,
+      contextDocs,
+      activeWorkDetails,
+    };
+  }
+
   // ── Private ──────────────────────────────────────────────────────────
 
   private async _loadData(projectRoot: string): Promise<void> {
+    // Core data (always needed)
     this._manifest = await readManifest(projectRoot);
     this._workIndex = await readWorkIndex(projectRoot);
 
-    try {
-      this._decisionsIndex = await readDecisionsIndex(projectRoot);
-    } catch {
-      this._decisionsIndex = undefined;
+    // Indexes (may not exist)
+    try { this._decisionsIndex = await readDecisionsIndex(projectRoot); }
+    catch { this._decisionsIndex = undefined; }
+
+    try { this._releasesIndex = await readReleasesIndex(projectRoot); }
+    catch { this._releasesIndex = undefined; }
+
+    // Snapshot (may not exist)
+    try { this._snapshot = await readLatestSnapshot(projectRoot); }
+    catch { this._snapshot = undefined; }
+
+    // Context documents (may not exist)
+    this._contextDocs.clear();
+    for (const name of ['architecture', 'conventions', 'requirements', 'stack']) {
+      try {
+        const doc = await readContextDoc(projectRoot, name);
+        this._contextDocs.set(name, doc);
+      } catch {
+        // Doc doesn't exist — skip
+      }
     }
 
-    try {
-      this._releasesIndex = await readReleasesIndex(projectRoot);
-    } catch {
-      this._releasesIndex = undefined;
+    // Active work item details + plan summaries
+    this._activeWorkItems.clear();
+    this._planSummaries.clear();
+    if (this._workIndex) {
+      for (const entry of this._workIndex.active) {
+        try {
+          const item = await readWorkItem(projectRoot, entry.id);
+          this._activeWorkItems.set(entry.id, item);
+        } catch {
+          this._output.appendLine(`Failed to read work item: ${entry.id}`);
+        }
+
+        try {
+          const plan = await listPlanTasks(projectRoot, entry.id);
+          this._planSummaries.set(entry.id, plan);
+        } catch {
+          // No plan or parse error — skip
+        }
+      }
     }
   }
 }
@@ -166,4 +283,43 @@ export interface ProjectStatusSummary {
   totalReleases: number;
   counters: unknown;
   health: unknown;
+}
+
+export interface ContextDocData {
+  name: string;
+  frontMatter: Record<string, unknown> | null;
+  body: string;
+  hasContent: boolean;
+}
+
+export interface ActiveWorkDetail {
+  id: string;
+  briefFrontMatter: Record<string, unknown> | null;
+  briefBody: string;
+  hasPlan: boolean;
+  planBody: string | null;
+  planFrontMatter: Record<string, unknown> | null;
+  totalTasks: number;
+  completedTasks: number;
+  tasks: Array<{ number: number; text: string; completed: boolean }>;
+}
+
+export interface SnapshotData {
+  grade: string | null;
+  score: number | null;
+  coverage: number | null;
+  tests: { total: number; passing: number; failing: number } | null;
+  vulnerabilities: number | null;
+  generatedAt: string;
+}
+
+export interface FullSdlcData {
+  isLoaded: boolean;
+  status: ProjectStatusSummary | undefined;
+  workIndex: { active: unknown[]; recent: unknown[] } | null;
+  decisionsIndex: { entries: unknown[] } | null;
+  releasesIndex: { entries: unknown[] } | null;
+  snapshot: SnapshotData | null;
+  contextDocs: Record<string, ContextDocData>;
+  activeWorkDetails: Record<string, ActiveWorkDetail>;
 }

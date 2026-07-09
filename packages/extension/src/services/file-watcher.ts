@@ -29,8 +29,15 @@ export class SdlcFileWatcher {
           return;
         }
 
-        this._output.appendLine('.sdlc/ changed — refreshing data');
-        await this._sdlcService.refresh();
+        if (!this._sdlcService.isLoaded) {
+          // .sdlc/ was just created — try to load for the first time
+          this._output.appendLine('.sdlc/ detected — loading project');
+          await this._sdlcService.tryLoad();
+        } else {
+          // Already loaded — just refresh data
+          this._output.appendLine('.sdlc/ changed — refreshing data');
+          await this._sdlcService.refresh();
+        }
       }, 500);
     };
 

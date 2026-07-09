@@ -57,6 +57,9 @@ importers:
       '@types/vscode-webview':
         specifier: ^1.57.5
         version: 1.57.5
+      '@vscode/codicons':
+        specifier: ^0.0.45
+        version: 0.0.45
       '@vscode/prompt-tsx':
         specifier: ^0.4.0-alpha.9
         version: 0.4.0-alpha.9
@@ -906,6 +909,9 @@ packages:
   '@vitest/utils@2.1.9':
     resolution: {integrity: sha512-v0psaMSkNJ3A2NMrUEHFRzJtDPFn+/VWZ5WxImB21T9fjucJRmS7xCS3ppEnARb9y11OAzaD+P2Ps+b+BGX5iQ==}
 
+  '@vscode/codicons@0.0.45':
+    resolution: {integrity: sha512-1KAZ7XCMagp5Gdrlr4bbbcAqgcIL623iO1wW6rfcSVGAVUQvR0WP7bQx1SbJ11gmV3fdQTSEFIJQ/5C+HuVasw==}
+
   '@vscode/prompt-tsx@0.4.0-alpha.9':
     resolution: {integrity: sha512-65Z/Q8R9JBslF+NvWloPAe9b/sKs3pUVjbcQ8nrS/Ylh/pf5cZbYXoJf4rSKTSytKZlTRVM71fDWIKdRRKScVw==}
 
@@ -1752,6 +1758,8 @@ snapshots:
       '@vitest/pretty-format': 2.1.9
       loupe: 3.2.1
       tinyrainbow: 1.2.0
+
+  '@vscode/codicons@0.0.45': {}
 
   '@vscode/prompt-tsx@0.4.0-alpha.9': {}
 

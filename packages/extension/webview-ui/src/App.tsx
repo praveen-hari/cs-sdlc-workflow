@@ -50,17 +50,20 @@ export function App() {
   const workIndex = data?.workIndex ?? null;
   const decisionsIndex = data?.decisionsIndex ?? null;
   const releasesIndex = data?.releasesIndex ?? null;
+  const snapshot = data?.snapshot ?? null;
+  const contextDocs = data?.contextDocs ?? {};
+  const activeWorkDetails = data?.activeWorkDetails ?? {};
 
   return (
     <div class="shell">
       <Sidebar activeScreen={screen} onNavigate={handleSwitchScreen} workIndex={workIndex} />
       <main class="detail">
         {screen === 'overview' && (
-          <Overview status={status} workIndex={workIndex} onNavigate={handleSwitchScreen} />
+          <Overview status={status} workIndex={workIndex} snapshot={snapshot} contextDocs={contextDocs} onNavigate={handleSwitchScreen} />
         )}
         {screen === 'plugins' && <Plugins />}
-        {screen === 'context' && <ProjectContext status={status} />}
-        {screen === 'work' && <Work status={status} workIndex={workIndex} />}
+        {screen === 'context' && <ProjectContext status={status} contextDocs={contextDocs} />}
+        {screen === 'work' && <Work status={status} workIndex={workIndex} activeWorkDetails={activeWorkDetails} />}
         {screen === 'history' && (
           <History workIndex={workIndex} decisionsIndex={decisionsIndex} releasesIndex={releasesIndex} />
         )}

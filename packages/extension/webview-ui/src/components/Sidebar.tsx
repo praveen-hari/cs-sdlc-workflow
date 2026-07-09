@@ -25,10 +25,6 @@ export function Sidebar({ activeScreen, onNavigate, workIndex }: SidebarProps) {
 
   return (
     <nav class="sidebar">
-      <div class="sidebar-header">
-        <span class="codicon codicon-rocket" style="color: var(--vscode-progressBar-background);" />
-        <span>SDLC Workflow</span>
-      </div>
       <div class="sidebar-items">
         {items.map((item) => (
           <button

@@ -1,44 +1,83 @@
-import { Button } from '../components/Button';
+import { openInChat } from '../vscode';
 
 export function Onboarding() {
   return (
     <div class="onboarding-shell">
       <div class="onboarding-container">
-        <span
-          class="codicon codicon-rocket"
-          style="font-size:48px; color:var(--vscode-progressBar-background); margin-bottom:20px;"
-        />
-        <div class="view-title">Welcome to SDLC Workflow</div>
-        <div class="text-secondary mt-sm" style="max-width:360px; line-height:1.5;">
-          Set up AI-assisted development for your project. The agent will understand your codebase,
-          follow your conventions, and track work from idea to completion.
+
+        {/* Icon */}
+        <div class="onboarding-icon">
+          <span class="codicon codicon-rocket" />
         </div>
-        <div class="flex flex-col gap-md mt-lg" style="width:300px;">
-          <Button
-            variant="primary"
-            class="w-full"
-            style="justify-content:center; height:32px;"
-            icon="codicon-search"
-            prompt="Scan this workspace and initialize SDLC tracking. Detect the tech stack, modules, and conventions automatically, then create the .sdlc/ directory."
+
+        {/* Title */}
+        <h1 class="onboarding-title">Welcome to SDLC Workflow</h1>
+        <p class="onboarding-subtitle">
+          Set up AI-assisted development for your project.<br />
+          The agent will understand your codebase, follow your conventions,<br />
+          and track work from idea to completion.
+        </p>
+
+        {/* Two Options */}
+        <div class="onboarding-options">
+
+          {/* Option 1: Existing Project */}
+          <button
+            class="onboarding-option"
+            onClick={() => openInChat(
+              'Scan this workspace and initialize SDLC tracking. ' +
+              'Detect the tech stack, folder structure, modules, and conventions automatically, ' +
+              'then create the .sdlc/ directory with populated context documents.'
+            )}
           >
-            Set Up Existing Project
-          </Button>
-          <Button
-            class="w-full"
-            style="justify-content:center; height:32px;"
-            icon="codicon-sparkle"
-            prompt="Initialize a new SDLC project for this workspace. Ask me for the project name and what I want to build."
+            <div class="onboarding-option-icon is-success">
+              <span class="codicon codicon-root-folder" />
+            </div>
+            <div class="onboarding-option-content">
+              <div class="onboarding-option-title">Set Up Existing Project</div>
+              <div class="onboarding-option-desc">
+                Scan your workspace to detect the tech stack, folder structure, and conventions
+                automatically. Best for projects that already have code.
+              </div>
+            </div>
+            <div class="onboarding-option-arrow">
+              <span class="codicon codicon-arrow-right" />
+            </div>
+          </button>
+
+          {/* Option 2: New Project */}
+          <button
+            class="onboarding-option"
+            onClick={() => openInChat(
+              'Initialize a new SDLC project for this workspace. ' +
+              'Ask me for the project name, what I want to build, and who will use it. ' +
+              'Then create the .sdlc/ directory with the project context.'
+            )}
           >
-            Start New Project
-          </Button>
+            <div class="onboarding-option-icon is-accent">
+              <span class="codicon codicon-wand" />
+            </div>
+            <div class="onboarding-option-content">
+              <div class="onboarding-option-title">Start New Project</div>
+              <div class="onboarding-option-desc">
+                Describe what you want to build and I'll help you choose the right tech stack,
+                set up the project structure, and configure everything.
+              </div>
+            </div>
+            <div class="onboarding-option-arrow">
+              <span class="codicon codicon-arrow-right" />
+            </div>
+          </button>
+
         </div>
-        <div class="text-secondary text-xs mt-lg">
+
+        {/* Footer */}
+        <div class="onboarding-footer">
           You can also type{' '}
-          <code style="background:var(--vscode-textCodeBlock-background); padding:1px 4px; border-radius:3px;">
-            /project-setup
-          </code>{' '}
-          in chat
+          <code>/init-sdlc</code>{' '}
+          in chat anytime to start this process.
         </div>
+
       </div>
     </div>
   );

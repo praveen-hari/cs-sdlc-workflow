@@ -14,6 +14,9 @@ export interface DataUpdateMessage {
   workIndex: WorkIndexData | null;
   decisionsIndex: DecisionsIndexData | null;
   releasesIndex: ReleasesIndexData | null;
+  snapshot: SnapshotData | null;
+  contextDocs: Record<string, ContextDocData>;
+  activeWorkDetails: Record<string, ActiveWorkDetail>;
 }
 
 export interface SwitchScreenMessage {
@@ -83,4 +86,41 @@ export interface ReleaseEntry {
 
 export interface ReleasesIndexData {
   entries: ReleaseEntry[];
+}
+
+/** Snapshot data from snapshots/latest.json */
+export interface SnapshotData {
+  grade: string | null;
+  score: number | null;
+  coverage: number | null;
+  tests: { total: number; passing: number; failing: number } | null;
+  vulnerabilities: number | null;
+  generatedAt: string;
+}
+
+/** Context document data */
+export interface ContextDocData {
+  name: string;
+  frontMatter: Record<string, unknown> | null;
+  body: string;
+  hasContent: boolean;
+}
+
+/** Active work item with full brief + plan details */
+export interface ActiveWorkDetail {
+  id: string;
+  briefFrontMatter: Record<string, unknown> | null;
+  briefBody: string;
+  hasPlan: boolean;
+  planBody: string | null;
+  planFrontMatter: Record<string, unknown> | null;
+  totalTasks: number;
+  completedTasks: number;
+  tasks: PlanTask[];
+}
+
+export interface PlanTask {
+  number: number;
+  text: string;
+  completed: boolean;
 }

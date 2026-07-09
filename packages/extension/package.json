@@ -86,10 +86,18 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "name": { "type": "string", "description": "Project name" },
-            "description": { "type": "string", "description": "One-line project description" }
+            "name": {
+              "type": "string",
+              "description": "Project name"
+            },
+            "description": {
+              "type": "string",
+              "description": "One-line project description"
+            }
           },
-          "required": ["name"]
+          "required": [
+            "name"
+          ]
         }
       },
       {
@@ -99,7 +107,10 @@
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "sdlcStatus",
         "icon": "$(info)",
-        "inputSchema": { "type": "object", "properties": {} }
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
       },
       {
         "name": "sdlc-workflow_createWorkItem",
@@ -111,12 +122,45 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "title": { "type": "string", "description": "Description of the work item" },
-            "type": { "type": "string", "enum": ["feature", "bug", "refactor", "performance", "security", "docs", "tech-debt", "infrastructure"], "description": "Type of work. Default: feature" },
-            "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"], "description": "Priority level. Default: medium" },
-            "modules": { "type": "array", "items": { "type": "string" }, "description": "Module IDs this work affects" }
+            "title": {
+              "type": "string",
+              "description": "Description of the work item"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "feature",
+                "bug",
+                "refactor",
+                "performance",
+                "security",
+                "docs",
+                "tech-debt",
+                "infrastructure"
+              ],
+              "description": "Type of work. Default: feature"
+            },
+            "priority": {
+              "type": "string",
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+              ],
+              "description": "Priority level. Default: medium"
+            },
+            "modules": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Module IDs this work affects"
+            }
           },
-          "required": ["title"]
+          "required": [
+            "title"
+          ]
         }
       },
       {
@@ -129,9 +173,14 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "id": { "type": "string", "description": "The work item ID to complete" }
+            "id": {
+              "type": "string",
+              "description": "The work item ID to complete"
+            }
           },
-          "required": ["id"]
+          "required": [
+            "id"
+          ]
         }
       },
       {
@@ -144,29 +193,72 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "title": { "type": "string", "description": "Decision title" },
-            "context": { "type": "string", "description": "What prompted this decision" },
-            "decision": { "type": "string", "description": "What was decided" },
-            "rationale": { "type": "string", "description": "Why this option was chosen" },
-            "status": { "type": "string", "enum": ["proposed", "accepted", "deprecated", "superseded"], "description": "Decision status. Default: accepted" },
-            "modules": { "type": "array", "items": { "type": "string" }, "description": "Module IDs affected" }
+            "title": {
+              "type": "string",
+              "description": "Decision title"
+            },
+            "context": {
+              "type": "string",
+              "description": "What prompted this decision"
+            },
+            "decision": {
+              "type": "string",
+              "description": "What was decided"
+            },
+            "rationale": {
+              "type": "string",
+              "description": "Why this option was chosen"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "proposed",
+                "accepted",
+                "deprecated",
+                "superseded"
+              ],
+              "description": "Decision status. Default: accepted"
+            },
+            "modules": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Module IDs affected"
+            }
           },
-          "required": ["title"]
+          "required": [
+            "title"
+          ]
         }
       }
     ],
     "chatSkills": [
-      { "path": "./skills/init-sdlc/SKILL.md" },
-      { "path": "./skills/plan-feature/SKILL.md" },
-      { "path": "./skills/implement-task/SKILL.md" },
-      { "path": "./skills/review-work/SKILL.md" },
-      { "path": "./skills/log-decision/SKILL.md" }
+      {
+        "path": "./skills/init-sdlc/SKILL.md"
+      },
+      {
+        "path": "./skills/plan-feature/SKILL.md"
+      },
+      {
+        "path": "./skills/implement-task/SKILL.md"
+      },
+      {
+        "path": "./skills/review-work/SKILL.md"
+      },
+      {
+        "path": "./skills/log-decision/SKILL.md"
+      }
     ],
     "chatAgents": [
-      { "path": "./agents/sdlc-workflow.agent.md" }
+      {
+        "path": "./agents/sdlc-workflow.agent.md"
+      }
     ],
     "chatInstructions": [
-      { "path": "./prompts/sdlc-conventions.instructions.md" }
+      {
+        "path": "./prompts/sdlc-conventions.instructions.md"
+      }
     ],
     "configuration": {
       "title": "SDLC Workflow",
@@ -200,6 +292,7 @@
     "@types/node": "^26.1.1",
     "@types/vscode": "^1.96.0",
     "@types/vscode-webview": "^1.57.5",
+    "@vscode/codicons": "^0.0.45",
     "@vscode/prompt-tsx": "^0.4.0-alpha.9",
     "esbuild": "^0.25.0",
     "typescript": "^5.5.0"

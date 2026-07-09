@@ -126,6 +126,16 @@ export class DashboardPanel {
         );
         break;
 
+      case 'openFile': {
+        const relativePath = message.path as string;
+        const projectRoot = this._sdlcService.sdlcRoot;
+        if (projectRoot) {
+          const fileUri = vscode.Uri.joinPath(vscode.Uri.file(projectRoot), '.sdlc', relativePath);
+          await vscode.commands.executeCommand('vscode.open', fileUri);
+        }
+        break;
+      }
+
       case 'refresh':
         await this._sdlcService.refresh();
         break;
@@ -136,19 +146,12 @@ export class DashboardPanel {
   }
 
   private _sendDataToWebview(): void {
-    const status = this._sdlcService.getStatusSummary();
-    const workIndex = this._sdlcService.getWorkIndex();
-    const decisionsIndex = this._sdlcService.getDecisionsIndex();
-    const releasesIndex = this._sdlcService.getReleasesIndex();
+    const fullData = this._sdlcService.getFullData();
 
     this._panel.webview.postMessage({
       type: 'dataUpdate',
-      isLoaded: this._sdlcService.isLoaded,
       activeScreen: this._state.activeScreen,
-      status,
-      workIndex: workIndex ? { active: workIndex.active, recent: workIndex.recent } : null,
-      decisionsIndex: decisionsIndex ? { entries: decisionsIndex.entries } : null,
-      releasesIndex: releasesIndex ? { entries: releasesIndex.entries } : null,
+      ...fullData,
     });
   }
 
@@ -161,6 +164,9 @@ export class DashboardPanel {
     );
     const cssUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'dist', 'webview', 'webview.css'),
+    );
+    const codiconCssUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode', 'codicons', 'dist', 'codicon.css'),
     );
 
     return /* html */ `<!DOCTYPE html>
@@ -175,6 +181,7 @@ export class DashboardPanel {
       font-src ${webview.cspSource};
       img-src ${webview.cspSource} https:;" />
   <title>SDLC Workflow</title>
+  <link rel="stylesheet" href="${codiconCssUri}" />
   <link rel="stylesheet" href="${cssUri}" />
 </head>
 <body>

@@ -1,147 +1,45 @@
 ---
-description: 'SDLC Workflow conventions and .sdlc/ file format reference. Use when working in a project that has a .sdlc/ directory. Ensures the agent follows SDLC tracking practices — checking for active work items, reading project context, and updating progress.'
+description: 'SDLC Workflow conventions. Use when working in a project that has a .sdlc/ directory. Ensures the agent uses SDLC tools correctly and follows tracking practices.'
 applyTo: '**'
 ---
 
 # SDLC Workflow Conventions
 
-When this workspace has a `.sdlc/` directory, follow these practices.
+## CRITICAL: Always Use Tools — Never Create .sdlc/ Files Manually
 
-## .sdlc/ File Structure Reference
+The `.sdlc/` directory has a specific format with JSON indexes, counters, and cross-references that must stay in sync. **NEVER create or modify .sdlc/ files manually.** Always use the provided tools:
 
-```
-.sdlc/
-├── manifest.json                    ← Project identity, stack, counters, health
-│                                       DO NOT edit directly — managed by tools
-├── context/
-│   ├── architecture.md              ← System design, modules, data flow
-│   │                                   YAML front matter + markdown body
-│   │                                   READ and EDIT directly
-│   ├── conventions.md               ← Coding standards, naming, testing patterns
-│   │                                   READ and EDIT directly
-│   ├── requirements.md              ← Project requirements (optional)
-│   └── stack.md                     ← Technology choices (optional)
-│
-├── work/
-│   ├── active/
-│   │   └── <work-item-id>/
-│   │       ├── brief.md             ← What/Why/Acceptance Criteria
-│   │       │                           YAML front matter: type, title, priority, createdAt
-│   │       │                           Body: ## What, ## Why, ## Acceptance Criteria
-│   │       │                           READ and EDIT directly
-│   │       └── plan.md              ← Implementation task checklist
-│   │                                   YAML front matter: totalTasks, completedTasks
-│   │                                   Body: ## Task N: Title + checkboxes (- [ ] / - [x])
-│   │                                   READ and EDIT directly
-│   └── archive/
-│       └── YYYY-MM/
-│           └── <work-item-id>/      ← Completed/abandoned work items
-│
-├── decisions/
-│   └── NNN-<slug>.md                ← Architectural Decision Records (ADRs)
-│                                       YAML front matter: id, title, status, date
-│                                       Created by #sdlcDecision tool — DO NOT create manually
-│
-├── releases/
-│   └── vX.Y.Z.md                   ← Release records
-│
-├── index/
-│   ├── work.json                    ← Active + recent work items index
-│   ├── decisions.json               ← All decisions index
-│   └── releases.json                ← All releases index
-│                                       DO NOT edit indexes directly — managed by tools
-│
-└── snapshots/
-    ├── latest.json                  ← Current quality metrics
-    └── history/
-        └── YYYY-MM.json            ← Monthly quality history
-```
+| Action | Tool to Use | NEVER Do This |
+|--------|------------|---------------|
+| Initialize project | `#sdlcInit` | ❌ Don't manually create `.sdlc/` directory or `manifest.json` |
+| Create work item | `#sdlcCreate` | ❌ Don't manually create `work/active/` directories or `brief.md` |
+| Complete work item | `#sdlcComplete` | ❌ Don't manually move files to `archive/` |
+| Log decision | `#sdlcDecision` | ❌ Don't manually create `decisions/` files |
+| Get project status | `#sdlcStatus` | Can also read `manifest.json` directly |
 
-## Key File Formats
+## What You CAN Edit Directly
 
-### brief.md (Work Item)
-```yaml
----
-type: feature          # feature, bug, refactor, etc.
-title: "Add dark mode"
-priority: high         # critical, high, medium, low
-createdAt: "2026-07-09T10:00:00Z"
-modules: [web-app]     # optional
----
-# Add Dark Mode
+After a tool creates the structure, you can edit these files:
+- `.sdlc/context/architecture.md` — system design (edit body content)
+- `.sdlc/context/conventions.md` — coding standards (edit body content)
+- `.sdlc/work/active/<id>/brief.md` — work item requirements (edit body content)
+- `.sdlc/work/active/<id>/plan.md` — task checklist (toggle `- [ ]` to `- [x]`)
 
-## What
-Description of the feature.
+## What You Should NEVER Edit Directly
 
-## Why
-Motivation and context.
-
-## Acceptance Criteria
-- [ ] Toggle button in header
-- [ ] Persists in localStorage
-- [ ] Respects OS preference
-```
-
-### plan.md (Implementation Plan)
-```yaml
----
-totalTasks: 5
-completedTasks: 2
----
-# Implementation Plan
-
-## Task 1: Setup
-- [x] Create ThemeProvider
-- [x] Add toggle component
-
-## Task 2: Core Logic
-- [ ] Add localStorage persistence
-- [ ] Add OS preference detection
-
-## Task 3: Testing
-- [ ] Write unit tests
-```
-
-### Context Documents (architecture.md, conventions.md)
-```yaml
----
-version: 1
-updatedAt: "2026-07-09"
----
-# Project Architecture
-
-## System Overview
-...
-```
+- `.sdlc/manifest.json` — managed by tools
+- `.sdlc/index/*.json` — managed by tools
+- `.sdlc/decisions/*.md` — created by `#sdlcDecision` tool
+- Any file in `.sdlc/work/active/` directory structure — created by `#sdlcCreate` tool
 
 ## Before Starting Work
 
-1. Check `.sdlc/index/work.json` for active work items
-2. If there's an active work item, read its `brief.md` and `plan.md` before making changes
+1. Use `#sdlcStatus` to check project status and active work items
+2. If there's an active work item, read its `brief.md` and `plan.md`
 3. Read `.sdlc/context/conventions.md` for coding standards
 
 ## During Implementation
 
 1. Follow the task order in `plan.md` — don't skip ahead
 2. After completing a sub-task, update `plan.md` — change `- [ ]` to `- [x]`
-3. Update the front matter counters: increment `completedTasks`
-4. If you make a significant architectural decision, log it with `#sdlcDecision`
-
-## Tools vs Direct File Access
-
-**Use tools for multi-file operations** (these update indexes + counters atomically):
-- `#sdlcInit` — Initialize `.sdlc/` directory
-- `#sdlcStatus` — Get project status summary
-- `#sdlcCreate` — Create a new work item
-- `#sdlcComplete` — Complete and archive a work item
-- `#sdlcDecision` — Log an architectural decision
-
-**Read/edit files directly** (no tool needed):
-- Context docs: `.sdlc/context/architecture.md`, `conventions.md`
-- Work item briefs: `.sdlc/work/active/<id>/brief.md`
-- Work item plans: `.sdlc/work/active/<id>/plan.md`
-- Any `.sdlc/` file for reading
-
-**NEVER edit directly** (managed by tools):
-- `.sdlc/manifest.json`
-- `.sdlc/index/*.json`
+3. If you make a significant architectural decision, use `#sdlcDecision`
