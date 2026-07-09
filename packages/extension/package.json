@@ -75,30 +75,6 @@
         "icon": "$(device-camera)"
       }
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "sdlc-workflow",
-          "title": "SDLC Workflow",
-          "icon": "$(rocket)"
-        }
-      ]
-    },
-    "views": {
-      "sdlc-workflow": [
-        {
-          "id": "sdlc-workflow.welcome",
-          "name": "SDLC Workflow",
-          "type": "tree"
-        }
-      ]
-    },
-    "viewsWelcome": [
-      {
-        "view": "sdlc-workflow.welcome",
-        "contents": "Open the SDLC Workflow dashboard to manage your project.\n[Open Dashboard](command:sdlc-workflow.openDashboardView)\nOr use the commands below to get started.\n[Initialize Project](command:sdlc-workflow.init)\n[Start New Work](command:sdlc-workflow.start)"
-      }
-    ],
     "languageModelTools": [
       {
         "name": "sdlc-workflow_getProjectStatus",
@@ -136,7 +112,11 @@
           "properties": {
             "status": {
               "type": "string",
-              "enum": ["active", "recent", "all"],
+              "enum": [
+                "active",
+                "recent",
+                "all"
+              ],
               "description": "Filter by status. Default: all"
             }
           }
@@ -157,7 +137,9 @@
               "description": "The work item ID (e.g., 'add-dark-mode-toggle')"
             }
           },
-          "required": ["id"]
+          "required": [
+            "id"
+          ]
         }
       },
       {
@@ -176,21 +158,39 @@
             },
             "type": {
               "type": "string",
-              "enum": ["feature", "bug", "refactor", "performance", "security", "docs", "tech-debt", "infrastructure"],
+              "enum": [
+                "feature",
+                "bug",
+                "refactor",
+                "performance",
+                "security",
+                "docs",
+                "tech-debt",
+                "infrastructure"
+              ],
               "description": "Type of work. Default: feature"
             },
             "priority": {
               "type": "string",
-              "enum": ["critical", "high", "medium", "low"],
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+              ],
               "description": "Priority level. Default: medium"
             },
             "modules": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "Module IDs this work affects"
             }
           },
-          "required": ["title"]
+          "required": [
+            "title"
+          ]
         }
       },
       {
@@ -208,7 +208,9 @@
               "description": "The work item ID to complete"
             }
           },
-          "required": ["id"]
+          "required": [
+            "id"
+          ]
         }
       },
       {
@@ -239,16 +241,25 @@
             },
             "status": {
               "type": "string",
-              "enum": ["proposed", "accepted", "deprecated", "superseded"],
+              "enum": [
+                "proposed",
+                "accepted",
+                "deprecated",
+                "superseded"
+              ],
               "description": "Decision status. Default: accepted"
             },
             "modules": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "Module IDs affected by this decision"
             }
           },
-          "required": ["title"]
+          "required": [
+            "title"
+          ]
         }
       }
     ],
@@ -277,11 +288,13 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "@syncfusion/cs-sdlc": "workspace:*"
+    "@syncfusion/cs-sdlc": "workspace:*",
+    "preact": "^10.29.6"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "@types/vscode": "^1.96.0",
+    "@types/vscode-webview": "^1.57.5",
     "@vscode/prompt-tsx": "^0.4.0-alpha.9",
     "esbuild": "^0.25.0",
     "typescript": "^5.5.0"

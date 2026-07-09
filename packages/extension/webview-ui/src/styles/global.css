@@ -1,0 +1,225 @@
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+}
+
+/* ── Shell: Sidebar Nav (200px) + Detail Area ─────────── */
+.shell {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Sidebar Nav ──────────────────────────────────────── */
+.sidebar {
+  background: var(--vscode-sideBar-background);
+  border-right: 1px solid var(--vscode-panel-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 40px;
+  min-height: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.sidebar-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  overflow-y: auto;
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--vscode-panel-border);
+  padding: 4px 0;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 12px;
+  background: none;
+  border: none;
+  color: var(--vscode-descriptionForeground);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  text-align: left;
+  transition: color 0.1s, background 0.1s;
+}
+
+.nav-btn .codicon { font-size: 16px; width: 20px; text-align: center; }
+.nav-btn-label { flex: 1; }
+
+.nav-btn:hover {
+  color: var(--vscode-foreground);
+  background: var(--vscode-list-hoverBackground);
+}
+
+.nav-btn.is-active {
+  color: var(--vscode-list-activeSelectionForeground);
+  background: var(--vscode-list-activeSelectionBackground);
+}
+
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-dot.success { background: var(--vscode-testing-iconPassed); }
+.nav-dot.active { background: var(--vscode-progressBar-background); }
+
+.nav-badge {
+  min-width: 18px; height: 16px; padding: 0 5px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  font-size: 10px; font-weight: 600;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Detail Area ──────────────────────────────────────── */
+.detail { overflow-y: auto; overflow-x: hidden; }
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  max-width: 960px;
+}
+
+/* ── Typography ───────────────────────────────────────── */
+.view-title { font-size: 20px; font-weight: 600; color: var(--vscode-foreground); }
+.view-subtitle { font-size: 13px; color: var(--vscode-descriptionForeground); margin-top: 2px; }
+.section-title { font-size: 16px; font-weight: 600; color: var(--vscode-foreground); }
+.text-secondary { color: var(--vscode-descriptionForeground); }
+.text-sm { font-size: 12px; }
+.text-xs { font-size: 11px; }
+
+/* ── Status Cards (3-column grid) ─────────────────────── */
+.status-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+.status-card {
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.status-card:hover { border-color: var(--vscode-focusBorder); }
+.status-card.is-ready { border-color: color-mix(in srgb, var(--vscode-testing-iconPassed) 30%, var(--vscode-panel-border)); }
+
+.status-card-top { display: flex; align-items: center; justify-content: space-between; }
+.status-card-icon {
+  width: 32px; height: 32px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.status-card-title { font-size: 13px; font-weight: 600; color: var(--vscode-foreground); }
+.status-card-details { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: var(--vscode-descriptionForeground); }
+.status-card-details span { display: inline-flex; align-items: center; gap: 3px; }
+
+/* ── Progress Bar ─────────────────────────────────────── */
+.progress-bar {
+  flex: 1; height: 3px;
+  background: color-mix(in srgb, var(--vscode-progressBar-background) 20%, transparent);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-fill { height: 100%; background: var(--vscode-progressBar-background); border-radius: 2px; }
+.progress-fill.is-success { background: var(--vscode-testing-iconPassed); }
+
+/* ── Buttons ──────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; height: 26px;
+  border: none; border-radius: 4px;
+  font-family: inherit; font-size: 12px;
+  cursor: pointer; white-space: nowrap;
+  transition: opacity 0.1s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--vscode-button-background); color: var(--vscode-button-foreground); }
+.btn-primary:hover { background: var(--vscode-button-hoverBackground); }
+.btn-secondary { background: transparent; color: var(--vscode-foreground); border: 1px solid var(--vscode-panel-border); }
+.btn-secondary:hover { background: var(--vscode-list-hoverBackground); }
+.btn-ghost { background: transparent; color: var(--vscode-textLink-foreground); padding: 2px 6px; border: none; cursor: pointer; font-family: inherit; font-size: inherit; }
+.btn-sm { height: 22px; padding: 0 8px; font-size: 11px; }
+
+/* ── Badge ────────────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 10px; font-size: 10px; font-weight: 500; }
+.badge-success { background: color-mix(in srgb, var(--vscode-testing-iconPassed) 20%, transparent); color: var(--vscode-testing-iconPassed); }
+.badge-accent { background: color-mix(in srgb, var(--vscode-progressBar-background) 20%, transparent); color: var(--vscode-progressBar-background); }
+.badge-info { background: var(--vscode-badge-background); color: var(--vscode-badge-foreground); }
+
+/* ── Section ──────────────────────────────────────────── */
+.section { display: flex; flex-direction: column; gap: 8px; }
+.section-header { display: flex; align-items: baseline; justify-content: space-between; }
+
+/* ── List Items ───────────────────────────────────────── */
+.list-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+}
+.list-item:hover { border-color: var(--vscode-focusBorder); }
+.list-info { flex: 1; min-width: 0; }
+.list-name { font-size: 13px; font-weight: 500; color: var(--vscode-foreground); }
+.list-desc { font-size: 11px; color: var(--vscode-descriptionForeground); }
+
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.success { background: var(--vscode-testing-iconPassed); }
+.status-dot.active { background: var(--vscode-progressBar-background); }
+.status-dot.warning { background: var(--vscode-editorWarning-foreground); }
+
+/* ── Empty State ──────────────────────────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 48px 24px; min-height: 300px;
+}
+.empty-state .codicon { font-size: 40px; color: var(--vscode-descriptionForeground); margin-bottom: 16px; }
+
+/* ── Onboarding ───────────────────────────────────────── */
+.onboarding-shell {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100vh;
+}
+.onboarding-container {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; max-width: 520px; width: 100%;
+}
+
+/* ── Flex utilities ───────────────────────────────────── */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-xs { gap: 4px; }
+.gap-sm { gap: 6px; }
+.gap-md { gap: 8px; }
+.gap-lg { gap: 12px; }
+.gap-xl { gap: 16px; }
+.mt-sm { margin-top: 4px; }
+.mt-md { margin-top: 8px; }
+.mt-lg { margin-top: 12px; }
+.w-full { width: 100%; }

@@ -1,14 +1,14 @@
 import * as esbuild from 'esbuild';
-import { copyFileSync, mkdirSync, cpSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const isWatch = process.argv.includes('--watch');
 const isProduction = process.argv.includes('--production');
 
+// ── Extension host bundle (Node.js, CJS) ─────────────────────────────────
 /** @type {import('esbuild').BuildOptions} */
-const buildOptions = {
+const extensionBuildOptions = {
   entryPoints: ['src/extension.ts'],
   bundle: true,
   outfile: 'dist/extension.js',
@@ -19,34 +19,45 @@ const buildOptions = {
   sourcemap: !isProduction,
   minify: isProduction,
   treeShaking: true,
-  // prompt-tsx JSX
+  // prompt-tsx JSX (for extension host)
   jsx: 'transform',
   jsxFactory: 'vscpp',
   jsxFragment: 'vscppf',
 };
 
-// Copy webview assets to dist
-function copyWebviewAssets() {
-  const webviewSrc = resolve(__dirname, 'webview');
-  const webviewDist = resolve(__dirname, 'dist', 'webview');
-
-  if (existsSync(webviewSrc)) {
-    mkdirSync(webviewDist, { recursive: true });
-    cpSync(webviewSrc, webviewDist, { recursive: true });
-    console.log('✓ Copied webview assets');
-  }
-}
+// ── Webview UI bundle (Browser, ESM, Preact) ──────────────────────────────
+/** @type {import('esbuild').BuildOptions} */
+const webviewBuildOptions = {
+  entryPoints: ['webview-ui/src/index.tsx'],
+  bundle: true,
+  outfile: 'dist/webview/webview.js',
+  format: 'esm',
+  platform: 'browser',
+  target: 'es2022',
+  sourcemap: !isProduction,
+  minify: isProduction,
+  treeShaking: true,
+  // Preact JSX
+  jsx: 'automatic',
+  jsxImportSource: 'preact',
+  // CSS bundling
+  loader: { '.css': 'css' },
+};
 
 async function main() {
   if (isWatch) {
-    const ctx = await esbuild.context(buildOptions);
-    await ctx.watch();
-    copyWebviewAssets();
-    console.log('👀 Watching for changes...');
+    const [extCtx, webCtx] = await Promise.all([
+      esbuild.context(extensionBuildOptions),
+      esbuild.context(webviewBuildOptions),
+    ]);
+    await Promise.all([extCtx.watch(), webCtx.watch()]);
+    console.log('👀 Watching extension + webview...');
   } else {
-    await esbuild.build(buildOptions);
-    copyWebviewAssets();
-    console.log('✓ Build complete');
+    await Promise.all([
+      esbuild.build(extensionBuildOptions),
+      esbuild.build(webviewBuildOptions),
+    ]);
+    console.log('✓ Extension + Webview build complete');
   }
 }
 
