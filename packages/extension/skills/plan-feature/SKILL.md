@@ -1,14 +1,34 @@
 ---
 name: plan-feature
-description: 'Plan a new feature with requirements, acceptance criteria, and implementation tasks. Use when the user wants to build something new, says "new feature", "I want to build", "plan", "start feature", or describes a feature idea.'
-argument-hint: 'Describe the feature you want to build'
+description: 'Plan work with depth proportional to complexity. Use when the user wants to build something new, fix a bug, refactor, or start any tracked work. Adapts artifacts (spec/plan/todo) based on work type.'
+argument-hint: 'Describe what you want to work on'
 ---
 
 # Plan Feature
 
 ## Procedure
 
-### Step 1: Understand the Idea
+### Step 0: Determine Workflow Depth
+
+Before doing anything, classify the work type and decide which artifacts to create:
+
+| Type | spec.md | plan.md | todo.md |
+|------|---------|---------|---------|
+| **feature** (complex, unclear scope) | ✅ Full | ✅ Architecture narrative | ✅ Task breakdown |
+| **feature** (small, well-understood) | ⚠️ Light (1-2 lines) | ❌ Skip | ✅ Task breakdown |
+| **bug** | ❌ Skip | ❌ Skip | ✅ reproduce → fix → test |
+| **refactor** | ❌ Skip | ⚠️ If risky | ✅ Task breakdown |
+| **infrastructure** | ❌ Skip | ❌ Skip | ✅ Checklist |
+| **tech-debt** | ❌ Skip | ❌ Skip | ✅ Checklist |
+| **docs** | ❌ Skip | ❌ Skip | ✅ Checklist |
+| **performance** | ❌ Skip | ⚠️ Profile results | ✅ Task breakdown |
+| **security** | ❌ Skip | ⚠️ Audit findings | ✅ Task breakdown |
+
+**The todo.md is ALWAYS required.** Spec and plan are optional based on type.
+
+For lightweight types (bug, infra, tech-debt, docs): skip to **Step 2** (create work item), then **Step 4b** (write todo only), then **Step 5** (stop for approval).
+
+### Step 1: Understand the Idea (features only)
 - Read `.sdlc/context/architecture.md` and `.sdlc/context/conventions.md`
 - Ask clarifying questions if the idea is vague
 - **Surface assumptions immediately.** Before writing any spec content, list what you're assuming:
@@ -37,7 +57,7 @@ REFRAMED SUCCESS CRITERIA:
 ### Step 2: Create Work Item
 Use `#sdlcCreate` tool with title, type, and priority.
 
-### Step 3: Write Brief
+### Step 3: Write Spec (features only — skip for bug/infra/docs/tech-debt)
 Edit `spec.md` covering these sections:
 
 1. **What** — What are we building? One paragraph.
@@ -50,8 +70,16 @@ Edit `spec.md` covering these sections:
    - **Ask first:** Schema changes, new dependencies, API changes
    - **Never do:** Skip tests, hardcode secrets, break existing features
 
-### Step 4: Write Plan
-Edit `plan.md` with ordered task breakdown.
+For **small features**: write only What + Acceptance Criteria (skip Why/Scope/Boundaries).
+
+### Step 4a: Write Plan (complex features only — skip for everything else)
+Edit `plan.md` with architecture narrative and design decisions. Only needed when:
+- Multiple modules are affected
+- New architectural patterns are introduced
+- The feature touches > 8 files
+
+### Step 4b: Write Todo (ALWAYS — every work type)
+Edit `todo.md` with ordered task breakdown.
 
 **Map the dependency graph first:**
 ```
@@ -96,29 +124,29 @@ Each task must have:
 
 ### Step 5: ⛔ STOP — PLAN APPROVAL REQUIRED
 
-Show the complete plan to the user:
+Show the plan to the user. Use the template that matches the work type:
 
+**For features (complex):**
 ```
-📋 Work Item Created: <id>
+📋 Work Item Created: <id> (feature)
 
 ## Assumptions
 <list assumptions made>
 
-## Brief
+## Spec
 **What:** <description>
 **Why:** <motivation>
 
 ## Acceptance Criteria
 - [ ] Criterion 1 → verified by: <test/check>
 - [ ] Criterion 2 → verified by: <test/check>
-- [ ] Criterion 3 → verified by: <test/check>
 
 ## Boundaries
 - Always: <rules>
 - Ask first: <rules>
 - Never: <rules>
 
-## Implementation Plan (N tasks, estimated size: S/M/L)
+## Todo (N tasks, estimated size: S/M/L)
 1. Task 1: <description> [S]
 2. Task 2: <description> [M]
 3. ── Checkpoint: verify core flow ──
@@ -127,6 +155,18 @@ Show the complete plan to the user:
 Does this plan look right?
 - Say **"approved"** to start implementing
 - Or tell me what to change
+```
+
+**For bugs / infra / refactor / tech-debt / docs:**
+```
+📋 Work Item Created: <id> (<type>)
+
+## Todo (N tasks)
+1. <step 1>
+2. <step 2>
+3. <step 3>
+
+Say **"approved"** to start, or tell me what to change.
 ```
 
 **⛔ STOP HERE. Do NOT start implementing until the user explicitly approves the plan.**

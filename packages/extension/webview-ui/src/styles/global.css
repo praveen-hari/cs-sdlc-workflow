@@ -357,19 +357,19 @@ body {
 .task-indicator { flex-shrink: 0; padding-top: 1px; }
 .task-content { flex: 1; min-width: 0; }
 
-/* ── Brief Content ────────────────────────────────────── */
-.brief-content { font-size: 13px; line-height: 1.6; color: var(--vscode-foreground); }
-.brief-content h1, .brief-content h2, .brief-content h3 {
+/* ── Spec Content ─────────────────────────────────────── */
+.spec-content { font-size: 13px; line-height: 1.6; color: var(--vscode-foreground); }
+.spec-content h1, .spec-content h2, .spec-content h3 {
   font-weight: 600; margin-top: 16px; margin-bottom: 6px;
   color: var(--vscode-foreground);
 }
-.brief-content h1 { font-size: 18px; }
-.brief-content h2 { font-size: 15px; }
-.brief-content h3 { font-size: 13px; }
-.brief-content p { margin-bottom: 8px; }
-.brief-content ul, .brief-content ol { padding-left: 20px; margin-bottom: 8px; }
-.brief-content li { margin-bottom: 4px; }
-.brief-content code {
+.spec-content h1 { font-size: 18px; }
+.spec-content h2 { font-size: 15px; }
+.spec-content h3 { font-size: 13px; }
+.spec-content p { margin-bottom: 8px; }
+.spec-content ul, .spec-content ol { padding-left: 20px; margin-bottom: 8px; }
+.spec-content li { margin-bottom: 4px; }
+.spec-content code {
   font-family: var(--vscode-editor-font-family);
   background: var(--vscode-textCodeBlock-background);
   padding: 1px 4px; border-radius: 3px; font-size: 12px;

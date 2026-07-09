@@ -334,12 +334,12 @@
         }
       },
       {
-        "name": "sdlc-workflow_updatePlanProgress",
-        "displayName": "Update Plan Progress",
-        "userDescription": "Toggle task checkboxes in a work item's plan",
-        "modelDescription": "Toggles a task checkbox in a work item's plan.md and syncs the front matter progress counters. Use after implementing a task to mark it as done (or to unmark it). This ensures the dashboard and indexes stay in sync. Provide the work item ID and the 1-based task number to toggle.",
+        "name": "sdlc-workflow_toggleTodoTask",
+        "displayName": "Toggle Todo Task",
+        "userDescription": "Toggle task checkboxes in a work item's todo.md",
+        "modelDescription": "Toggles a task checkbox in a work item's todo.md and syncs the front matter progress counters. Use after implementing a task to mark it as done (or to unmark it). This ensures the dashboard and indexes stay in sync. Provide the work item ID and the 1-based task number to toggle.",
         "canBeReferencedInPrompt": true,
-        "toolReferenceName": "sdlcPlanToggle",
+        "toolReferenceName": "sdlcTodoToggle",
         "icon": "$(tasklist)",
         "tags": ["sdlc", "sdlc-workflow", "work-management"],
         "when": "sdlc-workflow:projectLoaded && sdlc-workflow:hasActiveWork",
@@ -352,7 +352,7 @@
             },
             "taskNumber": {
               "type": "number",
-              "description": "The 1-based task number to toggle (order of appearance in plan.md)"
+              "description": "The 1-based task number to toggle (order of appearance in todo.md)"
             },
             "completed": {
               "type": "boolean",

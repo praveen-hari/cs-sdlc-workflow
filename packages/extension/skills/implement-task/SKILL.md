@@ -74,8 +74,14 @@ After implementing, run verification:
 3. **Run typecheck** — `npx tsc --noEmit` (if TypeScript)
 4. If any fail, fix before proceeding
 
-### Step 6: Mark Done
-Use `#sdlcPlanToggle` to mark the task complete (keeps dashboard and indexes in sync).
+### Step 6: Mark Done — MANDATORY
+**You MUST call `#sdlcTodoToggle` with the task number BEFORE reporting to the user.** This toggles the checkbox in todo.md and syncs the dashboard. If you skip this, the dashboard shows stale progress and the user sees wrong completion %.
+
+```
+#sdlcTodoToggle id=<work-id> taskNumber=<N> completed=true
+```
+
+**A task is NOT done until `#sdlcTodoToggle` has been called.** Do not proceed to Step 7 without it.
 
 ### Step 7: ⛔ STOP — TASK REVIEW REQUIRED
 
@@ -125,7 +131,7 @@ Would you like me to verify the acceptance criteria now?
 - ONE task at a time — never implement multiple tasks without review
 - ALWAYS ask "what is the simplest thing that could work?" before coding
 - ALWAYS stop after each task and wait for user response
-- ALWAYS use `#sdlcPlanToggle` after completing a task — never edit plan.md checkboxes manually
+- ALWAYS use `#sdlcTodoToggle` after completing a task — never edit todo.md checkboxes manually
 - ALWAYS run tests + build after each task before reporting completion
 - ALWAYS respect scope — don't touch code outside the current task
 - For bugs, ALWAYS reproduce with a failing test before fixing (Prove-It Pattern)

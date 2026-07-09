@@ -107,11 +107,11 @@ export interface ContextDocData {
   hasContent: boolean;
 }
 
-/** Active work item with full brief + plan details */
+/** Active work item with full spec + plan details */
 export interface ActiveWorkDetail {
   id: string;
-  briefFrontMatter: Record<string, unknown> | null;
-  briefBody: string;
+  specFrontMatter: Record<string, unknown> | null;
+  specBody: string;
   hasPlan: boolean;
   planBody: string | null;
   planFrontMatter: Record<string, unknown> | null;

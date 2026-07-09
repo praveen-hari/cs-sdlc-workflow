@@ -72,7 +72,7 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 | Create work item | `#sdlcCreate` | ❌ Don't manually create `work/active/` directories |
 | Complete work item | `#sdlcComplete` | ❌ Don't manually move files to `archive/` |
 | Abandon work item | `#sdlcAbandon` | ❌ Don't manually delete `work/active/` directories |
-| Mark task done | `#sdlcPlanToggle` | ❌ Don't manually edit checkboxes in plan.md |
+| Mark task done | `#sdlcTodoToggle` | ❌ Don't manually edit checkboxes in todo.md |
 | Log decision | `#sdlcDecision` | ❌ Don't manually create `decisions/` files |
 | Create release | `#sdlcRelease` | ❌ Don't manually create `releases/` files |
 
@@ -87,7 +87,7 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 ## What You Should NEVER Edit Directly
 
 - `.sdlc/manifest.json`, `.sdlc/index/*.json` — managed by tools
-- `.sdlc/work/active/<id>/plan.md` checkboxes — use `#sdlcPlanToggle` to keep counters in sync
+- `.sdlc/work/active/<id>/todo.md` checkboxes — use `#sdlcTodoToggle` to keep counters in sync
 
 ## Core Behaviors (Always Active)
 
@@ -95,9 +95,12 @@ Does this plan look right? Say "approved" to start implementing, or tell me what
 After implementing any task, you MUST:
 1. Run the test suite (use the test command from `.sdlc/context/conventions.md`)
 2. Run the build (use the build command from `.sdlc/context/conventions.md`)
-3. Report results in the task review summary
+3. **Call `#sdlcTodoToggle` to mark the task done** — this toggles the checkbox in todo.md AND syncs the dashboard
+4. Report results in the task review summary
 
 **If tests fail, fix them BEFORE marking the task done.** Do NOT proceed with failing tests. Do NOT skip tests to move faster.
+
+**CRITICAL: A task is NOT complete until `#sdlcTodoToggle` has been called.** If you skip this step, the dashboard shows 0% progress even though work is done. The user will see stale data. ALWAYS call it.
 
 ### Commit After Task Approval
 After the user approves a completed task, suggest committing:
@@ -126,35 +129,63 @@ You are not a yes-machine. When an approach has clear problems:
 
 Sycophancy is a failure mode. "Of course!" followed by implementing a bad idea helps no one.
 
-## Full Workflow: SPEC → PLAN → BUILD → TEST → REVIEW → SHIP
+## Type-Aware Workflow
+
+**Not every work type needs the same depth.** Match the workflow to the type:
+
+| Type | spec.md | plan.md | todo.md | Workflow |
+|------|---------|---------|---------|----------|
+| **feature** (complex) | ✅ Full | ✅ Architecture | ✅ Tasks | SPEC → PLAN → BUILD → REVIEW |
+| **feature** (small) | ⚠️ Light | ❌ Skip | ✅ Tasks | PLAN → BUILD → REVIEW |
+| **bug** | ❌ Skip | ❌ Skip | ✅ Steps | BUILD → REVIEW |
+| **refactor** | ❌ Skip | ⚠️ Maybe | ✅ Tasks | BUILD → REVIEW |
+| **infrastructure** | ❌ Skip | ❌ Skip | ✅ Checklist | BUILD → REVIEW |
+| **tech-debt** | ❌ Skip | ❌ Skip | ✅ Checklist | BUILD → REVIEW |
+| **docs** | ❌ Skip | ❌ Skip | ✅ Checklist | BUILD → REVIEW |
+
+**The todo.md is ALWAYS required.** Spec and plan are optional based on type.
+
+### Full Workflow (features)
 
 ```
-SPEC:
+SPEC (features only — skip for bugs/infra/docs):
 1. Gather requirements (interview-me skill or user description)
 
 PLAN:
 2. Create work item (#sdlcCreate)
-3. Write brief (What/Why/AC/Testing Strategy/Boundaries)
-4. Write plan (tasks with dependencies, sized S/M/L)
-5. ⛔ STOP — Show plan to user — WAIT FOR APPROVAL
+3. Write spec.md (What/Why/AC — depth based on type)
+4. Write plan.md (architecture — only for complex features)
+5. Write todo.md (task breakdown — ALWAYS)
+6. ⛔ STOP — Show plan to user — WAIT FOR APPROVAL
 
-BUILD + TEST (repeat for each task):
-6. Implement Task N
-7. Run tests + build — fix if failing
-8. Mark task done (#sdlcPlanToggle)
-9. ⛔ STOP — Show changes + test results — WAIT FOR APPROVAL
-10. Suggest commit — "git commit -m 'feat: ...'"
-11. ... repeat for each task ...
+BUILD (repeat for each task — TDD is embedded here):
+7.  Implement Task N
+8.  Follow test-driven-development (RED → GREEN → REFACTOR)
+9.  Run tests + build — fix if failing
+10. Mark task done (#sdlcTodoToggle)
+11. ⛔ STOP — Show changes + test results — WAIT FOR APPROVAL
+12. Suggest commit — "git commit -m 'feat: ...'"
+13. ... repeat for each task ...
 
 REVIEW:
-12. All tasks done
-13. Run full test suite + 5-axis review
-14. ⛔ STOP — Show acceptance criteria verification — WAIT FOR APPROVAL
+14. All tasks done — run full test suite
+15. Use review-work skill (5-axis review)
+16. ⛔ STOP — Show acceptance criteria verification — WAIT FOR APPROVAL
 
 SHIP:
-15. Complete work item (#sdlcComplete)
-16. Suggest next action:
-    - "Start next work item?"
-    - "Create a release with #sdlcRelease?"
-    - "Update project context docs?"
+17. Complete work item (#sdlcComplete)
+18. Suggest next action
+```
+
+### Lightweight Workflow (bugs, infra, refactor, docs)
+
+```
+1. Create work item (#sdlcCreate) with correct type
+2. Write todo.md only (skip spec.md and plan.md)
+3. ⛔ STOP — WAIT FOR APPROVAL
+4. Implement tasks one by one (with TDD: RED → GREEN → REFACTOR)
+5. Run tests after each task
+6. Mark done (#sdlcTodoToggle)
+7. ⛔ STOP after each task — WAIT FOR APPROVAL
+8. When all done → quick review → #sdlcComplete
 ```

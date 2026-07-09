@@ -14,7 +14,22 @@ type WorkView = 'empty' | 'create' | 'active';
 export function Work({ workIndex, activeWorkDetails }: WorkProps) {
   const hasActive = workIndex && workIndex.active.length > 0;
   const [view, setView] = useState<WorkView>(hasActive ? 'active' : 'empty');
-  const [tab, setTab] = useState<'brief' | 'plan' | 'review'>('plan');
+  const [tab, setTab] = useState<'spec' | 'plan' | 'todo' | 'review'>('todo');
+
+  // Determine which tabs to show based on work type + content
+  const workType = (workIndex?.active[0]?.type) || 'feature';
+  const isFeature = workType === 'feature';
+  const hasSpecContent = !!(activeWorkDetails[workIndex?.active[0]?.id ?? '']?.specBody);
+  const hasPlanContent = !!(activeWorkDetails[workIndex?.active[0]?.id ?? '']?.planBody);
+  const activeDetail = activeWorkDetails[workIndex?.active[0]?.id ?? ''];
+  const showSpecTab = isFeature || hasSpecContent;
+  const showPlanTab = isFeature || hasPlanContent;
+  const showReviewTab = (activeDetail?.tasks?.length ?? 0) > 0;
+
+  // Reset tab if current tab is hidden
+  if (tab === 'spec' && !showSpecTab) setTab('todo');
+  if (tab === 'plan' && !showPlanTab) setTab('todo');
+  if (tab === 'review' && !showReviewTab) setTab('todo');
 
   // Form state
   const [formDesc, setFormDesc] = useState('');
@@ -75,7 +90,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
       if (!formDesc.trim()) return;
       openInChat(
         `Create a new SDLC ${formType} work item with ${formPriority} priority: ${formDesc.trim()}\n\n` +
-        `Generate a brief with What, Why, and Acceptance Criteria, then create an implementation plan with task breakdown.`
+        `Generate a spec with What, Why, and Acceptance Criteria, then create a todo with task breakdown.`
       );
       setFormDesc('');
       setView('empty');
@@ -85,7 +100,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
       <div class="screen is-active">
         <div>
           <div class="view-title">Start New Work</div>
-          <div class="view-subtitle">Describe what you want to work on — the agent will generate a brief and plan</div>
+          <div class="view-subtitle">Describe what you want to work on — the agent will generate a spec and todo</div>
         </div>
 
         <div class="flex flex-col gap-lg">
@@ -134,8 +149,8 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
               <span class="codicon codicon-sparkle" style="color:var(--vscode-progressBar-background);" /> The agent will:
             </div>
             <div class="text-sm text-secondary" style="line-height:1.6;">
-              1. Generate a <strong>brief</strong> with What, Why, and Acceptance Criteria<br />
-              2. Create an <strong>implementation plan</strong> with task breakdown<br />
+              1. Generate a <strong>spec</strong> with What, Why, and Acceptance Criteria<br />
+              2. Create a <strong>todo</strong> with task breakdown<br />
               3. Wait for your <strong>review and approval</strong> before starting
             </div>
           </div>
@@ -163,6 +178,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
     );
   }
 
+  if (!workIndex) return null;
   const w = workIndex.active[0];
   const detail = activeWorkDetails[w.id];
 
@@ -174,19 +190,30 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
   const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
   const nextTask = tasks.find(t => !t.completed);
 
+  // Type-aware phases — not every type needs the full lifecycle
+  const isFullLifecycle = workType === 'feature';
+
+  const phases = isFullLifecycle
+    ? (['SPEC', 'PLAN', 'BUILD', 'REVIEW'] as const)
+    : (['BUILD', 'REVIEW'] as const);
+
   // Determine current phase
   const phase = (() => {
-    if (!detail?.hasPlan) return 'SPEC';
-    if (totalTasks === 0) return 'PLAN';
-    if (remainingTasks > 0) return 'BUILD';
-    if (progress === 100) return 'REVIEW';
-    return 'BUILD';
+    if (isFullLifecycle) {
+      if (!detail?.hasPlan) return 'SPEC';
+      if (totalTasks === 0) return 'PLAN';
+      if (remainingTasks > 0) return 'BUILD';
+      if (progress === 100) return 'REVIEW';
+      return 'BUILD';
+    }
+    // Lightweight types: just BUILD → REVIEW
+    if (remainingTasks > 0 || totalTasks === 0) return 'BUILD';
+    return 'REVIEW';
   })();
 
-  const phases = ['SPEC', 'PLAN', 'BUILD', 'TEST', 'REVIEW', 'SHIP'] as const;
   const phaseIcons: Record<string, string> = {
     SPEC: 'codicon-note', PLAN: 'codicon-list-tree', BUILD: 'codicon-tools',
-    TEST: 'codicon-beaker', REVIEW: 'codicon-shield', SHIP: 'codicon-rocket',
+    REVIEW: 'codicon-shield',
   };
 
   return (
@@ -262,27 +289,54 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
           >
             Open Todo
           </Button>
+          {remainingTasks === 0 && totalTasks > 0 && (
+            <Button
+              size="sm"
+              icon="codicon-shield"
+              prompt={`All tasks are complete for ${w.id}: ${w.title}. Verify acceptance criteria, do a 5-axis review (correctness, readability, architecture, security, performance), and report findings.`}
+            >
+              Review
+            </Button>
+          )}
+          {remainingTasks === 0 && totalTasks > 0 && (
+            <Button
+              size="sm"
+              icon="codicon-check"
+              command="sdlc-workflow.done"
+            >
+              Complete
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs — dynamic based on work type */}
       <div class="work-tabs">
-        <button class={`work-tab ${tab === 'brief' ? 'is-active' : ''}`} onClick={() => setTab('brief')}>
-          <span class="codicon codicon-file-text" style="font-size:14px;" /> Brief
+        {showSpecTab && (
+          <button class={`work-tab ${tab === 'spec' ? 'is-active' : ''}`} onClick={() => setTab('spec')}>
+            <span class="codicon codicon-file-text" style="font-size:14px;" /> Spec
+          </button>
+        )}
+        {showPlanTab && (
+          <button class={`work-tab ${tab === 'plan' ? 'is-active' : ''}`} onClick={() => setTab('plan')}>
+            <span class="codicon codicon-list-tree" style="font-size:14px;" /> Plan
+          </button>
+        )}
+        <button class={`work-tab ${tab === 'todo' ? 'is-active' : ''}`} onClick={() => setTab('todo')}>
+          <span class="codicon codicon-checklist" style="font-size:14px;" /> Todo
         </button>
-        <button class={`work-tab ${tab === 'plan' ? 'is-active' : ''}`} onClick={() => setTab('plan')}>
-          <span class="codicon codicon-checklist" style="font-size:14px;" /> Plan
-        </button>
-        <button class={`work-tab ${tab === 'review' ? 'is-active' : ''}`} onClick={() => setTab('review')}>
-          <span class="codicon codicon-shield" style="font-size:14px;" /> Review
-        </button>
+        {showReviewTab && (
+          <button class={`work-tab ${tab === 'review' ? 'is-active' : ''}`} onClick={() => setTab('review')}>
+            <span class="codicon codicon-shield" style="font-size:14px;" /> Review
+          </button>
+        )}
       </div>
 
-      {/* TAB: Brief */}
-      {tab === 'brief' && (
+      {/* TAB: Spec */}
+      {tab === 'spec' && (
         <div class="flex flex-col gap-lg">
-          {detail?.briefBody ? (
-            <div class="brief-content" dangerouslySetInnerHTML={{ __html: markdownToHtml(detail.briefBody) }} />
+          {detail?.specBody ? (
+            <div class="spec-content" dangerouslySetInnerHTML={{ __html: markdownToHtml(detail.specBody) }} />
           ) : (
             <div class="text-secondary text-sm">No spec content yet. Open the spec file to edit.</div>
           )}
@@ -291,6 +345,24 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
 
       {/* TAB: Plan */}
       {tab === 'plan' && (
+        <div class="flex flex-col gap-lg">
+          {detail?.planBody ? (
+            <div class="spec-content" dangerouslySetInnerHTML={{ __html: markdownToHtml(detail.planBody) }} />
+          ) : (
+            <div class="text-secondary text-sm">No plan content yet. Open the plan file to edit.</div>
+          )}
+          <Button
+            size="sm"
+            icon="codicon-go-to-file"
+            onClick={() => openFile(`work/active/${w.id}/plan.md`)}
+          >
+            Open Plan
+          </Button>
+        </div>
+      )}
+
+      {/* TAB: Todo */}
+      {tab === 'todo' && (
         <div class="flex flex-col gap-md">
           {detail?.tasks && detail.tasks.length > 0 ? (
             <>
@@ -324,7 +396,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
                             onClick={() => openInChat(
                               `Implement Task ${task.number} for ${w.id}: ${task.text}. ` +
                               `Follow test-driven-development (write failing test first, then implement, then refactor). ` +
-                              `Run tests and build after implementing. Mark done with #sdlcPlanToggle when complete.`
+                              `Run tests and build after implementing. Mark done with #sdlcTodoToggle when complete.`
                             )}
                           >
                             <span class="codicon codicon-play" style="font-size:11px;" /> Implement This Task
@@ -394,8 +466,16 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
                 variant="primary"
                 icon="codicon-shield"
                 prompt={`Verify the acceptance criteria for SDLC work item ${w.id}: ${w.title}. Check each criterion and report pass/fail.`}
+                disabled={remainingTasks > 0}
               >
                 Verify in Chat
+              </Button>
+              <Button
+                icon="codicon-search"
+                prompt={`Run a 5-axis code review for ${w.id}: ${w.title}. Review correctness, readability, architecture, security, and performance. Report findings.`}
+                disabled={remainingTasks > 0}
+              >
+                5-Axis Review
               </Button>
               <Button
                 icon="codicon-check"
@@ -412,7 +492,7 @@ export function Work({ workIndex, activeWorkDetails }: WorkProps) {
   );
 }
 
-/** Simple markdown to HTML converter for brief content */
+/** Simple markdown to HTML converter for spec content */
 function markdownToHtml(md: string): string {
   return md
     .replace(/&/g, '&amp;')

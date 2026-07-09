@@ -7,7 +7,7 @@ import { CompleteWorkItemTool } from './complete-work-item.js';
 import { AbandonWorkItemTool } from './abandon-work-item.js';
 import { CreateReleaseTool } from './create-release.js';
 import { LogDecisionTool } from './log-decision.js';
-import { UpdatePlanProgressTool } from './update-plan-progress.js';
+import { ToggleTodoTaskTool } from './toggle-todo-task.js';
 
 /**
  * Register Language Model Tools.
@@ -34,7 +34,7 @@ export function registerTools(
     vscode.lm.registerTool('sdlc-workflow_createWorkItem', new CreateWorkItemTool(sdlcService)),
     vscode.lm.registerTool('sdlc-workflow_completeWorkItem', new CompleteWorkItemTool(sdlcService)),
     vscode.lm.registerTool('sdlc-workflow_abandonWorkItem', new AbandonWorkItemTool(sdlcService)),
-    vscode.lm.registerTool('sdlc-workflow_updatePlanProgress', new UpdatePlanProgressTool(sdlcService)),
+    vscode.lm.registerTool('sdlc-workflow_toggleTodoTask', new ToggleTodoTaskTool(sdlcService)),
 
     // Decisions & releases
     vscode.lm.registerTool('sdlc-workflow_logDecision', new LogDecisionTool(sdlcService)),

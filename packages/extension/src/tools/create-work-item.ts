@@ -52,19 +52,29 @@ export class CreateWorkItemTool implements vscode.LanguageModelTool<CreateWorkIt
       // Refresh service state
       await this._sdlcService.refresh();
 
+      const type = options.input.type ?? 'feature';
+      const isFullLifecycle = type === 'feature';
+
+      const nextSteps = isFullLifecycle
+        ? `Next steps:\n` +
+          `1. Write spec.md (What/Why/Acceptance Criteria)\n` +
+          `2. Write plan.md (architecture narrative) — if complex\n` +
+          `3. Write todo.md (task breakdown)\n` +
+          `4. Stop and wait for user approval`
+        : `Next steps:\n` +
+          `1. Write todo.md (task checklist) — spec.md and plan.md are optional for ${type}\n` +
+          `2. Stop and wait for user approval`;
+
       return new vscode.LanguageModelToolResult([
         new vscode.LanguageModelTextPart(
           `# Work Item Created\n\n` +
           `**ID:** ${result.id}\n` +
           `**Title:** ${options.input.title}\n` +
-          `**Type:** ${options.input.type ?? 'feature'}\n` +
-          `**Priority:** ${options.input.priority ?? 'medium'}\n\n` +
-          `The work item has been created in \`.sdlc/work/active/${result.id}/\`.\n` +
-          `A brief.md and plan.md template have been generated.\n\n` +
-          `Next steps:\n` +
-          `1. Review and refine the brief (acceptance criteria)\n` +
-          `2. Fill in the implementation plan\n` +
-          `3. Start implementing`,
+          `**Type:** ${type}\n` +
+          `**Priority:** ${options.input.priority ?? 'medium'}\n` +
+          `**Workflow:** ${isFullLifecycle ? 'Full (SPEC → PLAN → BUILD → REVIEW)' : 'Lightweight (BUILD → REVIEW)'}\n\n` +
+          `The work item has been created in \`.sdlc/work/active/${result.id}/\`.\n\n` +
+          nextSteps,
         ),
       ]);
     } catch (err) {

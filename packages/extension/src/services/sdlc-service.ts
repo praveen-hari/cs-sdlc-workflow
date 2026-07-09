@@ -9,6 +9,7 @@ import {
   readLatestSnapshot,
   readContextDoc,
   readWorkItem,
+  syncPlanProgress,
 } from '@syncfusion/cs-sdlc';
 import type {
   Manifest,
@@ -133,9 +134,54 @@ export class SdlcService {
 
     try {
       await this._loadData(this._sdlcRoot);
+
+      // Auto-sync: if agent edited todo.md directly (without #sdlcTodoToggle),
+      // the frontmatter counters may be stale. Detect drift and fix silently.
+      await this._autoSyncTodoCounters();
+
       this._onDidChange.fire();
     } catch (err) {
       this._output.appendLine(`Failed to refresh .sdlc/: ${err}`);
+    }
+  }
+
+  /**
+   * Detect and fix frontmatter counter drift in active work items.
+   * If the checkbox count doesn't match the frontmatter, re-sync.
+   */
+  private async _autoSyncTodoCounters(): Promise<void> {
+    if (!this._sdlcRoot) return;
+
+    for (const [id, item] of this._activeWorkItems) {
+      const todoDoc = item.todo ?? item.plan;
+      if (!todoDoc) continue;
+
+      const fm = todoDoc.frontMatter as Record<string, unknown> | null;
+      const fmTotal = (fm?.totalTasks as number) ?? -1;
+      const fmCompleted = (fm?.completedTasks as number) ?? -1;
+
+      // Count actual checkboxes from body
+      const lines = todoDoc.body.split('\n');
+      let actualTotal = 0;
+      let actualCompleted = 0;
+      for (const line of lines) {
+        const match = /^\s*-\s+\[([ xX])\]\s+/.exec(line);
+        if (match) {
+          actualTotal++;
+          if (match[1] !== ' ') actualCompleted++;
+        }
+      }
+
+      // If counters match, no drift
+      if (fmTotal === actualTotal && fmCompleted === actualCompleted) continue;
+
+      // Drift detected — sync silently
+      try {
+        this._output.appendLine(`Auto-sync: ${id} frontmatter drift (fm: ${fmCompleted}/${fmTotal}, actual: ${actualCompleted}/${actualTotal})`);
+        await syncPlanProgress(this._sdlcRoot, id);
+      } catch {
+        // Non-critical — don't break refresh
+      }
     }
   }
 
@@ -195,8 +241,8 @@ export class SdlcService {
 
       activeWorkDetails[id] = {
         id,
-        briefFrontMatter: item.spec.frontMatter as Record<string, unknown> | null,
-        briefBody: item.spec.body,
+        specFrontMatter: item.spec.frontMatter as Record<string, unknown> | null,
+        specBody: item.spec.body,
         hasPlan: item.plan !== null || item.todo !== null,
         planBody: item.plan?.body ?? null,
         planFrontMatter: item.plan?.frontMatter as Record<string, unknown> | null,
@@ -367,8 +413,8 @@ export interface ContextDocData {
 
 export interface ActiveWorkDetail {
   id: string;
-  briefFrontMatter: Record<string, unknown> | null;
-  briefBody: string;
+  specFrontMatter: Record<string, unknown> | null;
+  specBody: string;
   hasPlan: boolean;
   planBody: string | null;
   planFrontMatter: Record<string, unknown> | null;

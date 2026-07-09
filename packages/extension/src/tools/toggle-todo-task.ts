@@ -2,17 +2,17 @@ import * as vscode from 'vscode';
 import { updatePlanTask, listPlanTasks } from '@syncfusion/cs-sdlc';
 import type { SdlcService } from '../services/sdlc-service.js';
 
-interface UpdatePlanProgressInput {
+interface ToggleTodoTaskInput {
   id: string;
   taskNumber: number;
   completed?: boolean;
 }
 
-export class UpdatePlanProgressTool implements vscode.LanguageModelTool<UpdatePlanProgressInput> {
+export class ToggleTodoTaskTool implements vscode.LanguageModelTool<ToggleTodoTaskInput> {
   constructor(private readonly _sdlcService: SdlcService) {}
 
   async prepareInvocation(
-    options: vscode.LanguageModelToolInvocationPrepareOptions<UpdatePlanProgressInput>,
+    options: vscode.LanguageModelToolInvocationPrepareOptions<ToggleTodoTaskInput>,
     _token: vscode.CancellationToken,
   ) {
     const action = options.input.completed === false ? 'Unmark' : 'Mark';
@@ -22,7 +22,7 @@ export class UpdatePlanProgressTool implements vscode.LanguageModelTool<UpdatePl
   }
 
   async invoke(
-    options: vscode.LanguageModelToolInvocationOptions<UpdatePlanProgressInput>,
+    options: vscode.LanguageModelToolInvocationOptions<ToggleTodoTaskInput>,
     _token: vscode.CancellationToken,
   ): Promise<vscode.LanguageModelToolResult> {
     const projectRoot = this._sdlcService.sdlcRoot;
@@ -56,7 +56,7 @@ export class UpdatePlanProgressTool implements vscode.LanguageModelTool<UpdatePl
     } catch (err) {
       return new vscode.LanguageModelToolResult([
         new vscode.LanguageModelTextPart(
-          `Failed to update plan progress: ${err instanceof Error ? err.message : String(err)}`,
+          `Failed to toggle todo task: ${err instanceof Error ? err.message : String(err)}`,
         ),
       ]);
     }
