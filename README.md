@@ -6,15 +6,9 @@ syncfusion
 
 A structured SDLC workflow system for AI-assisted software development — from agent configuration to deployment.
 
-## What is this?
+## About SDLC Workflow
 
-SDLC Workflow gives developers clear visibility, control, and review over AI-assisted software development. It provides a structured workflow:
-
-1. **Agent Configuration** — Configure skills, tools, MCP servers, and coding standards
-2. **Project Context** — Define architecture, conventions, requirements, and modules
-3. **Work Management** — Create work items with briefs and implementation plans
-4. **Review & Approval** — Review agent work, approve or request changes
-5. **History & Decisions** — Track completed work and architectural decisions
+SDLC Workflow is a structured Software Development Lifecycle system designed for AI-assisted development. It provides a disciplined framework for planning, managing, reviewing, and tracking every phase of the development process — from agent configuration and task management to approval workflows and architectural decision logging.
 
 All project data is stored locally in a `.sdlc/` directory using the [cs-sdlc format specification](spec/sdlc/README.md).
 
