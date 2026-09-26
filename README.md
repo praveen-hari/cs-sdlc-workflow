@@ -1,9 +1,5 @@
 # SDLC Workflow
 
-Looking great!
-
-syncfusion
-
 A structured SDLC workflow system for AI-assisted software development — from agent configuration to deployment.
 
 ## About SDLC Workflow
@@ -19,6 +15,7 @@ cs-sdlc-workflow/
 ├── packages/
 │   ├── sdk/          → @syncfusion/cs-sdlc — TypeScript SDK for .sdlc/ format
 │   ├── cli/          → @syncfusion/cs-sdlc-cli — Command-line interface
+│   ├── extension/    → @syncfusion/cs-sdlc-extension — VS Code / Code Studio extension
 │   └── tsconfig/     → @syncfusion/tsconfig — Shared TypeScript config
 ├── spec/sdlc/        → .sdlc/ format specification (v1.0-draft)
 ├── .designs/         → UI design prototypes (SDLC Workflow extension)
@@ -30,9 +27,9 @@ cs-sdlc-workflow/
 | Package | Path | Description | Status |
 |---------|------|-------------|--------|
 | [`@syncfusion/cs-sdlc`](packages/sdk/) | `packages/sdk/` | TypeScript SDK for reading, writing, and validating `.sdlc/` directories | v0.1.0 — 414 tests, Level 3 conformance ✅ |
-| `@syncfusion/cs-sdlc-cli` | `packages/cli/` | CLI tool (`cs-sdlc init`, `start`, `done`, etc.) | In progress |
+| [`@syncfusion/cs-sdlc-cli`](packages/cli/) | `packages/cli/` | CLI tool (`cs-sdlc init`, `start`, `done`, etc.) | v0.1.0 — Available |
+| [`@syncfusion/cs-sdlc-extension`](packages/extension/) | `packages/extension/` | VS Code / Code Studio extension with webview UI, tools, and skills | v0.1.0 — Available |
 | `@syncfusion/tsconfig` | `packages/tsconfig/` | Shared TypeScript configuration | Done |
-| SDLC Workflow Extension | `packages/extension/` | VS Code / Code Studio extension | Planned — [UI designs](.designs/) |
 
 ## Getting Started
 
